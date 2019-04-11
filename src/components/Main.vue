@@ -1,11 +1,62 @@
 <template>
   <div class="oa_main">
     <!--面包屑-->
+    <el-row class="oa_main_card">
+          <el-col :span="6">
+            <el-card style="background:#67C23A;">
+              <div class="todo_l">
+                <el-row>
+                  <el-col :span="12" class="tl"><span>我的督办</span></el-col>
+                  <el-col :span="12" class="tr">
+                    <el-button type="text" @click="handleGoUrl('/bangongguanli/dubanguanli')"><i>{{duban}}</i></el-button>
+                  </el-col>
+                </el-row>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6">
+            <el-card style="background:#E6A23C;">
+              <div class="todo_l">
+                <el-row>
+                  <el-col :span="12" class="tl"><span>我的会议</span></el-col>
+                  <el-col :span="12" class="tr">
+                    <el-button type="text" @click="handleGoUrl('/bangongguanli/huiyiguanli')"><i>{{huiyi}}</i></el-button>
+                  </el-col>
+                </el-row>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="6">
+            <el-card style="background:#409EFF;">
+              <div class="todo_l">
+                <el-row>
+                  <el-col :span="12" class="tl"><span>未读邮件</span></el-col>
+                  <el-col :span="12" class="tr">
+                    <el-button type="text" @click="handleGoUrl('/person/yishouyoujian')"><i>{{youjian}}</i></el-button>
+                  </el-col>
+                </el-row>
+              </div>
+            </el-card>
+          </el-col>
+    <el-col :span="6">
+            <el-card style="background:#F56C6C;">
+              <div class="todo_l">
+                <el-row>
+                  <el-col :span="12" class="tl"><span>预警待办</span></el-col>
+                  <el-col :span="12" class="tr">
+                    <el-button type="text" @click="handleGoUrl('/bangongguanli/yujingguanli')"><i>{{yujing}}</i></el-button>
+                  </el-col>
+                </el-row>
+              </div>
+            </el-card>
+          </el-col>
+    </el-row>
+
     <el-row class="oa_doc">
       <el-col :span="12">
         <el-card class="box-card">
           <el-carousel  class="toubanimg" indicator-position="none" :interval="4000" arrow="always">
-            <el-carousel-item class="toubanimg" v-for="item in toubanimageslist" :key="item" style="background:rgba(0,0,0,0)">
+            <el-carousel-item class="toubanimg" v-for="item in toubanimageslist" :key="item.url" style="background:rgba(0,0,0,0)">
               <img :src="item.url" width="100%" height="100%" />
             </el-carousel-item>
           </el-carousel>
@@ -16,195 +67,79 @@
           <div slot="header" class="clearfix">
             <span class="title"><i class="iconfont icon-remind1"></i> 通知公告</span>
             <el-tooltip class="item" effect="dark" content="查看更多" placement="top-start">
-              <i class="el-icon-more-outline" style="float: right; padding: 3px 0"></i>
+              <i class="el-icon-more-outline" style="float: right; padding: 3px 0" @click="handleGoUrl('/bangongguanli/gonggaoguanli')"></i>
             </el-tooltip>
           </div>
           <div>
-            <!--table-->
-            <el-table :data="tableData" stripe style="width: 100%">
-              <el-table-column prop="name" min-width="250" show-overflow-tooltip label="标题">
-              </el-table-column>
-              <el-table-column prop="date" align="center" label="日期" show-overflow-tooltip width="120">
-              </el-table-column>
-              <el-table-column fixed="right" align="center" label="操作" width="90">
-                <div slot-scope="scope">
-                  <el-button type="text" size="small">
-                    <i class="iconfont icon-search"></i></el-button>
-                </div>
-              </el-table-column>
-            </el-table>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
-    <!-- <el-row>
-          <el-col :span="24" class="warp-breadcrum">
-            <el-breadcrumb separator="/">
-              <el-breadcrumb-item>首页</el-breadcrumb-item>
-            </el-breadcrumb>
-          </el-col>
-        </el-row> -->
-    <!--卡片-->
-    <!-- <el-row class="oa_main_card">
-          <el-col :span="6">
-            <el-card style="background:#67C23A;">
-              <div class="todo_l">
-                <el-row>
-                  <el-col :span="12" class="tl"><span>待办事项</span></el-col>
-                  <el-col :span="12" class="tr">
-                    <el-button type="text" @click="handleGoUrl('/person/todo')"><i>25</i></el-button>
-                  </el-col>
-                </el-row>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="6">
-            <el-card style="background:#E6A23C;">
-              <div class="todo_l">
-                <el-row>
-                  <el-col :span="12" class="tl"><span>日程安排</span></el-col>
-                  <el-col :span="12" class="tr">
-                    <el-button type="text" @click="handleGoUrl('/person/timelist')"><i>30</i></el-button>
-                  </el-col>
-                </el-row>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="6">
-            <el-card style="background:#F56C6C;">
-              <div class="todo_l">
-                <el-row>
-                  <el-col :span="12" class="tl"><span>我的督办</span></el-col>
-                  <el-col :span="12" class="tr">
-                    <el-button type="text" @click="handleGoUrl('/office/supervisetask')"><i>18</i></el-button>
-                  </el-col>
-                </el-row>
-              </div>
-            </el-card>
-          </el-col> -->
-    <!-- <el-col :span="6">
-            <el-card style="background:#409EFF;">
-              <div class="date_l">
-                <el-row>
-                  <el-col :span="12" class="tl">
-                    <p>{{dateList.date}}</p>
-                    <p>{{dateList.weekday}}</p>
-                  </el-col>
-                  <el-col :span="12" class="tr">
-                    {{dateList.time}}
-                  </el-col>
-                </el-row>
-              </div>
-            </el-card>
-          </el-col> -->
-    <!-- </el-row> -->
-    <!--公文-->
-    <el-row class="oa_doc">
-      <el-col :span="12">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span class="title"><i class="iconfont icon-inquirytemplate"></i> 公开公文</span>
-            <el-tooltip class="item" effect="dark" content="查看更多" placement="top-start">
-              <i class="el-icon-more-outline" style="float: right; padding: 3px 0"></i>
-            </el-tooltip>
-          </div>
-          <div>
-            <!--table-->
-            <el-table :data="tableData" stripe style="width: 100%">
-              <el-table-column fixed prop="id" label="编号" show-overflow-tooltip width="90">
-              </el-table-column>
-              <el-table-column prop="type" label="公文类型" align="center" show-overflow-tooltip width="100">
-              </el-table-column>
-              <el-table-column prop="name" align="center" min-width="150" show-overflow-tooltip label="标题">
-              </el-table-column>
-              <el-table-column prop="date" align="center" label="发文日期" show-overflow-tooltip width="100">
-              </el-table-column>
-              <el-table-column fixed="right" align="center" label="操作" width="60">
-                <div slot-scope="scope">
-                  <el-button type="text" size="small"><i class="iconfont icon-search"></i></el-button>
-                </div>
-              </el-table-column>
-            </el-table>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="12">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span class="title"> <i class="iconfont icon-inquirytemplate"></i> 部门公文</span>
-            <el-tooltip class="item" effect="dark" content="查看更多" placement="top-start">
-              <i class="el-icon-more-outline" style="float: right; padding: 3px 0"></i>
-            </el-tooltip>
-          </div>
-          <div>
-            <!--table-->
-            <el-table :data="tableData" stripe style="width: 100%">
-              <el-table-column fixed prop="id" label="编号" show-overflow-tooltip width="90">
-              </el-table-column>
-              <el-table-column prop="type" label="公文类型" show-overflow-tooltip align="center" width="100">
-              </el-table-column>
-              <el-table-column prop="name" align="center" min-width="150" show-overflow-tooltip label="标题">
-              </el-table-column>
-              <el-table-column prop="date" align="center" label="发文日期" show-overflow-tooltip width="100">
-              </el-table-column>
-              <el-table-column fixed="right" align="center" label="操作" width="60">
-                <div slot-scope="scope">
-                  <el-button type="text" size="small">
-                    <i class="iconfont icon-search"></i></el-button>
-                </div>
-              </el-table-column>
-            </el-table>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
-    <!--公告&文档-->
-    <el-row class="oa_doc">
-      <el-col :span="12">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span class="title"><i class="iconfont icon-remind1"></i> 通知公告</span>
-            <el-tooltip class="item" effect="dark" content="查看更多" placement="top-start">
-              <i class="el-icon-more-outline" style="float: right; padding: 3px 0"></i>
-            </el-tooltip>
-          </div>
-          <div>
-            <!--table-->
-            <el-table :data="tableData" stripe style="width: 100%">
-              <el-table-column prop="name" min-width="250" show-overflow-tooltip label="标题">
-              </el-table-column>
-              <el-table-column prop="date" align="center" label="日期" show-overflow-tooltip width="120">
-              </el-table-column>
-              <el-table-column fixed="right" align="center" label="操作" width="90">
-                <div slot-scope="scope">
-                  <el-button type="text" size="small">
-                    <i class="iconfont icon-search"></i></el-button>
-                </div>
-              </el-table-column>
-            </el-table>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :span="12">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span class="title"> <i class="iconfont icon-attachment"></i> 部门文档</span>
-            <el-tooltip class="item" effect="dark" content="查看更多" placement="top-start">
-              <i class="el-icon-more-outline" style="float: right; padding: 3px 0"></i>
-            </el-tooltip>
-          </div>
-          <div>
-            <!--table-->
-            <el-table :data="tableData2" stripe style="width: 100%">
-              <el-table-column prop="name" min-width="250" show-overflow-tooltip label="名称">
-              </el-table-column>
-              <el-table-column prop="type" label="类型" align="center" show-overflow-tooltip width="120">
-              </el-table-column>
-              <el-table-column fixed="right" align="center" label="操作" width="90">
+            <el-table :data="gonggao" stripe style="width: 100%">
+              <el-table-column prop="biaoti" align="center" label="标题" min-width="150" show-overflow-tooltip >
                 <template slot-scope="scope">
-            <el-button type="text" size="small">
-              <i class="iconfont icon-icondownload"></i></el-button>
-</template>
+                  <div @click="handleEdit(0, scope.row)">
+                    {{scope.row.biaoti}}
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="nigaoren" align="center" label="发起人"  width="100">
+              </el-table-column>
+              <el-table-column prop="starttime" align="center" label="发起时间" width="100" show-overflow-tooltip>
+              </el-table-column>
+              <el-table-column prop="jinji" align="center" label="公开类型" width="100" fixed="right">
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row class="oa_doc">
+      <el-col :span="12">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span class="title"><i class="iconfont icon-inquirytemplate"></i> 代办发文</span>
+            <el-tooltip class="item" effect="dark" content="查看更多" placement="top-start">
+              <i class="el-icon-more-outline" style="float: right; padding: 3px 0" @click="handleGoUrl('/fawen/daibanfawen')"></i>
+            </el-tooltip>
+          </div>
+          <div>
+            <el-table :data="daibanfawen" stripe style="width: 100%">
+              <el-table-column prop="biaoti" align="center" label="发文标题"  show-overflow-tooltip min-width="150">
+                <template slot-scope="scope">
+                  <div @click="handleEdit(1, scope.row)">
+                    {{scope.row.biaoti}}
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="laiwenren" align="center" label="来文人" width="100">
+              </el-table-column>
+              <el-table-column prop="starttime" align="center" label="发文时间" width="100" show-overflow-tooltip>
+              </el-table-column>
+              <el-table-column prop="zhuangtai" align="center" label="状态" width="100" fixed="right">
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="12">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span class="title"> <i class="iconfont icon-inquirytemplate"></i> 代办收文</span>
+            <el-tooltip class="item" effect="dark" content="查看更多" placement="top-start">
+              <i class="el-icon-more-outline" style="float: right; padding: 3px 0" @click="handleGoUrl('/shouwen/daibanshouwen')"></i>
+            </el-tooltip>
+          </div>
+          <div>
+            <el-table :data="daibanshouwen" stripe style="width: 100%">
+              <el-table-column prop="biaoti" align="center" label="来文标题" show-overflow-tooltip min-width="150">
+                <template slot-scope="scope">
+                  <div @click="handleEdit(2, scope.row)">
+                    {{scope.row.biaoti}}
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="laiwenren" align="center" label="来文人" width="100">
+              </el-table-column>
+              <el-table-column prop="laiwentime" align="center" label="来文时间" width="100" show-overflow-tooltip>
+              </el-table-column>
+              <el-table-column prop="zhuangtai" align="center" label="状态" width="100" fixed="right">
               </el-table-column>
             </el-table>
           </div>
@@ -219,7 +154,7 @@
   export default {
     name: 'Main',
     mounted() {
-      this.showTime();
+      this.gengxin();
     },
     data() {
       return {
@@ -227,7 +162,7 @@
           url: API.base + '/data/1.jpg',
           text: ''
         }, {
-          url: API.base + '/data/6.jpg',
+          url: API.base + '/data/2.jpg',
           text: ''
         }, {
           url: API.base + '/data/3.jpg',
@@ -244,45 +179,125 @@
           weekday: '',
           time: ''
         },
-        tableData: new Array(5).fill({
-          id: 10000,
-          type: '决议',
-          name: '广西铁路旅游传媒集团有限责任公司',
-          date: '2017-10-20'
-        }),
-        tableData2: new Array(5).fill({
-          type: 'ZIP',
-          name: '全区先进教案模板'
-        })
+        duban:0,
+        huiyi:0,
+        youjian:0,
+        yujing:0,
+        gonggao: [],
+        daibanfawen:[],
+        daibanshouwen:[],
       };
     },
     methods: {
-      showTime() {
-        var show_day = new Array(
-          '星期日',
-          '星期一',
-          '星期二',
-          '星期三',
-          '星期四',
-          '星期五',
-          '星期六'
-        );
-        var time = new Date();
-        var year = time.getFullYear();
-        var month = time.getMonth() + 1;
-        var date = time.getDate();
-        var day = time.getDay();
-        var hour = time.getHours();
-        var minutes = time.getMinutes();
-        var second = time.getSeconds();
-        month < 10 ? (month = '0' + month) : month;
-        month = month;
-        hour < 10 ? (hour = '0' + hour) : hour;
-        minutes < 10 ? (minutes = '0' + minutes) : minutes;
-        this.dateList.date = year + '年' + month + '月' + date + '日';
-        this.dateList.weekday = show_day[day];
-        this.dateList.time = hour + ':' + minutes;
-        setTimeout(this.showTime, 3000);
+      gengxin(){
+        API.getshouyeweidu({
+          'token': localStorage.getItem('token'),
+        }).then(({
+          data
+        }) => {
+          this.duban=data.duban;
+          this.huiyi=data.huiyi;
+          this.youjian=data.youjian;
+          this.yujing=data.yujing;
+        });
+        API.getgonggaoguanli({
+          'token': localStorage.getItem('token'),
+          'doctype': 'gonggao',
+          'query':'',
+        }).then(({
+          data
+        }) => {
+          this.gonggao=data.dataTable.slice(0,5);
+        });
+        API.getdaibanfawen({
+          'token': localStorage.getItem('token'),
+          'doctype':'fawen',
+          'query':'',
+        }).then(({
+          data
+        }) => {
+          this.daibanfawen=data.dataTable.slice(0,5);
+        });
+        API.getdaibanfawen({
+          'token': localStorage.getItem('token'),
+          'doctype':'shouwen',
+          'query':'',
+        }).then(({
+          data
+        }) => {
+          this.daibanshouwen=data.dataTable.slice(0,5);
+        });
+        setTimeout(this.showTime, 10000);
+      },
+      handleEdit(e,row){
+        if(e==0){
+          this.$router.push({
+            path: '/bangongguanli/gonggao',
+            query: {
+              'wendangid': row.wendangid,
+            },
+          });
+        }
+        else if(e==1){
+          if (row.doctype == 'gongwen') {
+            this.$router.push({
+              path: '/fawen/gongwen',
+              query: {
+                'wendangid': row.wendangid,
+              },
+            });
+          } else if(row.doctype == 'fawen'){
+            this.$router.push({
+              path: '/fawen/fawen',
+              query: {
+                'wendangid': row.wendangid,
+              },
+            });
+          } else if(row.doctype == 'huiyi'){
+            this.$router.push({
+              path: '/fawen/huiyi',
+              query: {
+                'wendangid': row.wendangid,
+              },
+            });
+          } else if(row.doctype == 'dangwu'){
+            this.$router.push({
+              path: '/fawen/dangwu',
+              query: {
+                'wendangid': row.wendangid,
+              },
+            });
+          } else if(row.doctype == 'dangwuhuiyi'){
+            this.$router.push({
+              path: '/fawen/dangwuhuiyi',
+              query: {
+                'wendangid': row.wendangid,
+              },
+            });
+          } else if(row.doctype == 'qianbao'){
+            this.$router.push({
+              path: '/fawen/qianbao',
+              query: {
+                'wendangid': row.wendangid,
+              },
+            });
+          } else if(row.doctype == 'yian'){
+            this.$router.push({
+              path: '/fawen/yian',
+              query: {
+                'wendangid': row.wendangid,
+              },
+            });
+          }
+        }
+        else{
+          this.$router.push({
+            path: '/shouwen/shouwendengji', 
+            query: {
+              'wendangid':row.wendangid
+              }
+          });
+        }
       },
       handleGoUrl(url) {
         this.$router.push({
@@ -294,15 +309,19 @@
 </script>
 
 <style lang="scss" scoped>
+.oa_main{
+  background: #efefef;
+}
 .toubanimg{
-  height: 413px;
+  height: 340px;
 }
   .oa_main_card {
+    height: 100px;
     .el-card {
       margin: 6px;
     }
     .todo_l {
-      line-height: 75px;
+      line-height: 70px;
       color: #fff;
       .tl {
         font-size: 18px;
@@ -314,32 +333,23 @@
           font-size: 60px;
           font-weight: 500;
           color: #fff;
-          padding: 0;
-          line-height: 75px;
+          line-height: 70px;
         }
         .el-button--text:hover {
-          font-size: 62px;
+          font-size: 60px;
           transition: 0.5;
           text-shadow: 2px 2px 1px #666;
         }
-      }
-    }
-    .date_l {
-      color: #fff;
-      .tl {
-        font-size: 14px;
-        font-weight: bold;
-      }
-      .tr {
-        line-height: 75px;
-        font-size: 42px;
-        text-align: center;
       }
     }
   }
   
   .oa_doc {
     margin: 25px 0px;
+    .box-card{
+      height: 380px;
+      background: #ffffff;
+    }
     .el-card {
       margin: 0 6px;
       .title {

@@ -1,64 +1,211 @@
-/**
- * Created by jerry on 2017/6/9.
- */
 import axios from 'axios';
 
-axios.defaults.withCredentials = true;
-// axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
-// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';//配置请求头
+//设置全局axios默认值
+axios.defaults.timeout = 5000; //5000的超时验证
+axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 
-//添加一个请求拦截器
-// axios.interceptors.request.use(function (config) {
-//   console.dir(config);
-//   return config;
-// }, function (error) {
-//   // Do something with request error
-//   return Promise.reject(error);
-// });
+//创建一个axios实例
+const instance = axios.create();
+instance.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 
-// 添加一个响应拦截器
-axios.interceptors.response.use(
-  function(response) {
-    if (response.data && response.data.errcode) {
-      if (parseInt(response.data.errcode) === 40001) {
-        //未登录
-        this.$emit('goto', '/login');
-      }
+axios.interceptors.request.use = instance.interceptors.request.use;
+
+//request拦截器
+instance.interceptors.request.use(
+    config => {
+        //每次发送请求之前检测都vuex存有token,那么都要放在请求头发送给服务器
+        if(localStorage.getItem('token')){
+            config.headers.Authorization = `token ${localStorage.getItem('token')}`;
+        }
+        return config;
+    },
+    err => {
+        return Promise.reject(err);
     }
-
-    return response;
-  },
-  function(error) {
-    // Do something with response error
-    return Promise.reject(error);
-  }
+);
+//respone拦截器
+instance.interceptors.response.use(
+    response => {
+        return response;
+    },
+    error => { //默认除了2XX之外的都是错误的，就会走这里
+        if(error.response){
+            switch(error.response.status){
+                case 401:
+                localStorage.removeItem('token'); //可能是token过期，清除它
+                    router.replace({ //跳转到登录页面
+                        path: 'login',
+                        query: { redirect: router.currentRoute.fullPath } // 将跳转的路由path作为参数，登录成功后跳转到该路由
+                    });
+            }
+        }
+        return Promise.reject(error.response);
+    }
 );
 
 //基地址
-export const base = 'http://192.168.5.6';
-
-//测试使用
-export const ISDEV = true;
-
-//通用方法
-export const POST = (url, params) => {
-  return axios.post(`${base}${url}`, params).then(res => res.data);
-};
-
-export const GET = (url, params) => {
-  return axios.get(`${base}${url}`, { params: params }).then(res => res.data);
-};
-
-export const PUT = (url, params) => {
-  return axios.put(`${base}${url}`, params).then(res => res.data);
-};
-
-export const DELETE = (url, params) => {
-  return axios
-    .delete(`${base}${url}`, { params: params })
-    .then(res => res.data);
-};
-
-export const PATCH = (url, params) => {
-  return axios.patch(`${base}${url}`, params).then(res => res.data);
-};
+export const base = 'http://192.168.199.223';
+export const port = ':16888/api/';
+export const baseurl = base+port;
+//用户登录
+function   userLogin(data){
+    return instance.post(baseurl+'userLogin', data); 
+}
+//获取用户
+function getUser(data){
+    return instance.post(baseurl+'getUser',data);
+}
+//修改我的信息
+function setUserProfile(data){
+    return instance.post(baseurl+'setUserProfile',data);
+}
+//获取用户头像
+function settouxiangUrl(data){
+    return instance.post(baseurl+'settouxiangUrl',data);
+}
+//获取用户签名
+function setqianmingUrl(data){
+    return instance.post(baseurl+'setqianmingUrl',data);
+}
+//修改密码
+function changepwd(data){
+    return instance.post(baseurl+'changepwd',data);
+}
+//获取发文号
+function getfawenhao(data){
+    return instance.post(baseurl+'getfawenhao',data);
+}
+//获取个人发文草稿
+function getfawencaogao(data){
+    return instance.post(baseurl+'getfawencaogao',data);
+}
+//删除发文草稿
+function deletefawencaogao(data){
+    return instance.post(baseurl+'deletefawencaogao',data);
+}
+//获取通信录
+function gettongxinlu(data){
+    return instance.post(baseurl+'gettongxinlu',data);
+}
+//发送文档
+function fasongwendang(data){
+    return instance.post(baseurl+'fasongwendang',data);
+}
+//获取待办发文管理
+function getdaibanfawen(data){
+    return instance.post(baseurl+'getdaibanfawen',data);
+}
+//获取个人发文管理
+function getfawenguanli(data){
+    return instance.post(baseurl+'getfawenguanli',data);
+}
+//退文
+function tuiwen(data){
+    return instance.post(baseurl+'tuiwen',data);
+}
+//批示
+function pishi(data){
+    return instance.post(baseurl+'pishi',data);
+}
+//已阅
+function yiyue(data){
+    return instance.post(baseurl+'yiyue',data);
+}
+//获取个人收文管理
+function getshouwenguanli(data){
+    return instance.post(baseurl+'getshouwenguanli',data);
+}
+//根据编号获取文档
+function getwendangid(data){
+    return instance.post(baseurl+'getwendangid',data);
+}
+//发送mindoc
+function fasongmindoc(data){
+    return instance.post(baseurl+'fasongmindoc',data);
+}
+//保存image
+function baocunimage(data){
+    return instance.post(baseurl+'baocunimage',data);
+}
+//获取个人发文草稿
+function getmindoccaogao(data){
+    return instance.post(baseurl+'getmindoccaogao',data);
+}
+//删除发文草稿
+function deletemindoccaogao(data){
+    return instance.post(baseurl+'deletemindoccaogao',data);
+}
+//根据编号获取mindoc
+function getmindocid(data){
+    return instance.post(baseurl+'getmindocid',data);
+}
+//获取个人发送管理
+function getfasongguanli(data){
+    return instance.post(baseurl+'getfasongguanli',data);
+}
+//获取接受管理
+function getjieshouguanli(data){
+    return instance.post(baseurl+'getjieshouguanli',data);
+}
+//获取用户信息
+function getusers(data){
+    return instance.post(baseurl+'getusers',data);
+}
+//获取min文档
+function wanchengmindoc(data){
+    return instance.post(baseurl+'wanchengmindoc',data);
+}
+//min文档已阅
+function mindocyiyue(data){
+    return instance.post(baseurl+'mindocyiyue',data);
+}
+//公告管理
+function getgonggaoguanli(data){
+    return instance.post(baseurl+'getgonggaoguanli',data);
+}
+//公告审批发布
+function gonggaofabu(data){
+    return instance.post(baseurl+'gonggaofabu',data);
+}
+//获取首页未读
+function getshouyeweidu(data){
+    return instance.post(baseurl+'getshouyeweidu',data);
+}
+//获取首页未读
+function xinjianwenjianjia(data){
+    return instance.post(baseurl+'xinjianwenjianjia',data);
+}
+export{
+    xinjianwenjianjia,
+    getshouyeweidu,
+    gonggaofabu,
+    getgonggaoguanli,
+    mindocyiyue,
+    wanchengmindoc,
+    getusers,
+    getfasongguanli,
+    getjieshouguanli,
+    getmindocid,
+    fasongmindoc,
+    baocunimage,
+    getmindoccaogao,
+    deletemindoccaogao,
+    userLogin,
+    getUser,
+    setUserProfile,
+    settouxiangUrl,
+    setqianmingUrl,
+    changepwd,
+    getfawenhao,
+    getfawencaogao,
+    deletefawencaogao,
+    gettongxinlu,
+    fasongwendang,
+    getdaibanfawen,
+    getfawenguanli,
+    tuiwen,
+    pishi,
+    yiyue,
+    getshouwenguanli,
+    getwendangid,
+}

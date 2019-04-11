@@ -26,8 +26,9 @@
               <el-input type="text" v-model="account.username" auto-complete="off" placeholder="账号"></el-input>
             </el-form-item>
             <el-form-item prop="pwd">
-              <el-input type="password" v-model="account.pwd" auto-complete="off" placeholder="密码"></el-input>
+              <el-input type="password" v-model="account.pwd" auto-complete="off" placeholder="密码" @keyup.enter.native="handleLogin"></el-input>
             </el-form-item>
+            <div class="xianshi" v-if="xianshi">账号或密码错误</div>
             <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
             <el-form-item style="width:100%;">
               <el-button type="primary" style="width:100%;" @click.native.prevent="handleLogin" :loading="loading">登录</el-button>
@@ -41,10 +42,10 @@
         </div>
         <div class="youbian">
           <div class="lianjietitle">友情链接</div>
-          <div class="lianjiecontent">中国铁路南宁局集团有限公司</div>
-          <div class="lianjiecontent">集团公司运输部</div>
-          <div class="lianjiecontent">集团公司运输部规章系统</div>
-          <div class="lianjiecontent">集团公司科信部</div>
+          <div class="lianjiecontent" >中国铁路南宁局集团有限公司</div>
+          <div class="lianjiecontent" >集团公司运输部</div>
+          <div class="lianjiecontent" >集团公司运输部规章系统</div>
+          <div class="lianjiecontent" >集团公司科信部</div>
           <div class="lianjiecontent">集团公司贷运部</div>
         </div>
       </div>
@@ -53,16 +54,17 @@
 </template>
 
 <script>
-  import * as API from '@/api'
+  import * as API from '../api';
   export default {
     data() {
       return {
         toubanimg: API.base + "/data/touban2.png",
         toubanimageslist: [API.base + '/data/1.jpg', API.base + '/data/2.jpg', API.base + '/data/3.jpg', API.base + '/data/4.jpg', API.base + '/data/5.jpg'],
         loading: false,
+        xianshi: false,
         account: {
-          username: 'admin',
-          pwd: '123456'
+          username: '',
+          pwd: ''
         },
         rules: {
           username: [{
@@ -84,6 +86,11 @@
       };
     },
     methods: {
+      sleep(ms) {
+        return new Promise(resolve =>
+          setTimeout(resolve, ms)
+        )
+      },
       handleLogin() {
         let that = this;
         this.$refs.AccountFrom.validate(valid => {
@@ -93,10 +100,30 @@
               username: this.account.username,
               pwd: this.account.pwd
             };
-            localStorage.setItem('access-user', JSON.stringify('ok'));
-            that.$router.push({
-              path: '/'
-            });
+            API.userLogin(loginParams)
+              .then(({
+                data
+              }) => {
+                localStorage.removeItem('token');
+                if (data.MSG == 'YES') {
+                  localStorage.setItem('token', data.token);
+                  localStorage.setItem('userdata', data.data);
+                  that.$router.push({
+                    path: '/'
+                  });
+                } else {
+                  that.xianshi = true;
+                  that.sleep(2000).then(() => {
+                    that.xianshi = false;
+                    that.loading = false;
+                  });
+                }
+              }).catch(() => {
+                that.loading = false;
+                this.$message({
+                  message: '网络错误!'
+                });
+              });
           }
         });
       }
@@ -209,6 +236,10 @@
     }
     .remember {
       margin: 0px 0px 20px 0px;
+    }
+    .xianshi {
+      color: #c4261a;
+      text-align: center;
     }
   }
   

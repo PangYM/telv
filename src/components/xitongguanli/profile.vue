@@ -1,0 +1,116 @@
+<template>
+  <el-row class="warp">
+    <el-col :span="24" class="warp-breadcrum" :loading="loading">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item :to="{ path: '/' }"><b>首页</b></el-breadcrumb-item>
+        <el-breadcrumb-item>设置</el-breadcrumb-item>
+        <el-breadcrumb-item>我的信息</el-breadcrumb-item>
+      </el-breadcrumb>
+    </el-col>
+  
+    <el-col :span="23" class="warpmain">
+      <el-form ref="form" :model="form" label-width="80px">
+        <el-form-item label="账号">
+          <el-input v-model="form.id" disabled></el-input>
+        </el-form-item>
+        <el-form-item prop="name" label="姓名">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item prop="phone" label="手机">
+          <el-input v-model="form.phone"></el-input>
+        </el-form-item>
+        <el-form-item prop="dianhua" label="办公电话">
+          <el-input v-model="form.dianhua"></el-input>
+        </el-form-item>
+        <el-form-item prop="email" label="邮箱">
+          <el-input v-model="form.email"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handleSaveProfile">修改并保存</el-button>
+        </el-form-item>
+      </el-form>
+    </el-col>
+  </el-row>
+</template>
+
+<script>
+  import * as API from '@/api';
+  
+  export default {
+    created() {
+      API.getUser({'token':localStorage.getItem('token')}).then(({
+        data
+      }) => {
+        this.form = data;
+      });
+    },
+    data() {
+      return {
+        loading: false,
+        form: {
+          id: '',
+          name: '',
+          email: '',
+          phone: '',
+          dianhua: '',
+        },
+      };
+    },
+    methods: {
+      handleSaveProfile() {
+        let that = this;
+        that.$refs.form.validate(valid => {
+          if (valid) {
+            that.loading = true;
+            that.form.token=localStorage.getItem('token');
+            API.setUserProfile(that.form)
+              .then(
+                function(result) {
+                  that.loading = false;
+                  if (result && result.data === 'OK') {
+                    //修改成功
+                    userdata=JSON.parse(localStorage.getItem('userdata'));
+                    userdata.name=that.form.name;
+                    localStorage.setItem('userdata', JSON.stringify(userdata));
+                    that.$message.success({
+                      showClose: true,
+                      message: '修改成功',
+                      duration: 2000
+                    });
+                  } else {
+                    that.$message.error({
+                      showClose: true,
+                      message: result.errmsg,
+                      duration: 2000
+                    });
+                  }
+                },
+                function(err) {
+                  that.loading = false;
+                  that.$message.error({
+                    showClose: true,
+                    message: err.toString(),
+                    duration: 2000
+                  });
+                }
+              )
+              .catch(function(error) {
+                that.loading = false;
+                that.$message.error({
+                  showClose: true,
+                  message: '请求出现异常',
+                  duration: 2000
+                });
+              });
+          }
+        });
+      }
+    },
+  };
+</script>
+
+<style scoped lang="scss">
+  .warpmain {
+    margin-top: 20px;
+  }
+</style>

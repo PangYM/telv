@@ -1,40 +1,50 @@
 <template>
   <el-row class="container">
-    <!--头部-->
-  
-    <el-col :span="24" class="topbar-wrap">
-      <!--展开折叠开关-->
-      <!-- <div class="menu-toggle" @click.prevent="collapse">
-          <i class="iconfont icon-category" v-show="!collapsed"></i>
-          <i class="iconfont icon-more" v-show="collapsed"></i>
-        </div> -->
-      <div class="topbar-title">
-        <img :src="logourl" class="logo" />
-        <img :src="toubanurl" class="touban" />
-      </div>
-      <div class="topbar-account topbar-btn">
+    <el-row :span="24" class="topbar-wrap">
+      <el-col :span="12" class="topbar-title">
+        <img :src="logourl" class="logo" @click="jumpTo('/')" />
+        <img :src="toubanurl" class="touban" @click="jumpTo('/')"/>
+      </el-col>
+       <el-col :span="4" class="date_l">
+          <el-row>
+            <el-col :span="12" class="tl">
+              <el-row :span="12" class="tlu">{{dateList.date}}</el-row>
+              <el-row :span="12" class="tlb">{{dateList.weekday}}</el-row>
+            </el-col>
+            <el-col :span="12" class="tr">
+              {{dateList.time}}
+            </el-col>
+          </el-row>
+      </el-col>
+      <div class="topbar-account">
         <el-dropdown trigger="click">
-          <span class="el-dropdown-link userinfo-inner"><img src="../assets/images/user.jpeg" class="user_pic"> 吴波&nbsp;&nbsp;<i
-                        class="iconfont icon-code"></i></span>
+          <span class="el-dropdown-link userinfo-inner"><img v-if="touxiangUrl" :src="touxiangUrl" class="user_pic"><img v-else src="../assets/images/user.jpeg" class="user_pic">{{nickname}} &nbsp;&nbsp;<i
+                            class="iconfont icon-code"></i></span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>
-              <div @click="jumpTo('/user/profile')"><span style="color: #555;font-size: 14px;">个人信息</span></div>
+              <div @click="jumpTo('/xitongguanli/profile')"><span style="color: #555;font-size: 14px;">我的信息</span></div>
             </el-dropdown-item>
             <el-dropdown-item>
-              <div @click="jumpTo('/user/changepwd')"><span style="color: #555;font-size: 14px;">修改密码</span></div>
+              <div @click="jumpTo('/xitongguanli/touxiang')"><span style="color: #555;font-size: 14px;">我的头像</span></div>
+            </el-dropdown-item>
+            <el-dropdown-item>
+              <div @click="jumpTo('/xitongguanli/qianming')"><span style="color: #555;font-size: 14px;">我的签名</span></div>
+            </el-dropdown-item>
+            <el-dropdown-item>
+              <div @click="jumpTo('/xitongguanli/changepwd')"><span style="color: #555;font-size: 14px;">修改密码</span></div>
             </el-dropdown-item>
             <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
-    </el-col>
+    </el-row>
     <!--中间-->
     <el-col :span="24" class="main">
       <!--左侧导航-->
       <aside :class="{showSidebar:!collapsed}">
         <!--导航菜单-->
-        <el-menu unique-opened="true" background-color="#cfcfcf" text-color="#000000" active-text-color="#0c23ff" :default-active="defaultActiveIndex" router :collapse="collapsed" @select="handleSelect">
-          <div v-for="(item,index) in $router.options.routes" :key="item">
+        <el-menu uniqueOpened background-color="#cfcfcf" text-color="#000000" active-text-color="#0c23ff" :default-active="defaultActiveIndex" router :collapse="collapsed" @select="handleSelect">
+          <div v-for="(item,index) in $router.options.routes" :key="item.name">
             <el-submenu v-if="item.menuShow && !item.leaf" :index="index+''">
               <div slot="title">
                 <i :class="item.iconCls"></i>
@@ -64,7 +74,7 @@
             </el-col>
           </el-row>
           <el-row :span="24" style="text-align:center;line-height:100px;color:#666;height:100px;">
-            <el-col>深圳宇子科技提供技术支持</el-col>
+            <el-col class='shenzhenyuzi'>深圳宇子科技提供技术支持</el-col>
           </el-row>
         </div>
       </section>
@@ -78,27 +88,58 @@
   export default {
     name: 'home',
     created() {
-      this.$on('setNickName', text => {
-        this.nickname = text;
+      API.settouxiangUrl({'token':localStorage.getItem('token')}).then(({
+        data
+      }) => {
+        this.touxiangUrl = API.base + '/data/' + data.touxiangUrl;
       });
-  
-      this.$on('goto', url => {
-        if (url === '/login') {
-          localStorage.removeItem('access-user');
-        }
-        this.$router.push(url);
-      });
+    },
+    mounted() {
+      this.showTime();
     },
     data() {
       return {
-        logourl: API.base + '/data/logo.jpg',
+        touxiangUrl: '',
+        logourl: API.base + '/data/logo.png',
         toubanurl: API.base + '/data/touban.jpg',
         defaultActiveIndex: '0',
-        nickname: '',
-        collapsed: false
+        nickname: JSON.parse(localStorage.getItem('userdata')).name,
+        collapsed: false,
+        dateList: {
+          date: '',
+          weekday: '',
+          time: ''
+        },
       };
     },
     methods: {
+      showTime() {
+        var show_day = new Array(
+          '星期日',
+          '星期一',
+          '星期二',
+          '星期三',
+          '星期四',
+          '星期五',
+          '星期六'
+        );
+        var time = new Date();
+        var year = time.getFullYear();
+        var month = time.getMonth() + 1;
+        var date = time.getDate();
+        var day = time.getDay();
+        var hour = time.getHours();
+        var minutes = time.getMinutes();
+        var second = time.getSeconds();
+        month < 10 ? (month = '0' + month) : month;
+        date < 10 ? (date = '0' + date) : date;
+        hour < 10 ? (hour = '0' + hour) : hour;
+        minutes < 10 ? (minutes = '0' + minutes) : minutes;
+        this.dateList.date = year + '年' + month + '月' + date + '日';
+        this.dateList.weekday = show_day[day];
+        this.dateList.time = hour + ':' + minutes;
+        setTimeout(this.showTime, 10000);
+      },
       handleSelect(index) {
         this.defaultActiveIndex = index;
       },
@@ -117,25 +158,20 @@
           })
           .then(() => {
             //确认
+            localStorage.removeItem('token');
             that.loading = true;
             that.$router.push('/login'); //用go刷新
           })
           .catch(() => {});
       }
     },
-    mounted() {
-      let user = localStorage.getItem('access-user');
-      if (user) {
-        user = JSON.parse(user);
-        this.nickname = user.nickname || '';
-      }
-    }
   };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
   .container {
+    background: #efefef;
     position: absolute;
     top: 0px;
     bottom: 0px;
@@ -145,25 +181,23 @@
       line-height: 100px;
       background: #0c23ff;
       padding: 0px;
-      .topbar-btn {
-        color: rgb(223, 208, 208);
+      .topbar-title{
+        width: 1400px;
       }
-      /*.topbar-btn:hover {*/
-      /*background-color: #4A5064;*/
-      /*}*/
       .logo {
+        background: #ffffff;
         position: absolute;
         height: 100px;
-        width: 220px;
+        width: 200px;
         top: 0px;
         left: 0px;
       }
       .touban {
         position: absolute;
         height: 100px;
-        width: 1100px;
+        width: 60%;
         top: 0px;
-        left: 220px;
+        left: 200px;
       }
       .top_logo {
         font-size: 18px;
@@ -171,12 +205,33 @@
         font-weight: 500;
         opacity: 0.8;
       }
-      .topbar-title {
-        float: left;
-        width: 350px;
-        padding-left: 220px;
+      .date_l {
+        margin-left: 73%;
+        color: #ffffff;
+        height: 100px;
+        width: 15%;
+        .tl {
+          height: 100px;
+          font-size: 14px;
+          font-weight: bold;
+          .tlu{
+            height: 50px;
+            line-height: 70px;
+          }
+          .tlb{
+            height: 50px;
+            line-height: 30px;
+          }
+        }
+        .tr {
+          line-height: 100px;
+          font-size: 42px;
+          text-align: center;
+        }
       }
       .topbar-account {
+        width: 100px;
+        position: relative;
         float: right;
         padding-right: 12px;
       }
@@ -208,14 +263,14 @@
       display: -ms-flexbox;
       display: flex;
       position: absolute;
-      background: #ffffff;
+      background: #efefef;
       top: 100px;
       bottom: 0px;
       overflow: hidden;
     }
     aside {
       min-width: 60px;
-      background: #fff;
+      background: #efefef;
       &::-webkit-scrollbar {
         display: none;
       }
@@ -237,7 +292,7 @@
         min-width: 60px;
       }
       .el-menu {
-        width: 220px;
+        width: 200px;
       }
       .el-menu--collapse {
         width: 60px;
@@ -250,14 +305,14 @@
       .el-submenu .el-submenu__title .el-menu-item:hover,
       .el-submenu .el-menu-item:hover,
       .el-submenu .el-submenu__title:hover {
-        background-color: #ffffff;
+        background-color: #efefef;
         color: #ffda4d;
       }
     }
     .menu-toggle {
       float: left;
       text-align: center;
-      color: #ffffff;
+      color: #efefef;
       opacity: 0.8;
       font-weight: bold;
       line-height: 60px;
@@ -278,6 +333,9 @@
       .content-wrapper {
         box-sizing: border-box;
       }
+    }
+    .shenzhenyuzi {
+      margin-top: 50px;
     }
   }
 </style>
