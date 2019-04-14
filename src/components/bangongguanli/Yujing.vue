@@ -45,6 +45,7 @@
             <el-col :span="12">
               <el-form-item label="开始时间">
                 <el-date-picker :disabled="!xiugai"
+                  value-format="yyyy-MM-dd"
                   v-model="form.starttime"
                   type="date"
                   style="width:100%;"
@@ -55,6 +56,7 @@
             <el-col :span="12">
               <el-form-item label="结束时间">
                 <el-date-picker :disabled="!xiugai"
+                  value-format="yyyy-MM-dd"
                   v-model="form.endtime"
                   type="date"
                   style="width:100%;"
@@ -94,8 +96,6 @@ export default {
         }) => {
           this.form = data.data;
           this.xiugai = 0;
-          this.form.starttime=this.form.starttime.slice(0, 10);
-          this.form.endtime=this.form.endtime.slice(0, 10);
         });
   
       } else {
@@ -121,8 +121,8 @@ export default {
         nigaoren:'',
         nigaodanwei:'',
         jinji:'',
-        starttime: '',
-        endtime: '',
+        starttime: new Date().toLocaleString().slice(0,10),
+        endtime: new Date().toLocaleString().slice(0,10),
         beizhu: ''
       }
     };

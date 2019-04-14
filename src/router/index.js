@@ -10,6 +10,7 @@ import Yifayoujian from '@/components/person/Yifayoujian';
 import Yishouyoujian from '@/components/person/Yishouyoujian';
 import Caogaoxiang from '@/components/person/Caogaoxiang';
 import Tongxinlu from '@/components/person/Tongxinlu';
+import Changyongzu from '@/components/person/Changyongzu';
 
 //公文发文
 import Yangban from '@/components/fawen/Yangban';
@@ -214,7 +215,16 @@ let router = new Router({
           meta: {
             requiresAuth: true
           }
-        }
+        },
+        {
+          path: '/person/changyongzu',
+          component: Changyongzu,
+          name: '常用组',
+          menuShow: true,
+          meta: {
+            requiresAuth: true
+          }
+        },
       ]
     },
     {

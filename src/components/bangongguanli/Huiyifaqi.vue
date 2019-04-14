@@ -50,6 +50,7 @@
               <el-form-item label="会议日期">
                 <el-date-picker :disabled="!xiugai"
                   v-model="form.riqi"
+                  value-format="yyyy-MM-dd"
                   type="date"
                   style="width:100%;"
                   placeholder="选择日期">
@@ -121,7 +122,6 @@ export default {
         }) => {
           this.form = data.data;
           this.xiugai = 0;
-          this.form.riqi=this.form.riqi.slice(0, 10);
         });
   
       } else {
@@ -152,9 +152,9 @@ export default {
         nigaoid:'',
         nigaoren:'',
         userlist: [],
-        riqi: '',
-        starttime:'',
-        endtime:'',
+        riqi: new Date().toLocaleString().slice(0,10),
+        starttime:'08:00',
+        endtime:'08:00',
         beizhu:'',
       }
     };
@@ -165,7 +165,7 @@ export default {
     },
     querensend() {
         this.istongxinlu = 1;
-        API.gettongxinlu()
+        API.gettongxinlu({'token': localStorage.getItem('token')})
           .then(({
             data
           }) => {
@@ -181,6 +181,14 @@ export default {
         this.toData = toData;
       },
     onSubmit() {
+      if(this.toData.length==0){
+          this.$message({
+            showClose: true,
+            message: '请选择发送人',
+            duration: 2000
+          });
+          return "";
+        }
       var fasongdata={
           'toData': this.toData,
           'wendang':this.form,

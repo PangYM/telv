@@ -35,7 +35,7 @@
   
       </div>
       <div class="riqi">日期：
-        <el-date-picker v-if="xiugai" v-model="form.riqi" type="date" placeholder="选择日期">
+        <el-date-picker v-if="xiugai" value-format="yyyy-MM-dd" v-model="form.riqi" type="date" placeholder="选择日期">
         </el-date-picker>
         <a v-else style="color:#000000">{{form.riqi}}</a>
       </div>
@@ -172,6 +172,16 @@
             <a v-else style="color:#000000">{{form.fenshu}}</a>
           </div>
         </div>
+        <div class="wenjianbanli">
+          <div class="wenjianbanli1">
+            文件办理
+          </div>
+          <div class="wenjianbanli2">
+            <li v-bind="form.qianyuelist" v-for="item in form.qianyuelist" :key="item.name">
+              <a style="color:#000000">{{item.name}} {{item.time}}</a>
+              </li>
+          </div>
+        </div>
         <div class="fujian">
           <div class="fujian1">
             附件
@@ -237,9 +247,6 @@
           this.pishi = data.pishi;
           this.yuedu=data.yuedu;
           this.upload.wendangid = this.form.wendangid;
-          if (this.xiugai == 0) {
-            this.form.riqi = this.form.riqi.slice(0, 10);
-          }
           if (this.hegao){
             this.form.hegaoren = userdata.name;
             this.form.hegaodanwei = userdata.group;
@@ -295,7 +302,7 @@
           nigaoid:'',
           zhuangtai:'caogao',
           leixing: '',
-          riqi: '',
+          riqi: new Date().toLocaleString().slice(0,10),
           bianhao: '',
           huanji: '',
           biglingdaolist:[],
@@ -313,6 +320,7 @@
           hegaorendianhua: '',
           shenpihis:{},
           liuchenglist:[],
+          qianyuelist:[],
           fileList: [],
           fujianList: [],
         },
@@ -325,10 +333,11 @@
       querenyuedu(){
         API.yiyue({
           'token': localStorage.getItem('token'),
-          'wendangid': this.$route.query.wendangid
+          'wendangid': this.form.wendangid
         }).then(({
           data
         }) => {
+          this.form.qianyuelist=data.qianyuelist;
           this.$message.success({
                 showClose: true,
                 message: '办理成功！',
@@ -342,7 +351,7 @@
       },
       querensend() {
         this.istongxinlu = 1;
-        API.gettongxinlu()
+        API.gettongxinlu({'token': localStorage.getItem('token')})
           .then(({
             data
           }) => {
@@ -577,6 +586,24 @@
         }
         .zhusong {
           width: 87.5%;
+        }
+      }
+      .wenjianbanli {
+        border-bottom: 2px solid red;
+        line-height: 50px;
+        min-height: 50px;
+        display: flex;
+        .wenjianbanli1 {
+          width: 12%;
+          border-right: 2px solid red;
+        }
+        .wenjianbanli2 {
+          color: #000000;
+          width: 88%;
+          .qianming{
+          height: 50px;
+          width: 100px;
+        }
         }
       }
       .fujian {

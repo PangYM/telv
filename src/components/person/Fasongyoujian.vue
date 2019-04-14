@@ -92,8 +92,7 @@ export default {
           data
         }) => {
           this.form = data.data;
-          this.xiugai = data.xiugai;
-          this.upload.wendangid = this.form.wendangid;
+          this.xiugai = 0;
           this.form.fujianList = [];
           for (var i = 0; i < this.form.fileList.length; ++i) {
             this.form.fujianList.push({
@@ -102,7 +101,13 @@ export default {
             });
           }
         });
-  
+        API.mindocyiyue({
+          'token': localStorage.getItem('token'),
+          'wendangid': this.$route.query.wendangid
+        }).then(({
+          data
+        }) => {
+        });
       } else {
         API.getfawenhao().then(({
           data
@@ -185,7 +190,7 @@ export default {
     },
     querensend() {
         this.istongxinlu = 1;
-        API.gettongxinlu()
+        API.gettongxinlu({'token': localStorage.getItem('token')})
           .then(({
             data
           }) => {

@@ -15,18 +15,18 @@
       class="selecteblock"
       placeholder="文件搜索"
       :options="options"
-      v-model="selectedOptions1"
+      v-model="selectedOptions"
       filterable
       clearable
       change-on-select
-      @change="nowvalue"
+      @change="nowlabel"
     ></el-cascader>
     <div class="main">
             <!--顶部工具栏-->
             <div class="toolbar">
                 <div class="layout clearfix">
                         <div class="action-wrap action-wrap-upload">
-                          <el-upload ref="upload" :show-file-list="false" :action="baocunfujian" :data="upload" multiple>
+                          <el-upload ref="upload" :limit="20" :on-success="onsuccess" :show-file-list="false" :action="baocunwenjian" :data="upload" multiple>
                         <div class="action-item">
                             <i class="icon icon-upload-s"></i>
                             <span class="act-txt">上传</span>
@@ -65,10 +65,10 @@
                         </div>
                     </div>
                     <ul class="breadcrumb clearfix">
-                        <a @click="xuanze(0)" href="#">全部 <i class="icon icon-bread-next"></i></a>
-                        <li v-bind="selectedOptions" v-for="(item,index) in selectedOptions">
-                          <a @click="xuanze(index+1)" v-if="index<selectedOptions.length-1" href="#">{{item.value}} <i class="icon icon-bread-next"></i></a>
-                          <a v-else style="font-weight:bold;" href="#">{{item.value}}</a>
+                        <a @click="xuanze(0)" href="#/bangongguanli/bumenwenjian">全部 <i class="icon icon-bread-next"></i></a>
+                        <li v-bind="selectedOptions1" v-for="(item,index) in selectedOptions1">
+                          <a @click="xuanze(index+1)" v-if="index<selectedOptions1.length-1" href="#/bangongguanli/bumenwenjian">{{item.label}} <i class="icon icon-bread-next"></i></a>
+                          <a v-else style="font-weight:bold;" href="#/bangongguanli/bumenwenjian">{{item.label}}</a>
                         </li>
                     </ul>
                 </div>
@@ -77,7 +77,8 @@
                     <div class="list-header clearfix">
                         <div @click="quanxuan" class="col checkbox">
                             <!--icon-checkbox,icon-checkbox-hover,icon-checkbox-cur-->
-                            <i class="icon icon-checkbox"></i>
+                            <i v-if="quanxuanlabel==0" class="icon icon-checkbox"></i>
+                            <i v-else class="icon icon-checkbox-cur"></i>
                         </div>
                         <div class="col col-border name" style="display: block;">
                             <strong>名称</strong>
@@ -89,19 +90,19 @@
                     <div v-if="showMode == 'thumb'" class="list-item-wrap list-item-wrap-thumb">
 
                         <ul class="list-item clearfix">
-                            <li class="item" v-for="file of folderFiles">
-                                <div @click="select(file.value)" @dblclick="querendakai(file)" class="inner">
+                            <li v-bind="this.files" class="item" v-for="file of folderFiles">
+                                <div @click="select(file.label)" @dblclick="querendakai(file)" class="inner">
                                     <i class="icon-wrapper">
                                         <i class="icon icon-file-l"></i>
                                     </i>
-                                    <span title="a4" class="txt">{{file.value}}</span>
+                                    <span title="a4" class="txt">{{file.label}}</span>
                                     <i v-if="file.select" class="icon checkbox icon-checkbox-cur"></i>
                                 </div>
                             </li>
                         </ul>
                         <ul class="list-item clearfix">
-                            <li v-for="file of otherFiles" class="figure-list-item">
-                                <div @click="select(file.value)" @dblclick="querendakai(file)" class="figure-list-item-inner">
+                            <li v-bind="this.files" v-for="file of otherFiles" class="figure-list-item">
+                                <div @click="select(file.label)" @dblclick="querendakai(file)" class="figure-list-item-inner">
                                     <div class="figure-list-item-pic">
                                         <div class="img-wrapper">
                                             <i class="icon icon-l icon-nor-l"></i>
@@ -109,7 +110,7 @@
                                     </div>
                                     <i v-if="file.select" class="icon checkbox icon-checkbox-cur"></i>
                                     <div class="figure-list-item-txt">
-                                        <p class="tit">{{file.value}}</p>
+                                        <p class="tit">{{file.label}}</p>
                                     </div>
                                 </div>
                             </li>
@@ -117,19 +118,19 @@
                     </div>
                     <!--列表模式-->
                     <div v-else class="list-item-wrap list-item-wrap-list clearfix">
-                        <div class="row clearfix" v-for="file of folderFiles">
+                        <div v-bind="this.files" class="row clearfix" v-for="file of folderFiles">
                             <div class="col checkbox-wrap">
                                 <!--icon-checkbox,icon-checkbox-hover,icon-checkbox-cur-->
                                 <i v-if="file.select" class="icon checkbox icon-checkbox-cur"></i>
                             </div>
-                            <div @click="select(file.value)" @dblclick="querendakai(file)" class="col col-border name"><i class="icon checkbox icon-nor-m"></i>{{file.value}}</div>
+                            <div @click="select(file.label)" @dblclick="querendakai(file)" class="col col-border name"><i class="icon checkbox icon-nor-m"></i>{{file.label}}</div>
                         </div>
-                        <div class="row clearfix" v-for="file of otherFiles">
+                        <div v-bind="this.files" class="row clearfix" v-for="file of otherFiles">
                             <div class="col checkbox-wrap">
                                 <!--icon-checkbox,icon-checkbox-hover,icon-checkbox-cur-->
                                 <i v-if="file.select" class="icon checkbox icon-checkbox-cur"></i>
                             </div>
-                            <div @click="select(file.value)" @dblclick="querendakai(file)" class="col col-border name">{{file.value}}</div>
+                            <div @click="select(file.label)" @dblclick="querendakai(file)" class="col col-border name">{{file.label}}</div>
                         </div>
                     </div>
                 </div>
@@ -151,166 +152,80 @@ import * as API from '@/api';
     },
     created() {
       var userdata = JSON.parse(localStorage.getItem('userdata'));
-      this.files=this.options;
+      this.userid=userdata.id;
+      API.huoqubumenwenjian({
+                        'token': localStorage.getItem('token')}).then(({
+                        data
+                        }) => {
+                            this.options=data.options;
+                            this.files=this.options;                        
+                        });
     },
   data() {
     return {
-      quanxuanvalue:0,
-      baseurl: API.base,
-      loading: false,
-      baocunfujian: API.baseurl + 'baocunfujian',
-      upload: {},
-      selectedOptions1:[],
-      selectedOptions:[
-      ],
-      // 显示模式：缩略图、列表
-      showMode: 'thumb',
-      // 显示的文件类型
-      showType: 'all',
+        quanxuanlabel:0,
+        baseurl: API.base,
+        loading: false,
+        userid:'',
+        baocunwenjian: API.baseurl + 'baocunwenjian',
+        upload: {'selectedOptions':'[]','token':localStorage.getItem('token')},
+        selectedOptions:[],
+        selectedOptions1:[],
+        // 显示模式：缩略图、列表
+        showMode: 'thumb',
+        // 显示的文件类型
+        showType: 'all',
         // 所有的文件夹、文件信息
-        // options:[],
-        options: [{
-          value: '指南',
-          label: '指南',
-          type:'',
-          select:0,
-          children: [{
-            value: '设计原则',
-            label: '设计原则',
-            type:'',
-            select:0,
-            children: [{
-              value: '一致',
-              label: '一致',
-              type:'doc',
-              select:0,
-            }, {
-              value: '反馈',
-              label: '反馈',
-              type:'doc',
-              select:0,
-            }, {
-              value: '效率',
-              label: '效率',
-              type:'doc',
-              select:0,
-            }, {
-              value: '可控',
-              label: '可控',
-              type:'doc',
-              select:0,
-            }]
-          }, {
-            value: '导航',
-            label: '导航',
-            type:'',
-            select:0,
-            children: [{
-              value: '侧向导航',
-              label: '侧向导航',
-              type:'doc',
-                select:0,
-            }, {
-              value: '顶部导航',
-              label: '顶部导航',
-              type:'doc',
-                select:0,
-            }]
-          },
-          {
-          value: '我',
-          label: '我',
-          type:'doc',
-          select:0,
-        },
-        {
-          value: '你',
-          label: '你',
-          type:'doc',
-          select:0,
-        },]
-        }, {
-          value: '组件',
-          label: '组件',
-          type:'',
-            select:0,
-          children: [{
-            value: '基本',
-            label: '基本',
-            type:'',
-                select:0,
-            children: [{
-              value: '布局',
-              label: '布局',
-              type:'doc',
-                select:0,
-            }, {
-              value: '色彩',
-              label: '色彩',
-              type:'doc',
-                select:0,
-            }, {
-              value: '字体',
-              label: '字体',
-              type:'doc',
-                select:0,
-            }, {
-              value: '图标',
-              label: '图标',
-              type:'doc',
-                select:0,
-            },]
-          }, {
-            value: '形式',
-            label: '形式',
-            type:'',
-            select:0,
-            children: [{
-              value: '单选框',
-              label: '单选框',
-              type:'doc',
-                select:0,
-            }, {
-              value: '多选框',
-              label: '多选框',
-              type:'doc',
-                select:0,
-            },]
-          },
-          {
-          value: '我',
-          label: '我',
-          type:'doc',
-          select:0,
-        },
-        {
-          value: '你',
-          label: '你',
-          type:'doc',
-          select:0,
-        },]
-        },
-        {
-          value: '我',
-          label: '我',
-          type:'doc',
-          select:0,
-        },
-        {
-          value: '你',
-          label: '你',
-          type:'doc',
-          select:0,
-        },],   
+        options:[],  
       files: [
       ],
     };
   },
   methods: {
-      quanxuan(){
-          this.quanxuanvalue=1-this.quanxuanvalue;
+      shanchu(){
           for(var i=0;i<this.files.length;++i){
-            this.files[i].select=this.quanxuanvalue;
+              if(this.files[i].select==1){
+                  if(this.files[i].userid!=this.userid){
+                      this.$message({
+                            type: 'info',
+                            message: this.files[i].label+'不是您上传的，您无权限删除',
+                        }); 
+                  }
+              else{
+                API.wenjianshanchu({
+                    'token': localStorage.getItem('token'),
+                    'selectedOptions':this.selectedOptions,
+                    'value':this.files[i].value,
+                    }).then(({
+                    data
+                    }) => {
+                        this.options=data.options;
+                        this.files=data.files;
+                        this.$message({
+                        type: 'success',
+                        message: this.files[i]['label']+'删除成功'
+                        });
+                    });
+                } 
+              }
+          }
+      },
+      onsuccess(response, file, fileList){
+          if(response.MSG=='NO'){
+              this.$message({
+                            type: 'info',
+                            message: '当前文件夹已存在相同的文件名，文件名为'+response.label,
+                        });  
+          }
+          else{
+                this.options=response.options;
+                this.files=response.files;
+          }
+      },
+      quanxuan(){
+          this.quanxuanlabel=1-this.quanxuanlabel;
+          for(var i=0;i<this.files.length;++i){
+            this.files[i].select=this.quanxuanlabel;
         }
       },
       xinjian(){
@@ -327,7 +242,7 @@ import * as API from '@/api';
             else{
                 var flag=1;
                 for(var i=0;i<this.files.length;++i){
-                    if(this.files[i].value==value){
+                    if(this.files[i].label==value&&this.files[i].type==''){
                         this.$message({
                             type: 'info',
                             message: '新建名称与已有文件名重复'
@@ -336,27 +251,16 @@ import * as API from '@/api';
                     }
                 }
                 if(flag){
-                    // API.xinjianwenjianjia({
-                    //     'token': localStorage.getItem('token'),
-
-                    //     }).then(({
-                    //     data
-                    //     }) => {
-                    //     this.form = data.data;
-                    //     this.xiugai = 0;
-                    //     this.yuedu = data.yuedu;
-                    //     this.upload.wendangid = this.form.wendangid;
-                    //     if (this.xiugai == 0) {
-                    //         this.form.riqi = this.form.riqi.slice(0, 10);
-                    //     }
-                    //     this.form.fujianList = [];
-                    //     for (var i = 0; i < this.form.fileList.length; ++i) {
-                    //         this.form.fujianList.push({
-                    //         'name': this.form.fileList[i].name,
-                    //         'url': this.baseurl + '/data/fujian/' + this.form.wendangid + '/' + this.form.fileList[i].name
-                    //         });
-                    //     }
-                    //     });
+                    API.xinjianwenjianjia({
+                        'token': localStorage.getItem('token'),
+                        'selectedOptions':this.selectedOptions,
+                        'label':value,
+                        }).then(({
+                        data
+                        }) => {
+                            this.options=data.options;
+                            this.files.push({'value': data.value, 'label': value, 'type': '', 'select': 0, 'children': [], 'userid': data.userid});
+                        });
                     this.$message({
                         type: 'success',
                         message: '新建成功'
@@ -370,22 +274,20 @@ import * as API from '@/api';
           });       
         });
       },
-      shanchu(){
-
-      },
       querendakai(file){
           if(file.type==''){
                 this.files=file.children;
-                this.selectedOptions.push({'value':file.value});
-                this.selectedOptions1.push(file.value);
+                this.selectedOptions1.push({'label':file.label});
+                this.selectedOptions.push(file.label);
+                this.upload.selectedOptions=JSON.stringify(this.selectedOptions);
           }
           else{
-
+              window.open(API.base + '/data/bumenwenjian/'+file.value+'/'+file.label);
           }
       },
-    select(value){
+    select(label){
         for(var i=0;i<this.files.length;++i){
-            if(this.files[i].value==value){
+            if(this.files[i].label==label){
                 this.files[i].select=1-this.files[i].select;
                 break;
             }
@@ -396,19 +298,21 @@ import * as API from '@/api';
             this.selectedOptions=[];
             this.selectedOptions1=[];
             this.files=this.options;
+            this.upload.selectedOptions=JSON.stringify(this.selectedOptions);
         }
         else{
             this.files=this.options;
             for(var i=0;i<e;++i){
                 for(var j=0;j<this.files.length;++j){
-                    if(this.files[j].value==this.selectedOptions[i].value){
+                    if(this.files[j].label==this.selectedOptions1[i].label){
                         this.files=this.files[j].children;
                         break;
                     }
                 }
             }
-            this.selectedOptions=this.selectedOptions.splice(0,e);
             this.selectedOptions1=this.selectedOptions1.splice(0,e);
+            this.selectedOptions=this.selectedOptions.splice(0,e);
+            this.upload.selectedOptions=JSON.stringify(this.selectedOptions);
         }
     },
     changeShowMode(type) {
@@ -417,17 +321,18 @@ import * as API from '@/api';
     changeShowType(type) {
       this.showType = type;
     },
-    nowvalue(val){
-        this.selectedOptions=[];
+    nowlabel(val){
+        this.upload.selectedOptions=JSON.stringify(this.selectedOptions);
+        this.selectedOptions1=[];
         this.files=this.options;
       for(var i=0;i<val.length;++i){
           for(var j=0;j<this.files.length;++j){
-              if(this.files[j].value==val[i]){
+              if(this.files[j].label==val[i]){
                 this.files=this.files[j].children;
                 break;
               }
           }
-          this.selectedOptions.push({'value':val[i]});
+          this.selectedOptions1.push({'label':val[i]});
       }
     },
   }

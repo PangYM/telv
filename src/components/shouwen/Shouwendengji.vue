@@ -35,7 +35,7 @@
       </div>
       <div class="bantou1">
         <div class="riqi">收文日期：
-          <el-date-picker v-if="xiugai" class="riqikuang" v-model="form.riqi" type="date" placeholder="选择日期">
+          <el-date-picker v-if="xiugai" value-format="yyyy-MM-dd" class="riqikuang" v-model="form.riqi" type="date" placeholder="选择日期">
           </el-date-picker>
           <a v-else style="color:#000000">{{form.riqi}}</a>
         </div>
@@ -203,9 +203,6 @@ import * as API from '@/api';
           this.hegao = data.hegao;
           this.yuedu = data.yuedu;
           this.upload.wendangid = this.form.wendangid;
-          if (this.xiugai == 0) {
-            this.form.riqi = this.form.riqi.slice(0, 10);
-          }
           this.form.fujianList = [];
           for (var i = 0; i < this.form.fileList.length; ++i) {
             this.form.fujianList.push({
@@ -250,7 +247,7 @@ import * as API from '@/api';
           nigaoid:'',
           zhuangtai:'caogao',
           leixing: '',
-          riqi: '',
+          riqi: new Date().toLocaleString().slice(0,10),
           nigaoid:'',
           nigaoren: '',
           wenzhong:'',
@@ -282,7 +279,7 @@ import * as API from '@/api';
       querenyuedu(){
         API.yiyue({
           'token': localStorage.getItem('token'),
-          'wendangid': this.$route.query.wendangid
+          'wendangid': this.form.wendangid
         }).then(({
           data
         }) => {
@@ -300,7 +297,7 @@ import * as API from '@/api';
       },
       querensend() {
         this.istongxinlu = 1;
-        API.gettongxinlu()
+        API.gettongxinlu({'token': localStorage.getItem('token')})
           .then(({
             data
           }) => {

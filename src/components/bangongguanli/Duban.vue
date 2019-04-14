@@ -90,6 +90,7 @@
             <el-date-picker
               :disabled="!xiugai"
               v-model="form.riqi"
+              value-format="yyyy-MM-dd"
               type="date"
               style="width:30%"
               placeholder="请选择办结期限">
@@ -148,9 +149,6 @@ import * as API from '@/api';
           this.xiugai = 0;
           this.yuedu = data.yuedu;
           this.upload.wendangid = this.form.wendangid;
-          if (this.xiugai == 0) {
-            this.form.riqi = this.form.riqi.slice(0, 10);
-          }
           this.form.fujianList = [];
           for (var i = 0; i < this.form.fileList.length; ++i) {
             this.form.fujianList.push({
@@ -203,7 +201,7 @@ import * as API from '@/api';
           }
         ],
         beizhu: '',
-        riqi: '',
+        riqi: new Date().toLocaleString().slice(0,10),
         shenpihis:{},
         fileList: [],
         fujianList: [],
@@ -296,7 +294,7 @@ import * as API from '@/api';
       },
     querensend() {
       this.istongxinlu = 1;
-      API.gettongxinlu()
+      API.gettongxinlu({'token': localStorage.getItem('token')})
         .then(({
           data
         }) => {

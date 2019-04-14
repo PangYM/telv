@@ -111,7 +111,7 @@
             签发日期
           </div>
           <div class="kuang24">
-          <el-date-picker v-if="xiugai" v-model="form.qianfariqi" type="date" placeholder=" 签发日期">
+          <el-date-picker v-if="xiugai" value-format="yyyy-MM-dd" v-model="form.qianfariqi" type="date" placeholder=" 签发日期">
           </el-date-picker>
           <a v-else style="color:#000000">{{form.qianfariqi}}</a> 
           </div>
@@ -128,7 +128,7 @@
             制发日期
           </div>
           <div class="kuang24">
-          <el-date-picker v-if="xiugai" v-model="form.zhifariqi" type="date" placeholder="制发日期">
+          <el-date-picker v-if="xiugai" value-format="yyyy-MM-dd" v-model="form.zhifariqi" type="date" placeholder="制发日期">
           </el-date-picker>
           <a v-else style="color:#000000">{{form.zhifariqi}}</a> 
           </div>
@@ -215,10 +215,6 @@
           this.xiugai = data.xiugai;
           this.yuedu = data.yuedu;
           this.upload.wendangid = this.form.wendangid;
-          if (this.xiugai == 0) {
-            this.form.qianfariqi = this.form.qianfariqi.slice(0, 10);
-            this.form.zhifariqi = this.form.zhifariqi.slice(0, 10);
-          }
           this.form.fujianList = [];
           for (var i = 0; i < this.form.fileList.length; ++i) {
             this.form.fujianList.push({
@@ -268,9 +264,9 @@
           nigaoren: '',
           qianfadanhao: '',
           qianfaren:'',
-          qianfariqi: '',
+          qianfariqi: new Date().toLocaleString().slice(0,10),
           xiaoyinren:'',
-          zhifariqi: '',
+          zhifariqi: new Date().toLocaleString().slice(0,10),
           zhifashuoming: '',
           shenpihis:{},
           liuchenglist:[],
@@ -291,7 +287,7 @@
       querenyuedu(){
         API.yiyue({
           'token': localStorage.getItem('token'),
-          'wendangid': this.$route.query.wendangid
+          'wendangid': this.form.wendangid
         }).then(({
           data
         }) => {
@@ -306,7 +302,7 @@
       },
       querensend() {
         this.istongxinlu = 1;
-        API.gettongxinlu()
+        API.gettongxinlu({'token': localStorage.getItem('token')})
           .then(({
             data
           }) => {

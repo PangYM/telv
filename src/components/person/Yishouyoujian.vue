@@ -92,7 +92,6 @@
         this.qiefendataTable=this.dataTable.slice(20*val-20,val*20);
       },
       handleEdit(index, row) {
-        API.
         this.$router.push({
           path: '/person/fasongyoujian',
           query: {

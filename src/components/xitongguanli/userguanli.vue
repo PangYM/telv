@@ -40,7 +40,7 @@
   let id = 1000;
   export default {
     created() {
-      API.gettongxinlu()
+      API.gettongxinlu({'token': localStorage.getItem('token')})
         .then(({
           data
         }) => {

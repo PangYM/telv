@@ -171,11 +171,40 @@ function gonggaofabu(data){
 function getshouyeweidu(data){
     return instance.post(baseurl+'getshouyeweidu',data);
 }
-//获取首页未读
+//新建文件夹
 function xinjianwenjianjia(data){
     return instance.post(baseurl+'xinjianwenjianjia',data);
 }
+//获取文件夹
+function huoqubumenwenjian(data){
+    return instance.post(baseurl+'huoqubumenwenjian',data);
+}
+//获取部门文件
+function huoqubumenwenjian(data){
+    return instance.post(baseurl+'huoqubumenwenjian',data);
+}
+//文件删除
+function wenjianshanchu(data){
+    return instance.post(baseurl+'wenjianshanchu',data);
+}
+//新加常用组
+function setchangyongzu(data){
+    return instance.post(baseurl+'setchangyongzu',data);
+}
+//获取常用组
+function getchangyongzu(data){
+    return instance.post(baseurl+'getchangyongzu',data);
+}
+//修改常用组
+function xiugaichangyongzu(data){
+    return instance.post(baseurl+'xiugaichangyongzu',data);
+}
 export{
+    xiugaichangyongzu,
+    getchangyongzu,
+    setchangyongzu,
+    wenjianshanchu,
+    huoqubumenwenjian,
     xinjianwenjianjia,
     getshouyeweidu,
     gonggaofabu,
