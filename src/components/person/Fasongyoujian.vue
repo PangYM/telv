@@ -26,19 +26,21 @@
       <el-col :span="24">
         <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label="邮件标题">
-            <el-input :disabled="!xiugai" v-model="form.biaoti" placeholder="请输入邮件标题"></el-input>
+            <el-input v-if="xiugai" v-model="form.biaoti" placeholder="请输入邮件标题"></el-input>
+            <div v-else class="xianshi">{{form.biaoti}}</div>
           </el-form-item>
           <el-row>
           </el-row>
           <el-row>
             <el-col :span="12">
               <el-form-item label="发件人">
-                <el-input disabled v-model="form.nigaoren" placeholder=""></el-input>
+                <div class="xianshi">{{form.nigaoren}}</div>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item v-if="form.starttime.length" label="收件日期">
-                <el-input :disabled="!xiugai" v-model="form.starttime" placeholder=""></el-input>
+                <el-input v-if="xiugai" v-model="form.starttime" placeholder=""></el-input>
+                <div v-else class="xianshi">{{form.starttime}}</div>
               </el-form-item>
             </el-col>
           </el-row>
@@ -251,4 +253,7 @@ export default {
       margin-left: 25%;
     }
   }
+.xianshi{
+  background: #ffffff;
+}
 </style>

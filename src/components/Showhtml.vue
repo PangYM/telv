@@ -1,6 +1,6 @@
 <template>
   <el-row class="warp">
-    <div style="text-align:center;margin:150px 0;"><img src="../assets/images/404.gif"></div>
+    <div v-html="content"></div>
   </el-row>
 </template>
 <style>
@@ -8,9 +8,14 @@
 
 <script>
 export default {
+  created() {
+    if (this.$route.query.content) {
+      this.content=this.$route.query.content;
+    }
+  },
   data() {
     return {
-      currentDate: new Date()
+      content:'',
     };
   },
   mounted: function() {}

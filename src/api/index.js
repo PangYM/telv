@@ -199,7 +199,72 @@ function getchangyongzu(data){
 function xiugaichangyongzu(data){
     return instance.post(baseurl+'xiugaichangyongzu',data);
 }
+//删除人员
+function shanchurenyuan(data){
+    return instance.post(baseurl+'shanchurenyuan',data);
+}
+//新建部门
+function xinjianbumen(data){
+    return instance.post(baseurl+'xinjianbumen',data);
+}
+//新增人员
+function xinzengrenyuan(data){
+    return instance.post(baseurl+'xinzengrenyuan',data);
+}
+//是否在线
+function getifzaixian(data){
+    return instance.post(baseurl+'getifzaixian',data);
+}
+//查询文档
+function chaxunwendang(data){
+    return instance.post(baseurl+'chaxunwendang',data);
+}
+//删除文档
+function shanchuwendang(data){
+    return instance.post(baseurl+'shanchuwendang',data);
+}
+//获取首页图片
+function gettoubanimageslist(data){
+    return instance.post(baseurl+'gettoubanimageslist',data);
+}
+//获取友情链接
+function getyouqinglist(data){
+    return instance.post(baseurl+'getyouqinglist',data);
+}
+//设置友情链接
+function setyouqinglist(data){
+    return instance.post(baseurl+'setyouqinglist',data);
+}
+//获取登录页介绍
+function getdengluyelist(data){
+    return instance.post(baseurl+'getdengluyelist',data);
+}
+//设置登录页介绍
+function setdengluyelist(data){
+    return instance.post(baseurl+'setdengluyelist',data);
+}
+//获取轮播图
+function getlunbotulist(data){
+    return instance.post(baseurl+'getlunbotulist',data);
+}
+//设置轮播图
+function setlunbotulist(data){
+    return instance.post(baseurl+'setlunbotulist',data);
+}
 export{
+    setlunbotulist,
+    getlunbotulist,
+    setdengluyelist,
+    getdengluyelist,
+    setyouqinglist,
+    getyouqinglist,
+    gettoubanimageslist,
+    shanchuwendang,
+    chaxunwendang,
+    getifzaixian,
+    xinzengrenyuan,
+    xinjianbumen,
+    shanchurenyuan,
     xiugaichangyongzu,
     getchangyongzu,
     setchangyongzu,

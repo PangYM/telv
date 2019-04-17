@@ -14,6 +14,8 @@
     <el-row class="gonggao">
       <div class="fasong">
       <el-button type="primary"  v-if="xiugai" @click="querenfasong">立即创建</el-button>
+      <el-button type="primary"  v-if="xiugai&&yulan" @click="querenyulan">预览</el-button>
+      <el-button type="primary"  v-if="xiugai==0&&yulan" @click="querenyulan">关闭预览</el-button>
       <el-button type="primary"  v-if="shenpi" @click="shenpifabu(0)">退文</el-button>
       <el-button type="primary"  v-if="shenpi" @click="shenpifabu(1)">审批发布</el-button>
       <el-button type="primary" @click="guanbi()">关闭</el-button>
@@ -21,27 +23,30 @@
       <el-col :span="24">
         <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label="公告标题">
-            <el-input :disabled="!xiugai" v-model="form.biaoti" placeholder="请输入公告标题"></el-input>
+            <el-input v-if="xiugai" v-model="form.biaoti" placeholder="请输入公告标题"></el-input>
+            <div v-else class="xianshi">{{form.biaoti}}</div>
           </el-form-item>
           <el-row>
           </el-row>
           <el-row>
             <el-col :span="12">
               <el-form-item label="发起人">
-                <el-input disabled v-model="form.nigaoren" placeholder=""></el-input>
+                <div class="xianshi">{{form.nigaoren}}</div>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="公开类型">
-                <el-select :disabled="!xiugai" v-model="form.jinji" placeholder="" style="width:100%;">
+                <el-select v-if="xiugai" :disabled="!xiugai" v-model="form.jinji" placeholder="" style="width:100%;">
                   <el-option label="公开" value="公开"></el-option>
                   <el-option label="部门" value="部门"></el-option>
                 </el-select>
+                <div v-else class="xianshi">{{form.jinji}}</div>
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item v-if="form.starttime.length" label="收文日期">
-                <el-input :disabled="!xiugai" v-model="form.starttime" placeholder=""></el-input>
+              <el-form-item v-if="form.starttime.length" label="发起时间">
+                <el-input v-if="xiugai" :disabled="!xiugai" v-model="form.starttime" placeholder=""></el-input>
+                <div v-else class="xianshi">{{form.starttime}}</div>
               </el-form-item>
             </el-col>
           </el-row>
@@ -51,13 +56,14 @@
             @imageAdded="handleImageAdded"
             v-model="form.content">
             </vue-editor>
-            <vue-editor v-else disabled
+            <div class="html" v-else v-html="form.content"></div>
+            <!-- <vue-editor v-else disabled
             useCustomImageHandler
             @imageAdded="handleImageAdded"
             v-model="form.content">
-            </vue-editor>
+            </vue-editor> -->
           </el-form-item>
-          <el-form-item>
+          <el-form-item v-if="xiugai==0" label="附件">
           <li v-bind="form.fileList" v-for="item in form.fileList" :key="item.name">
               <a target="_blank" :href="baseurl+'/data/fujian/'+form.wendangid+'/'+item.name">
                                                                               {{item.name}}
@@ -96,6 +102,7 @@ export default {
         }) => {
           this.form = data.data;
           this.xiugai = 0;
+          this.yulan=0;
           this.shenpi=data.shenpi;
           this.upload.wendangid = this.form.wendangid;
           this.form.fujianList = [];
@@ -121,6 +128,7 @@ export default {
     },
   data() {
     return {
+      yulan:1,
       xiugai:1,
       shenpi:0,
       istongxinlu: 0,
@@ -143,12 +151,16 @@ export default {
         jinji:'公开',
         starttime:'',
         content: '',
+        shenpihis:{},
         fileList: [],
         fujianList: [],
       }
     };
   },
   methods: {
+    querenyulan(){
+      this.xiugai=1-this.xiugai;
+    },
     shenpifabu(e){
       this.shenpi=0;
       API.gonggaofabu({
@@ -184,6 +196,14 @@ export default {
         })
       },
     querenfasong(){
+      if(this.form.biaoti.length==0){
+        this.$message({
+            showClose: true,
+            message: '公告标题不能为空',
+            duration: 2000
+          });
+          return '';
+      }
         var fasongdata={
           'wendang':this.form,
           'token':localStorage.getItem('token'),
@@ -233,6 +253,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.xianshi{
+  background:#efefef;
+}
 .gonggao {
   margin: 25px 0;
   text-align: center;
@@ -242,5 +265,9 @@ export default {
 .fasong{
   text-align: center;
   margin-bottom: 30px;
+}
+.html{
+  background: #efefef;
+  width: 100%;
 }
 </style>

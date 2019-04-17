@@ -51,8 +51,14 @@
                 <span slot="title">{{item.name}}</span>
               </div>
               <el-menu-item v-for="term in item.children" :key="term.path" :index="term.path" :class="$route.path==term.path?'is-active':''">
+                <div v-if="term.name!='人员管理'&&term.name!='文档管理'&&term.name!='页面管理'">
                 <i :class="term.iconCls"></i>
                 <span slot="title">{{term.name}}</span>
+                </div>
+                <div v-else-if="quanxian==28||quanxian==60">
+                  <i :class="term.iconCls"></i>
+                <span slot="title">{{term.name}}</span>
+                </div>
               </el-menu-item>
             </el-submenu>
             <el-menu-item v-else-if="item.leaf&&item.children&&item.children.length" :index="item.children[0].path" :class="$route.path==item.children[0].path?'is-active':''">
@@ -88,6 +94,22 @@
   export default {
     name: 'home',
     created() {
+      var userdata = JSON.parse(localStorage.getItem('userdata'));
+      this.quanxian=userdata.quanxian;
+      API.getifzaixian({'token':localStorage.getItem('token')}).then(({
+        data
+      }) => {
+        if(data.MSG=='NO'){
+          this.$message({
+            showClose: true,
+            message: '您已在其他地方登陆，请重新登陆',
+            duration: 10000
+          });
+          this.$router.push({
+                    path: '/login'
+                  });
+        }
+      });
       API.settouxiangUrl({'token':localStorage.getItem('token')}).then(({
         data
       }) => {
@@ -99,6 +121,7 @@
     },
     data() {
       return {
+        quanxian:0,
         touxiangUrl: '',
         logourl: API.base + '/data/logo.png',
         toubanurl: API.base + '/data/touban.jpg',

@@ -20,7 +20,7 @@
                 <el-row>
                   <el-col :span="12" class="tl"><span>我的会议</span></el-col>
                   <el-col :span="12" class="tr">
-                    <el-button type="text" @click="handleGoUrl('/bangongguanli/huiyiguanli')"><i>{{huiyi}}</i></el-button>
+                    <el-button type="text" @click="handleGoUrl('/bangongguanli/huiyiguanli')"><i>{{huiyifaqi}}</i></el-button>
                   </el-col>
                 </el-row>
               </div>
@@ -56,8 +56,8 @@
       <el-col :span="12">
         <el-card class="box-card">
           <el-carousel  class="toubanimg" indicator-position="none" :interval="4000" arrow="always">
-            <el-carousel-item class="toubanimg" v-for="item in toubanimageslist" :key="item.url" style="background:rgba(0,0,0,0)">
-              <img :src="item.url" width="100%" height="100%" />
+            <el-carousel-item class="toubanimg" v-for="item in lunbotulist" :key="item.url" style="background:rgba(0,0,0,0)">
+              <img :src="item.url" @click="showcontent(item.content)" width="100%" height="100%" />
             </el-carousel-item>
           </el-carousel>
         </el-card>
@@ -154,33 +154,24 @@
   export default {
     name: 'Main',
     mounted() {
+      API.getlunbotulist({
+          }).then(({
+          data
+        }) => {
+          this.lunbotulist=data.lunbotulist;
+        });
       this.gengxin();
     },
     data() {
       return {
-        toubanimageslist: [{
-          url: API.base + '/data/1.jpg',
-          text: ''
-        }, {
-          url: API.base + '/data/2.jpg',
-          text: ''
-        }, {
-          url: API.base + '/data/3.jpg',
-          text: ''
-        }, {
-          url: API.base + '/data/4.jpg',
-          text: ''
-        }, {
-          url: API.base + '/data/5.jpg',
-          text: ''
-        }],
+        lunbotulist: [],
         dateList: {
           date: '',
           weekday: '',
           time: ''
         },
         duban:0,
-        huiyi:0,
+        huiyifaqi:0,
         youjian:0,
         yujing:0,
         gonggao: [],
@@ -189,6 +180,14 @@
       };
     },
     methods: {
+      showcontent(content){
+        this.$router.push({
+            path: '/showhtml',
+            query: {
+              'content': content,
+            },
+          });
+      },
       gengxin(){
         API.getshouyeweidu({
           'token': localStorage.getItem('token'),
@@ -196,7 +195,7 @@
           data
         }) => {
           this.duban=data.duban;
-          this.huiyi=data.huiyi;
+          this.huiyifaqi=data.huiyifaqi;
           this.youjian=data.youjian;
           this.yujing=data.yujing;
         });

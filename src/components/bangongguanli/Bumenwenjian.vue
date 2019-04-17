@@ -26,7 +26,7 @@
             <div class="toolbar">
                 <div class="layout clearfix">
                         <div class="action-wrap action-wrap-upload">
-                          <el-upload ref="upload" :limit="20" :on-success="onsuccess" :show-file-list="false" :action="baocunwenjian" :data="upload" multiple>
+                          <el-upload ref="upload" :limit="1000" :on-success="onsuccess" :show-file-list="false" :action="baocunwenjian" :data="upload" multiple>
                         <div class="action-item">
                             <i class="icon icon-upload-s"></i>
                             <span class="act-txt">上传</span>
@@ -70,6 +70,7 @@
                           <a @click="xuanze(index+1)" v-if="index<selectedOptions1.length-1" href="#/bangongguanli/bumenwenjian">{{item.label}} <i class="icon icon-bread-next"></i></a>
                           <a v-else style="font-weight:bold;" href="#/bangongguanli/bumenwenjian">{{item.label}}</a>
                         </li>
+                        <div style="margin-left:500px;">{{files.length}}个项目</div>
                     </ul>
                 </div>
                 <div class="list-wrap">

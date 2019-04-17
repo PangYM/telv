@@ -6,17 +6,14 @@
     <img class="touban" :src="toubanimg" />
     <div class="kuang">
       <div class="shouhang">
-        <h3 class="anniutext">首页</h3>
-        <h3 class="anniutext">集团公司概况</h3>
-        <h3 class="anniutext">党建平台</h3>
-        <h3 class="anniutext">公告通知</h3>
-        <h3 class="anniutext">电子公文</h3>
-        <h3 class="anniutext">政务公开</h3>
+        <div v-for="(item, index) in dengluyelist">
+        <el-button class="anniutext" @click="xuanzeanniu(index)">{{item.title}}</el-button>
+        </div>
       </div>
       <div class="body">
         <el-carousel class="toubanimg" :interval="4000" arrow="always">
-          <el-carousel-item v-for="item in toubanimageslist" :key="item">
-            <img :src="item" width="100%" height="100%" />
+          <el-carousel-item class="toubanimg1" v-for="item in lunbotulist" :key="item">
+            <img :src="item.url" width="100%" height="100%" />
           </el-carousel-item>
         </el-carousel>
         <div class="youbian">
@@ -38,15 +35,14 @@
       </div>
       <div class="body">
         <div class="bodytext">
-          广西铁路旅游传媒集团有限责任公司 成立于2004年04月22日，注册地址在南宁市衡阳西路３０号大院３号楼，主要从事承办旅游专列运营的组织服务，旅游信息咨询服务；火车票代售；代购火车票、汽车票、飞机票、船票及票务咨询；国内货物运输代理；销售：办公用品、家用电器、工艺美术品、金属材料（除国家专控产品外）；门面柜台的销售及租赁；房屋租赁，汽车租赁；保险代理服务（具体项目以审批部门批准为准）；以下项目限分支机构经营：销售：预包装食品；快餐食品、卤味肉制品、粽子、面点、米粉；卷烟、雪茄烟的零售；销售：日用百货、水果、农副土特产品（仅限初级农产品）、保健用品（除国家专控产品）、五金交电（除助力自行车）、矿产品（除国家专控产品）、装饰材料（除危险化学品）、纸张、文化用品、印刷器材；候车场所（茶座）；接待旅客住宿；行李包寄存、保管、打包服务；装卸服务；停车场服务；国内各类广告的设计、制作、代理及发布；出版物批发、零售；包装装潢印刷、其他印刷品印刷；旅行社业务，出境旅游业务；会展服务；住宿服务，餐饮服务；会务服务、健康管理信息咨询、摄影器材销售及摄影服务、体育用品销售、家禽养殖及蛋制品的销售、饲料销售、餐具(除一次性餐具外）销售。。欢迎交流合作！
+          <div stype="width:100%;" v-html="content">
+          </div>
         </div>
         <div class="youbian">
           <div class="lianjietitle">友情链接</div>
-          <div class="lianjiecontent" >中国铁路南宁局集团有限公司</div>
-          <div class="lianjiecontent" >集团公司运输部</div>
-          <div class="lianjiecontent" >集团公司运输部规章系统</div>
-          <div class="lianjiecontent" >集团公司科信部</div>
-          <div class="lianjiecontent">集团公司贷运部</div>
+          <div v-for="item in youqinglist">
+          <div class="lianjiecontent" ><a target="_blank" :href="item.url">{{item.title}}</a></div>
+          </div>
         </div>
       </div>
     </div>
@@ -56,12 +52,36 @@
 <script>
   import * as API from '../api';
   export default {
+    created() {
+      API.getdengluyelist()
+      .then(({
+        data
+      }) => {
+        this.dengluyelist=data.dengluyelist;
+        this.content=this.dengluyelist[0].content;
+      });
+       API.getlunbotulist({
+          }).then(({
+          data
+        }) => {
+          this.lunbotulist=data.lunbotulist;
+        });
+      API.getyouqinglist()
+      .then(({
+        data
+      }) => {
+        this.youqinglist=data.youqinglist;
+      });
+    },
     data() {
       return {
-        toubanimg: API.base + "/data/touban2.png",
-        toubanimageslist: [API.base + '/data/1.jpg', API.base + '/data/2.jpg', API.base + '/data/3.jpg', API.base + '/data/4.jpg', API.base + '/data/5.jpg'],
+        toubanimg: API.base + "/data/login.png",
+        lunbotulist: [],
+        dengluyelist:[],
+        youqinglist:[],
         loading: false,
         xianshi: false,
+        content:'',
         account: {
           username: '',
           pwd: ''
@@ -86,6 +106,9 @@
       };
     },
     methods: {
+      xuanzeanniu(e){
+        this.content=this.dengluyelist[e].content;
+      },
       sleep(ms) {
         return new Promise(resolve =>
           setTimeout(resolve, ms)
@@ -158,7 +181,7 @@
     border-radius: 5px;
     margin-left: 10%;
     width: 80%;
-    background: #c4261a;
+    background: #0066FF;
   }
   
   .shouhang {
@@ -169,14 +192,17 @@
   }
   
   .anniutext {
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: 550;
     border-radius: 5px;
     text-align: center;
-    width: 120px;
-    height: 100%;
-    line-height: 40px;
-    background: #EE9A00;
+    width: 150px;
+    height: 50px;
+    line-height: 25px;
+    background: #ffffff;
     position: relative;
-    color: #ffffff;
+    color: #1c0fc7;
   }
   
   .body {
@@ -186,36 +212,49 @@
   }
   
   .bodytext {
-    position: relative;
-    color: #ffda4d;
-    width: 68%;
+    width: 63%;
     margin-left: 2%;
+    margin-right: 2%;
+    border-radius: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    background: #ffffff;
+    position: relative;
+    color: #000000;
   }
   
   .toubanimg {
-    width: 68%;
+    height: 400px;
+    width: 66%;
     margin-left: 2%;
+    margin-right: 2%;
+  }
+  .toubanimg1 {
+    height: 400px;
+    border-radius: 5px;
   }
   
   .youbian {
     border-radius: 5px;
     border: 1px solid #eaeaea;
-    background: #efefef;
+    background: #ffffff;
     text-align: center;
     margin-left: 2%;
+    margin-right: 2%;
     width: 26%;
   }
   
   .lianjietitle {
     height: 30px;
     line-height: 30px;
-    background: #409EFF;
+    background: #0066FF;
     margin-left: 20px;
     margin-top: 20px;
     margin-right: 20px;
     font-size: 16px;
-    font-weight: 450;
-    color: #efefef;
+    color: #ffffff;
   }
   
   .lianjiecontent {
@@ -227,8 +266,7 @@
     height: 100%;
     padding: 0px 20px 0px 20px;
     .title {
-      background: #409EFF;
-      font-weight: 450;
+      background: #0066FF;
       font-size: 16px;
       height: 30px;
       line-height: 30px;
@@ -244,7 +282,7 @@
   }
   
   .el-carousel__item h3 {
-    color: #409EFF;
+    color: #1166FF;
     font-size: 18px;
     opacity: 0.75;
     line-height: 300px;

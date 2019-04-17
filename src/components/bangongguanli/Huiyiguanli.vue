@@ -99,7 +99,7 @@ export default {
   created() {
       API.getjieshouguanli({
         'token': localStorage.getItem('token'),
-        'doctype': 'huiyi',
+        'doctype': 'huiyifaqi',
         'query':this.query,
       }).then(({
         data
@@ -122,7 +122,7 @@ export default {
     chaxun(){
         API.getjieshouguanli({
         'token': localStorage.getItem('token'),
-        'doctype': 'huiyi',
+        'doctype': 'huiyifaqi',
         'query':this.query,
       }).then(({
         data

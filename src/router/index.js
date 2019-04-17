@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '@/components/Home';
-import Dashboard from '@/components/Dashboard';
 import Main from '@/components/Main';
 
 // 个人事务
@@ -45,13 +44,16 @@ import Yujingguanli from '@/components/bangongguanli/Yujingguanli';
 import Yujing from '@/components/bangongguanli/Yujing';
 
 //系统管理
-import UserChangePwd from '@/components/xitongguanli/changepwd';
-import UserProfile from '@/components/xitongguanli/profile';
-import UserTouxiang from '@/components/xitongguanli/touxiang';
-import UserQianming from '@/components/xitongguanli/qianming';
-import Userguanli from '@/components/xitongguanli/userguanli';
+import UserChangePwd from '@/components/xitongguanli/Changepwd';
+import UserProfile from '@/components/xitongguanli/Profile';
+import UserTouxiang from '@/components/xitongguanli/Touxiang';
+import UserQianming from '@/components/xitongguanli/Qianming';
+import Renyuanguanli from '@/components/xitongguanli/Renyuanguanli';
+import Wendangguanli from '@/components/xitongguanli/Wendangguanli';
+import Yemianguanli from '@/components/xitongguanli/Yemianguanli';
 
 import Drage from '@/components/Drage'
+import Showhtml from '@/components/Showhtml'
 
 // 懒加载方式，当路由被访问的时候才加载对应组件
 const Login = resolve => require(['@/components/Login'], resolve);
@@ -161,7 +163,17 @@ let router = new Router({
           meta: {
             requiresAuth: true
           }
-        },]
+        },
+        {
+          path: '/showhtml',
+          name: 'showhtml',
+          component: Showhtml,
+          menuShow: false,
+          meta: {
+            requiresAuth: true
+          }
+        },
+      ]
     },
     {
       path: '/',
@@ -432,8 +444,8 @@ let router = new Router({
           }
         },
         {
-          path: '/xitongguanli/userguanli',
-          component: Userguanli,
+          path: '/xitongguanli/renyuanguanli',
+          component: Renyuanguanli,
           name: '人员管理',
           menuShow: true,
           meta: {
@@ -441,9 +453,18 @@ let router = new Router({
           }
         },
         {
-          path: '/xitongguanli/bumenguanli',
-          component: Dashboard,
-          name: '部门管理',
+          path: '/xitongguanli/wendangguanli',
+          component: Wendangguanli,
+          name: '文档管理',
+          menuShow: true,
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/xitongguanli/yemianguanli',
+          component: Yemianguanli,
+          name: '页面管理',
           menuShow: true,
           meta: {
             requiresAuth: true

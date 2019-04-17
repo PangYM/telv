@@ -28,23 +28,26 @@
             <el-button type="primary" @click="guanbi(1)">关闭</el-button>
           </div>
           <el-form-item label="交办事项">
-            <el-input :disabled="!xiugai" v-model="form.biaoti" placeholder="请输入交办事项"></el-input>
+            <el-input v-if="xiugai" v-model="form.biaoti" placeholder="请输入交办事项"></el-input>
+            <div v-else class="xianshi">{{form.biaoti}}</div>
           </el-form-item>
           <el-row>
             <el-col :span="12">
               <el-form-item label="督办类型">
-                <el-select :disabled="!xiugai" v-model="form.jinji" placeholder="请选择督办类型" style="width:100%;">
+                <el-select v-if="xiugai" v-model="form.jinji" placeholder="请选择督办类型" style="width:100%;">
                   <el-option label="决议" value="决议"></el-option>
                   <el-option label="命令" value="命令"></el-option>
                   <el-option label="议案" value="议案"></el-option>
                   <el-option label="指示" value="指示"></el-option>
                   <el-option label="通告" value="通告"></el-option>
                 </el-select>
+                <div v-else class="xianshi">{{form.jinji}}</div>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="主办部门">
-                <el-input :disabled="!xiugai" v-model="form.bumen" placeholder="请输入主办部门"></el-input>
+                <el-input v-if="xiugai" v-model="form.bumen" placeholder="请输入主办部门"></el-input>
+                <div v-else class="xianshi">{{form.bumen}}</div>
               </el-form-item>
             </el-col>
           </el-row>
@@ -55,20 +58,22 @@
               stripe
               style="width: 100%">
               <el-table-column
-                prop="date"
+                prop="title"
                 align="center"
                 label="任务描述">
                 <template slot-scope="scope">
-                  <el-input :disabled="!xiugai" v-model="scope.row.title" placeholder="请输入任务描述"></el-input>
+                  <el-input v-if="xiugai" v-model="scope.row.title" placeholder="请输入任务描述"></el-input>
+                  <div v-else class="xianshi">{{scope.row.title}}</div>
                 </template>
               </el-table-column>
               <el-table-column
-                prop="name"
+                prop="puser"
                 label="责任人"
                 align="center"
                 width="300">
                 <template slot-scope="scope">
-                  <el-input :disabled="!xiugai" v-model="scope.row.puser" placeholder="请输入责任人"></el-input>
+                  <el-input v-if="xiugai" v-model="scope.row.puser" placeholder="请输入责任人"></el-input>
+                  <div v-else class="xianshi">{{scope.row.puser}}</div>
                 </template>
               </el-table-column>
               <el-table-column
@@ -84,17 +89,19 @@
             </el-table>
           </el-form-item>
           <el-form-item label="备注" class="editer">
-            <el-input :disabled="!xiugai" type="textarea" v-model="form.mark" :rows="5"></el-input>
+            <el-input v-if="xiugai" type="textarea" v-model="form.mark" :rows="5"></el-input>
+            <div v-else class="xianshi">{{form.mark}}</div>
           </el-form-item>
           <el-form-item label="办结期限">
             <el-date-picker
-              :disabled="!xiugai"
+              v-if="xiugai"
               v-model="form.riqi"
               value-format="yyyy-MM-dd"
               type="date"
               style="width:30%"
               placeholder="请选择办结期限">
             </el-date-picker>
+            <div v-else class="xianshi">{{form.riqi}}</div> 
           </el-form-item>
           <el-form-item label="附件">
             <li v-bind="form.fileList" v-for="item in form.fileList" :key="item.name">
@@ -201,7 +208,7 @@ import * as API from '@/api';
           }
         ],
         beizhu: '',
-        riqi: new Date().toLocaleString().slice(0,10),
+        riqi: this.getToday(),
         shenpihis:{},
         fileList: [],
         fujianList: [],
@@ -209,6 +216,21 @@ import * as API from '@/api';
     };
   },
   methods: {
+    getToday(){
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    },
     piyuejilu(){
         this.xianshi=1-this.xianshi;
         this.shenyuejilu=[];
@@ -319,5 +341,8 @@ import * as API from '@/api';
   text-align: center;
   width: 80%;
   margin-left: 10%;
+}
+.xianshi{
+  background: #efefef;
 }
 </style>

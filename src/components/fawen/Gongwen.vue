@@ -264,9 +264,9 @@
           nigaoren: '',
           qianfadanhao: '',
           qianfaren:'',
-          qianfariqi: new Date().toLocaleString().slice(0,10),
+          qianfariqi: this.getToday(),
           xiaoyinren:'',
-          zhifariqi: new Date().toLocaleString().slice(0,10),
+          zhifariqi: this.getToday(),
           zhifashuoming: '',
           shenpihis:{},
           liuchenglist:[],
@@ -277,6 +277,21 @@
       }
     },
     methods: {
+      getToday(){
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    },
       piyuejilu(){
         this.xianshi=1-this.xianshi;
         this.shenyuejilu=[];

@@ -11,10 +11,10 @@
     <el-col :span="23" class="warpmain">
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="账号">
-          <el-input v-model="form.id" disabled></el-input>
+          <div class="xianshi">{{form.id}}</div>
         </el-form-item>
         <el-form-item prop="name" label="姓名">
-          <el-input v-model="form.name"></el-input>
+          <div class="xianshi">{{form.name}}</div>
         </el-form-item>
         <el-form-item prop="phone" label="手机">
           <el-input v-model="form.phone"></el-input>
@@ -41,7 +41,7 @@
       API.getUser({'token':localStorage.getItem('token')}).then(({
         data
       }) => {
-        this.form = data;
+        this.form = data.userinfo;
       });
     },
     data() {
@@ -58,51 +58,16 @@
     },
     methods: {
       handleSaveProfile() {
-        let that = this;
-        that.$refs.form.validate(valid => {
-          if (valid) {
-            that.loading = true;
-            that.form.token=localStorage.getItem('token');
-            API.setUserProfile(that.form)
-              .then(
-                function(result) {
-                  that.loading = false;
-                  if (result && result.data === 'OK') {
-                    //修改成功
-                    userdata=JSON.parse(localStorage.getItem('userdata'));
-                    userdata.name=that.form.name;
-                    localStorage.setItem('userdata', JSON.stringify(userdata));
-                    that.$message.success({
-                      showClose: true,
-                      message: '修改成功',
-                      duration: 2000
-                    });
-                  } else {
-                    that.$message.error({
-                      showClose: true,
-                      message: result.errmsg,
-                      duration: 2000
-                    });
-                  }
-                },
-                function(err) {
-                  that.loading = false;
-                  that.$message.error({
-                    showClose: true,
-                    message: err.toString(),
-                    duration: 2000
-                  });
-                }
-              )
-              .catch(function(error) {
-                that.loading = false;
-                that.$message.error({
-                  showClose: true,
-                  message: '请求出现异常',
-                  duration: 2000
-                });
+        API.setUserProfile(this.form).then(({
+          data
+        }) => {
+          localStorage.setItem('userdata', JSON.stringify(data));
+            this.$message.success({
+                showClose: true,
+                message: '修改成功！',
+                duration: 2000
               });
-          }
+            return '';
         });
       }
     },
@@ -112,5 +77,8 @@
 <style scoped lang="scss">
   .warpmain {
     margin-top: 20px;
+  }
+  .xianshi{
+    background: #efefef;
   }
 </style>

@@ -15,15 +15,17 @@
       <el-col :span="24">
         <el-form label-width="80px">
           <el-form-item label="会议主题">
-            <el-input :disabled="!xiugai" v-model="form.biaoti" placeholder="请输入会议主题"></el-input>
+            <el-input v-if="xiugai" v-model="form.biaoti" placeholder="请输入会议主题"></el-input>
+            <div v-else class="xianshi">{{form.biaoti}}</div>
           </el-form-item>
           <el-form-item label="会议地点">
-            <el-input :disabled="!xiugai" v-model="form.didian" placeholder="请输入会议地点"></el-input>
+            <el-input v-if="xiugai" v-model="form.didian" placeholder="请输入会议地点"></el-input>
+            <div v-else class="xianshi">{{form.didian}}</div>
           </el-form-item>
           <el-row>
             <el-col :span="10">
               <el-form-item label="发起人">
-                <el-input disabled v-model="form.nigaoren" placeholder=""></el-input>
+                <div class="xianshi">{{form.nigaoren}}</div>
               </el-form-item>
             </el-col>
             <el-col :span="2">
@@ -31,7 +33,7 @@
             </el-col>
             <el-col :span="10">
               <el-form-item label="发起单位">
-                <el-input disabled v-model="form.nigaodanwei" placeholder=""></el-input>
+                <div class="xianshi">{{form.nigaodanwei}}</div>
               </el-form-item>
             </el-col>
           </el-row>
@@ -48,13 +50,14 @@
           <el-row>
             <el-col :span="6">
               <el-form-item label="会议日期">
-                <el-date-picker :disabled="!xiugai"
+                <el-date-picker v-if="xiugai"
                   v-model="form.riqi"
                   value-format="yyyy-MM-dd"
                   type="date"
                   style="width:100%;"
                   placeholder="选择日期">
                 </el-date-picker>
+                <div v-else class="xianshi">{{form.riqi}}</div>
               </el-form-item>
             </el-col>
             <el-col :span="2">
@@ -63,7 +66,7 @@
             <el-col :span="6">
               <el-form-item label="开始时间">
                 <el-time-select
-                  :disabled="!xiugai"
+                  v-if="xiugai"
                   placeholder="起始时间"
                   v-model="form.starttime"
                   :picker-options="{
@@ -72,6 +75,7 @@
                     end: '20:00'
                   }">
                 </el-time-select>
+                <div v-else class="xianshi">{{form.starttime}}</div>
               </el-form-item>
             </el-col>
             <el-col :span="2">
@@ -80,7 +84,7 @@
             <el-col :span="6">
               <el-form-item label="结束时间">
                 <el-time-select 
-                  :disabled="!xiugai"
+                  v-if="xiugai"
                   placeholder="结束时间"
                   v-model="form.endtime"
                   :picker-options="{
@@ -89,11 +93,26 @@
                     end: '22:00'
                   }">
                 </el-time-select>
+                <div v-else class="xianshi">{{form.endtime}}</div>
               </el-form-item>
             </el-col>
           </el-row>
           <el-form-item label="备注">
-            <el-input :disabled="!xiugai" type="textarea" v-model="form.beizhu" :rows="5"></el-input>
+            <el-input v-if="xiugai" type="textarea" v-model="form.beizhu" :rows="5"></el-input>
+            <div v-else class="xianshi">{{form.beizhu}}</div>
+          </el-form-item>
+          <el-form-item v-if="xiugai==0" label="附件">
+          <li v-bind="form.fileList" v-for="item in form.fileList" :key="item.name">
+              <a target="_blank" :href="baseurl+'/data/fujian/'+form.wendangid+'/'+item.name">
+                                                                              {{item.name}}
+                                                                              </a>
+          </li>
+          </el-form-item>
+          <el-form-item v-if="xiugai" label="附件">
+      <el-upload drag ref="upload" :action="baocunfujian" :data="upload" :on-change="handlechange" :on-remove="handleremove" :file-list="form.fujianList" multiple>
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将附件拖到此处，或<em>点击上传</em></div>
+      </el-upload>
           </el-form-item>
           <el-form-item>
             <el-button v-if="xiugai" type="primary" @click="onSubmit">立即发起</el-button>
@@ -122,6 +141,14 @@ export default {
         }) => {
           this.form = data.data;
           this.xiugai = 0;
+          this.upload.wendangid = this.form.wendangid;
+          this.form.fujianList = [];
+          for (var i = 0; i < this.form.fileList.length; ++i) {
+            this.form.fujianList.push({
+              'name': this.form.fileList[i].name,
+              'url': this.baseurl + '/data/fujian/' + this.form.wendangid + '/' + this.form.fileList[i].name
+            });
+          }
         });
   
       } else {
@@ -132,6 +159,7 @@ export default {
           this.form.nigaoid = userdata.id;
           this.form.nigaoren = userdata.name;
           this.form.nigaodanwei = userdata.group;
+          this.upload.wendangid = this.form.wendangid;
         });
       }
   },
@@ -143,8 +171,11 @@ export default {
       mode: "transfer",
       fromData:[],
       toData:[],
+      baseurl: API.base,
+      baocunfujian: API.baseurl + 'baocunfujian',
+      upload: {},
       form: {
-        doctype:'huiyi',
+        doctype:'huiyifaqi',
         zhuangtai:'',
         wendangid:'',
         biaoti: '',
@@ -152,14 +183,32 @@ export default {
         nigaoid:'',
         nigaoren:'',
         userlist: [],
-        riqi: new Date().toLocaleString().slice(0,10),
+        riqi: this.getToday(),
         starttime:'08:00',
         endtime:'08:00',
         beizhu:'',
+        shenpihis:{},
+        fileList: [],
+        fujianList: [],
       }
     };
   },
   methods: {
+    getToday(){
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    },
     guanbi(){
       this.$router.go(-1);
     },
@@ -204,7 +253,23 @@ export default {
             });
           this.$router.go(-1);
         });
-    }
+    },
+    handlechange(file, fileList) {
+      this.form.fileList = [];
+      for (var i = 0; i < fileList.length; ++i) {
+        this.form.fileList.push({
+          'name': fileList[i].name
+        });
+      }
+    },
+    handleremove(file, fileList) {
+      this.form.fileList = [];
+      for (var i = 0; i < fileList.length; ++i) {
+        this.form.fileList.push({
+          'name': fileList[i].name
+        });
+      }
+    },
   }
 };
 </script>
@@ -216,5 +281,8 @@ export default {
   margin-top: 30px;
   width: 80%;
   margin-left: 10%;
+}
+.xianshi{
+  background: #efefef;
 }
 </style>
