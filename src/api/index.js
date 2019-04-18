@@ -251,7 +251,17 @@ function getlunbotulist(data){
 function setlunbotulist(data){
     return instance.post(baseurl+'setlunbotulist',data);
 }
+//返回上一级
+function fanhui(data){
+    return instance.post(baseurl+'fanhui',data);
+}
+//撤回
+function chehui(data){
+    return instance.post(baseurl+'chehui',data);
+}
 export{
+    chehui,
+    fanhui,
     setlunbotulist,
     getlunbotulist,
     setdengluyelist,

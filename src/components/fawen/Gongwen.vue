@@ -309,8 +309,8 @@
           this.form.qianyuelist=data.qianyuelist;
           this.$message.success({
                 showClose: true,
-                message: '已阅！',
-                duration: 2000
+                message: '已阅成功！',
+                duration: 1000
               });
           this.yuedu=0;
         });
@@ -336,7 +336,7 @@
           this.$message({
             showClose: true,
             message: '请选择发送人',
-            duration: 2000
+            duration: 1000
           });
           return "";
         }
@@ -356,7 +356,7 @@
             this.$message.success({
               showClose: true,
               message: '发送成功',
-              duration: 2000
+              duration: 1000
             });
             if(e)
               this.$router.push({

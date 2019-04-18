@@ -15,9 +15,12 @@
     <div class="dayin">
       <el-button type="primary" v-if="xiugai" :loading="loading" @click="querenfasong(0)">保存</el-button>
       <el-button type="primary" v-if="tuiwen" @click="querentuiwen">退文至发起人</el-button>
+      <el-button type="primary" v-if="tuiwen" @click="querenfanhui">退回上一级</el-button>
+      <el-button type="primary" v-if="quanxian<=20" @click="querenchehui">撤回</el-button>
       <el-button type="primary" v-if="pishi" @click="querenshenpi">审批</el-button>
       <el-button type="primary" v-else @click="querensend">发送</el-button>
-      <el-button type="primary" v-if="yuedu" @click="querenyuedu">办理</el-button>
+      <el-button type="primary" v-if="yuedu&&form.zhuangtai!='退文'" @click="querenyuedu">办理</el-button>
+      <el-button type="primary" v-if="yuedu&&form.zhuangtai=='退文'" @click="querenyuedu">已阅</el-button>
       <el-button type="primary" v-if="!xiugai" @click="piyuejilu">查看批阅记录</el-button>
       <el-button type="primary" v-print="'#jieshou'">打印</el-button>
       <el-button type="primary" @click="guanbi(0)">关闭</el-button>
@@ -106,7 +109,7 @@
             拟办意见
           </div>
           <div class="kuang42">
-            <el-input v-if="hegao" size="medium" type="textarea" rows="4" v-model="form.nibanyijian.yijian" placeholder=""></el-input>
+            <el-input v-if="hegao" size="medium" type="textarea" rows="3" v-model="form.nibanyijian.yijian" placeholder=""></el-input>
             <a v-else style="color:#000000">{{form.nibanyijian.yijian}} {{form.nibanyijian.name}} {{form.nibanyijian.time}}</a>
           </div>
         </div>
@@ -120,7 +123,7 @@
                 {{item.yijian}} <img class="qianming" :src="getImgUrl(item.imageurl)"/> {{item.time}}
                 </a>
             </li>
-            <el-input v-if="pishi" size="medium" v-model="form.lingdaopishi" placeholder=""></el-input>
+            <el-input v-if="pishi" size="medium" v-model="lingdaopishi" placeholder=""></el-input>
           </div>
         </div>
         <div class="kuang4">
@@ -189,6 +192,7 @@ import * as API from '@/api';
     },
     created() {
       var userdata = JSON.parse(localStorage.getItem('userdata'));
+      this.quanxian=userdata.quanxian;
       if (this.$route.query.wendangid) {
         API.getwendangid({
           'token': localStorage.getItem('token'),
@@ -227,12 +231,14 @@ import * as API from '@/api';
     },
     data() {
       return {
+        quanxian:50,
         xianshi:1,
         xiugai: 1,
         hegao:0,
         tuiwen: 0,
         pishi:0,
         yuedu:0,
+        lingdaopishi:'',
         title: ['未选列表', '已选列表'],
         mode: "transfer",
         istongxinlu: 0,
@@ -264,7 +270,6 @@ import * as API from '@/api';
             name:'',
             time:'',
           },
-          lingdaopishi:'',
           lingdaopishilist:[],
           qianyuelist:[],
           fileList: [],
@@ -273,6 +278,55 @@ import * as API from '@/api';
       };
     },
     methods: {
+      querenfanhui(){
+        this.$confirm('确认退回上一级?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.hegao = 0;
+          this.tuiwen = 0;
+          this.xiugai = 0;
+          this.pishi = 0;
+          API.fanhui({
+            'token': localStorage.getItem('token'),
+            'wendangid': this.form.wendangid,
+            'nibanyijian':this.form.nibanyijian,
+            'lingdaopishi':this.lingdaopishi,
+            'pishi':this.pishi,
+          }).then(({
+            data
+          }) => {});
+          this.$message({
+            type: 'success',
+            message: '退回成功!',
+            duration: 1000,
+          });
+        }).catch(() => {});
+      },
+      querenchehui(){
+        this.$confirm('确认撤回?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.hegao = 0;
+          this.tuiwen = 0;
+          this.xiugai = 0;
+          this.pishi = 0;
+          API.chehui({
+            'token': localStorage.getItem('token'),
+            'wendangid': this.form.wendangid,
+          }).then(({
+            data
+          }) => {});
+          this.$message({
+            type: 'success',
+            message: '撤回成功!',
+            duration: 1000,
+          });
+        }).catch(() => {});
+      },
       getToday(){
         var date = new Date();
         var seperator1 = "-";
@@ -301,8 +355,8 @@ import * as API from '@/api';
           this.form.qianyuelist=data.qianyuelist;
           this.$message.success({
                 showClose: true,
-                message: '办理成功！',
-                duration: 2000
+                message: this.form.zhuangtai!='退文'?'办理成功！':'已阅成功！',
+                duration: 1000
               });
           this.yuedu=0;
         });
@@ -339,12 +393,14 @@ import * as API from '@/api';
           API.tuiwen({
             'token': localStorage.getItem('token'),
             'wendangid': this.form.wendangid,
+            'nibanyijian':this.form.nibanyijian,
           }).then(({
             data
           }) => {});
           this.$message({
             type: 'success',
-            message: '退文成功!'
+            message: '退文成功!',
+            duration: 1000,
           });
         }).catch(() => {});
       },
@@ -358,7 +414,7 @@ import * as API from '@/api';
             'token': localStorage.getItem('token'),
             'wendangid':this.form.wendangid,
             'pishi':this.pishi,
-            'lingdaopishi':this.form.lingdaopishi,
+            'lingdaopishi':this.lingdaopishi,
           }).then(({
             data
           }) => {
@@ -368,7 +424,7 @@ import * as API from '@/api';
           this.$message.success({
                 showClose: true,
                 message: '审批成功',
-                duration: 2000
+                duration: 1000
               });
         })
       },
@@ -377,7 +433,7 @@ import * as API from '@/api';
           this.$message({
             showClose: true,
             message: '请选择发送人',
-            duration: 2000
+            duration: 1000
           });
           return "";
         }
@@ -396,7 +452,7 @@ import * as API from '@/api';
             this.$message.success({
               showClose: true,
               message: '发送成功',
-              duration: 2000
+              duration: 1000
             });
             if(e)
               this.$router.push({

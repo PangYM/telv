@@ -39,7 +39,7 @@
       <el-input class="changyongzu" v-model="changyongzu" placeholder="请输入常用组名字"></el-input>
       <tree-transfer class="tongxinlu" :title="title" :from_data='fromData' :to_data='toData' :defaultProps="{label:'label'}" @addBtn='add' @removeBtn='remove' :mode='mode' width="50%" height="500px" filter>
       </tree-transfer>
-      <el-button type="primary" @click="querenfasong()">确定发送</el-button>
+      <el-button type="primary" @click="querenfasong()">确定新建</el-button>
       <el-button type="primary" @click="guanbi(1)">关闭</el-button>
       </div>
       </div>
