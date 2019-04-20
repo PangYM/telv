@@ -50,7 +50,7 @@
     components: {
       VueEditor
     },
-    created() {
+    mounted() {
       API.getfasongguanli({
         'token': localStorage.getItem('token'),
         'doctype': 'youjian',

@@ -48,24 +48,24 @@
               <el-form-item label="开始时间">
                 <el-date-picker v-if="xiugai"
                   value-format="yyyy-MM-dd"
-                  v-model="form.starttime"
+                  v-model="form.kaishitime"
                   type="date"
                   style="width:100%;"
                   placeholder="开始时间">
                 </el-date-picker>
-                <div v-else class="xianshi">{{form.starttime}}</div>
+                <div v-else class="xianshi">{{form.kaishitime}}</div>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="结束时间">
                 <el-date-picker v-if="xiugai"
                   value-format="yyyy-MM-dd"
-                  v-model="form.endtime"
+                  v-model="form.jieshutime"
                   type="date"
                   style="width:100%;"
                   placeholder="结束时间">
                 </el-date-picker>
-                <div v-else class="xianshi">{{form.endtime}}</div>
+                <div v-else class="xianshi">{{form.jieshutime}}</div>
               </el-form-item>
             </el-col>
           </el-row>
@@ -103,7 +103,7 @@
 <script>
 import * as API from '@/api';
 export default {
-  created() {
+  mounted() {
     var userdata = JSON.parse(localStorage.getItem('userdata'));
     if (this.$route.query.wendangid) {
         API.getmindocid({
@@ -151,8 +151,8 @@ export default {
         nigaoren:'',
         nigaodanwei:'',
         jinji:'',
-        starttime: this.getToday(),
-        endtime: this.getToday(),
+        kaishitime: this.getToday(),
+        jieshutime: this.getToday(),
         beizhu: '',
         shenpihis:{},
         fileList: [],

@@ -71,7 +71,7 @@
     components: {
       VueEditor
     },
-    created() {
+    mounted() {
       API.getshouwenguanli({
         'token':localStorage.getItem('token'),
         'doctype':'shouwen',

@@ -143,7 +143,7 @@ import * as API from '@/api';
       VueEditor,
       treeTransfer
     },
-    created() {
+    mounted() {
       var userdata = JSON.parse(localStorage.getItem('userdata'));
       if (this.$route.query.wendangid) {
         API.getmindocid({
@@ -177,6 +177,12 @@ import * as API from '@/api';
             this.hegao=1;
         });
       }
+      API.gettongxinlu({'token': localStorage.getItem('token')})
+        .then(({
+          data
+        }) => {
+          this.fromData = data.tongxinlu;
+        });
     },
   data() {
     return {
@@ -190,14 +196,12 @@ import * as API from '@/api';
       fromData:[],
       toData:[],
       baseurl: API.base,
-      loading: false,
       baocunfujian: API.baseurl + 'baocunfujian',
       upload: {},
       form: {
         doctype:'duban',
         wendangid:'',
         zhuangtai:'未完成',
-        starttime:'',
         biaoti: '',
         jinji: '',
         bumen:'',
@@ -286,7 +290,6 @@ import * as API from '@/api';
           });
           return "";
         }
-        this.loading = true;
         var fasongdata={
           'toData': this.toData,
           'wendang':this.form,
@@ -296,7 +299,6 @@ import * as API from '@/api';
           .then(({
             data
           }) => {
-            this.loading=false;
             this.$message.success({
               showClose: true,
               message: '发送成功',
@@ -316,12 +318,6 @@ import * as API from '@/api';
       },
     querensend() {
       this.istongxinlu = 1;
-      API.gettongxinlu({'token': localStorage.getItem('token')})
-        .then(({
-          data
-        }) => {
-          this.fromData = data.tongxinlu;
-        });
     },
     handleAddTask() {
       this.form.tasks.push({

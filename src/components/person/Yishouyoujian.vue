@@ -53,7 +53,7 @@
     components: {
       VueEditor
     },
-    created() {
+    mounted() {
       API.getjieshouguanli({
         'token': localStorage.getItem('token'),
         'doctype': 'youjian',

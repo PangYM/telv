@@ -93,7 +93,7 @@
 <script>
 import * as API from '@/api';
 export default {
-  created() {
+  mounted() {
       API.getjieshouguanli({
         'token': localStorage.getItem('token'),
         'doctype': 'duban',

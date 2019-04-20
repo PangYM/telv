@@ -57,7 +57,7 @@
         <el-card class="box-card">
           <el-carousel  class="toubanimg" indicator-position="none" :interval="4000" arrow="always">
             <el-carousel-item class="toubanimg" v-for="item in lunbotulist" :key="item.url" style="background:rgba(0,0,0,0)">
-              <img :src="item.url" @click="showcontent(item.content)" width="100%" height="100%" />
+              <img :src="base+item.url" @click="showcontent(item.content)" width="100%" height="100%" />
             </el-carousel-item>
           </el-carousel>
         </el-card>
@@ -154,22 +154,18 @@
   export default {
     name: 'Main',
     mounted() {
-      API.getlunbotulist({
-          }).then(({
-          data
-        }) => {
-          this.lunbotulist=data.lunbotulist;
-        });
-      this.gengxin();
+      this.dono();
     },
     data() {
       return {
+        ifnew:1,
         lunbotulist: [],
         dateList: {
           date: '',
           weekday: '',
           time: ''
         },
+        base:API.base,
         duban:0,
         huiyifaqi:0,
         youjian:0,
@@ -180,6 +176,10 @@
       };
     },
     methods: {
+      dono(){
+        let _this=this;
+        setTimeout(_this.gengxin, 1000);
+      },
       showcontent(content){
         this.$router.push({
             path: '/showhtml',
@@ -189,6 +189,12 @@
           });
       },
       gengxin(){
+        API.getlunbotulist({
+          }).then(({
+          data
+        }) => {
+          this.lunbotulist=data.lunbotulist;
+        });
         API.getshouyeweidu({
           'token': localStorage.getItem('token'),
         }).then(({
@@ -226,7 +232,8 @@
         }) => {
           this.daibanshouwen=data.dataTable.slice(0,5);
         });
-        setTimeout(this.showTime, 10000);
+        let that=this;
+        setTimeout(that.gengxin, 30000);
       },
       handleEdit(e,row){
         if(e==0){

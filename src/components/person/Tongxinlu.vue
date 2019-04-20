@@ -41,7 +41,7 @@
     components: {
       VueEditor
     },
-    created() {
+    mounted() {
       API.getusers({
         'query':this.query,
       }).then(({

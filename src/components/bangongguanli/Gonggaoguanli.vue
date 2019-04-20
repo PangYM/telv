@@ -55,7 +55,7 @@
     components: {
       VueEditor
     },
-    created() {
+    mounted() {
       API.getgonggaoguanli({
         'token': localStorage.getItem('token'),
         'doctype': 'gonggao',

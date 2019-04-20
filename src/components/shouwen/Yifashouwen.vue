@@ -65,7 +65,7 @@
     components: {
       VueEditor
     },
-    created() {
+    mounted() {
       API.getfawenguanli({
         'token':localStorage.getItem('token'),
         'doctype':'shouwen',

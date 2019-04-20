@@ -84,7 +84,7 @@ export default {
     VueEditor,
     treeTransfer
   },
-  created() {
+  mounted() {
       var userdata = JSON.parse(localStorage.getItem('userdata'));
       if (this.$route.query.wendangid) {
         API.getmindocid({

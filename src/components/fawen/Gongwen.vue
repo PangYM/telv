@@ -13,9 +13,9 @@
     <!--list-->
     <div v-if="xianshi">
     <div class="dayin">
-      <el-button type="primary" v-if="xiugai" :loading="loading" @click="querenfasong(0)">保存</el-button>
+      <el-button type="primary" v-if="xiugai" @click="querenfasong(0)">保存</el-button>
       <el-button type="primary" v-if="yuedu" @click="querenyuedu">已阅</el-button>
-      <el-button type="primary" @click="querensend">发送</el-button>
+      <el-button type="primary" :loading="loading" @click="querensend">发送</el-button>
       <el-button type="primary" v-if="!xiugai" @click="piyuejilu">查看批阅记录</el-button>
       <el-button type="primary" v-print="'#gongwen'">打印</el-button>
       <el-button type="primary" @click="guanbi(0)">关闭</el-button>
@@ -202,7 +202,7 @@
       VueEditor,
       treeTransfer
     },
-    created() {
+    mounted() {
       var userdata = JSON.parse(localStorage.getItem('userdata'));
       if (this.$route.query.wendangid) {
         API.getwendangid({
@@ -233,6 +233,12 @@
           this.form.nigaoren = userdata.name;
         });
       }
+      API.gettongxinlu({'token': localStorage.getItem('token')})
+          .then(({
+            data
+          }) => {
+            this.fromData = data.tongxinlu;
+          });
     },
     data() {
       return {
@@ -317,12 +323,12 @@
       },
       querensend() {
         this.istongxinlu = 1;
-        API.gettongxinlu({'token': localStorage.getItem('token')})
-          .then(({
-            data
-          }) => {
-            this.fromData = data.tongxinlu;
-          });
+        if(this.yuedu){
+          this.querenyuedu();
+        }
+        if(this.pishi){
+          this.querenshenpi();
+        }
       },
       guanbi(e) {
         if (e == 0) {
@@ -359,9 +365,7 @@
               duration: 1000
             });
             if(e)
-              this.$router.push({
-            path: '/main',
-          });
+              this.$router.go(-1);
           });
       },
       add(fromData, toData, obj) {

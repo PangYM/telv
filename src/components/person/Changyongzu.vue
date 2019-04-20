@@ -56,7 +56,7 @@ export default {
     VueEditor,
     treeTransfer
   },
-  created() {
+  mounted() {
       API.getchangyongzu({'token':localStorage.getItem('token')})
           .then(({
             data

@@ -27,8 +27,6 @@
   export default {
     components: {
     },
-    created() {
-    },
     data() {
       return {
       };

@@ -41,7 +41,7 @@
     components: {
       VueEditor
     },
-    created() {
+    mounted() {
       let that = this;
       API.getmindoccaogao({
         'token': localStorage.getItem('token'),

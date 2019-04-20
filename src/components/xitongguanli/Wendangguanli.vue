@@ -49,7 +49,7 @@
     components: {
       VueEditor
     },
-    created() {
+    mounted() {
       var userdata = JSON.parse(localStorage.getItem('userdata'));
       this.quanxian=userdata.quanxian;
     },
@@ -62,6 +62,11 @@
     },
     methods: {
       handleDelete(index, row){
+        this.$confirm('确认删除文档?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
         API.shanchuwendang({
           'token':localStorage.getItem('token'),
           'wendangid':row.wendangid,
@@ -76,6 +81,7 @@
             });
             this.dataTable=[];
           }
+        });
         });
       },
       chaxun(){

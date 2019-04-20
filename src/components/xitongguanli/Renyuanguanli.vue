@@ -153,9 +153,16 @@ export default {
     VueEditor,
     treeTransfer
   },
-  created() {
+  mounted() {
     var userdata = JSON.parse(localStorage.getItem('userdata'));
     this.quanxian=userdata.quanxian;
+    API.gettongxinlu({'token':localStorage.getItem('token'),'isguanliyuan':1})
+          .then(({
+            data
+          }) => {
+            this.xinjianfrom=data.tongxinlu;
+            this.xinjianto=[];
+          });
     },
   data() {
     return {
@@ -264,13 +271,6 @@ export default {
       this.shanchu=1;
       this.xinjian=0;
       this.piliang=0;
-      API.gettongxinlu({'token':localStorage.getItem('token'),'isguanliyuan':1})
-          .then(({
-            data
-          }) => {
-            this.shanchufrom=data.tongxinlu;
-            this.shanchuto=[];
-          });
     },
     xinzengxinzeng(){
       this.xiugai=0;
@@ -285,13 +285,6 @@ export default {
       this.shanchu=0;
       this.xinjian=1;
       this.piliang=0;
-      API.gettongxinlu({'token':localStorage.getItem('token'),'isguanliyuan':1})
-          .then(({
-            data
-          }) => {
-            this.xinjianfrom=data.tongxinlu;
-            this.xinjianto=[];
-          });
     },
     piliangpiliang(){
       this.xiugai=0;

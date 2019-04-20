@@ -1,6 +1,6 @@
 <template>
   <el-row class="warp">
-    <el-col :span="24" class="warp-breadcrum" :loading="loading">
+    <el-col :span="24" class="warp-breadcrum">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }"><b>首页</b></el-breadcrumb-item>
         <el-breadcrumb-item>设置</el-breadcrumb-item>
@@ -37,7 +37,7 @@
   import * as API from '@/api';
   
   export default {
-    created() {
+    mounted() {
       API.getUser({'token':localStorage.getItem('token')}).then(({
         data
       }) => {
@@ -46,7 +46,6 @@
     },
     data() {
       return {
-        loading: false,
         form: {
           id: '',
           name: '',

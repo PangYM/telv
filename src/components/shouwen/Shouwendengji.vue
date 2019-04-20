@@ -13,12 +13,12 @@
     <!--list-->
     <div v-if="xianshi">
     <div class="dayin">
-      <el-button type="primary" v-if="xiugai" :loading="loading" @click="querenfasong(0)">保存</el-button>
+      <el-button type="primary" v-if="xiugai" @click="querenfasong(0)">保存</el-button>
       <el-button type="primary" v-if="tuiwen" @click="querentuiwen">退文至发起人</el-button>
       <el-button type="primary" v-if="tuiwen" @click="querenfanhui">退回上一级</el-button>
-      <el-button type="primary" v-if="quanxian<=20" @click="querenchehui">撤回</el-button>
+      <el-button type="primary" v-if="quanxian<=20&&yuedu" @click="querenchehui">撤回</el-button>
       <el-button type="primary" v-if="pishi" @click="querenshenpi">审批</el-button>
-      <el-button type="primary" v-else @click="querensend">发送</el-button>
+      <el-button type="primary" :loading="loading" @click="querensend">发送</el-button>
       <el-button type="primary" v-if="yuedu&&form.zhuangtai!='退文'" @click="querenyuedu">办理</el-button>
       <el-button type="primary" v-if="yuedu&&form.zhuangtai=='退文'" @click="querenyuedu">已阅</el-button>
       <el-button type="primary" v-if="!xiugai" @click="piyuejilu">查看批阅记录</el-button>
@@ -132,8 +132,9 @@
           </div>
           <div class="kuang42">
             <li v-bind="form.qianyuelist" v-for="item in form.qianyuelist" :key="item.name">
-              <a style="color:#000000">{{item.name}} {{item.time}}</a>
+              <a style="color:#000000">{{item.name}} {{item.time}} {{item.yijian}}</a>
               </li>
+              <el-input v-if="yuedu" size="medium" v-model="banli" placeholder=""></el-input>
           </div>
         </div>
         <div class="fujian">
@@ -190,7 +191,7 @@ import * as API from '@/api';
       VueEditor,
       treeTransfer
     },
-    created() {
+    mounted() {
       var userdata = JSON.parse(localStorage.getItem('userdata'));
       this.quanxian=userdata.quanxian;
       if (this.$route.query.wendangid) {
@@ -228,6 +229,12 @@ import * as API from '@/api';
             this.hegao=1;
         });
       }
+      API.gettongxinlu({'token': localStorage.getItem('token')})
+          .then(({
+            data
+          }) => {
+            this.fromData = data.tongxinlu;
+          });
     },
     data() {
       return {
@@ -239,6 +246,7 @@ import * as API from '@/api';
         pishi:0,
         yuedu:0,
         lingdaopishi:'',
+        banli:'',
         title: ['未选列表', '已选列表'],
         mode: "transfer",
         istongxinlu: 0,
@@ -348,7 +356,8 @@ import * as API from '@/api';
       querenyuedu(){
         API.yiyue({
           'token': localStorage.getItem('token'),
-          'wendangid': this.form.wendangid
+          'wendangid': this.form.wendangid,
+          'banli':this.banli,
         }).then(({
           data
         }) => {
@@ -366,12 +375,12 @@ import * as API from '@/api';
       },
       querensend() {
         this.istongxinlu = 1;
-        API.gettongxinlu({'token': localStorage.getItem('token')})
-          .then(({
-            data
-          }) => {
-            this.fromData = data.tongxinlu;
-          });
+        if(this.yuedu){
+          this.querenyuedu();
+        }
+        if(this.pishi){
+          this.querenshenpi();
+        }
       },
       guanbi(e) {
         if (e == 0) {
@@ -405,28 +414,22 @@ import * as API from '@/api';
         }).catch(() => {});
       },
       querenshenpi(){
-        this.$confirm('确认审批?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-        API.pishi({
-            'token': localStorage.getItem('token'),
-            'wendangid':this.form.wendangid,
-            'pishi':this.pishi,
-            'lingdaopishi':this.lingdaopishi,
-          }).then(({
-            data
-          }) => {
-            this.pishi=0;
-            this.form.lingdaopishilist=data.lingdaopishilist;
-          });
-          this.$message.success({
-                showClose: true,
-                message: '审批成功',
-                duration: 1000
-              });
-        })
+      API.pishi({
+          'token': localStorage.getItem('token'),
+          'wendangid':this.form.wendangid,
+          'pishi':this.pishi,
+          'lingdaopishi':this.lingdaopishi,
+        }).then(({
+          data
+        }) => {
+          this.pishi=0;
+          this.form.lingdaopishilist=data.lingdaopishilist;
+        });
+        this.$message.success({
+              showClose: true,
+              message: '审批成功',
+              duration: 1000
+            });
       },
       querenfasong(e) {
         if(e&&this.toData.length==0){
@@ -455,9 +458,7 @@ import * as API from '@/api';
               duration: 1000
             });
             if(e)
-              this.$router.push({
-            path: '/main',
-          });
+              this.$router.go(-1);
           });
       },
       add(fromData, toData, obj) {

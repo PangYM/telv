@@ -67,15 +67,15 @@
               <el-form-item label="开始时间">
                 <el-time-select
                   v-if="xiugai"
-                  placeholder="起始时间"
-                  v-model="form.starttime"
+                  placeholder="开始时间"
+                  v-model="form.kaishitime"
                   :picker-options="{
                     start: '08:00',
                     step: '00:15',
                     end: '20:00'
                   }">
                 </el-time-select>
-                <div v-else class="xianshi">{{form.starttime}}</div>
+                <div v-else class="xianshi">{{form.kaishitime}}</div>
               </el-form-item>
             </el-col>
             <el-col :span="2">
@@ -86,14 +86,14 @@
                 <el-time-select 
                   v-if="xiugai"
                   placeholder="结束时间"
-                  v-model="form.endtime"
+                  v-model="form.jieshutime"
                   :picker-options="{
                     start: '08:00',
                     step: '00:15',
                     end: '22:00'
                   }">
                 </el-time-select>
-                <div v-else class="xianshi">{{form.endtime}}</div>
+                <div v-else class="xianshi">{{form.jieshutime}}</div>
               </el-form-item>
             </el-col>
           </el-row>
@@ -130,7 +130,7 @@ export default {
   components: {
     treeTransfer
   },
-  created() {
+  mounted() {
     var userdata = JSON.parse(localStorage.getItem('userdata'));
     if (this.$route.query.wendangid) {
         API.getmindocid({
@@ -162,6 +162,12 @@ export default {
           this.upload.wendangid = this.form.wendangid;
         });
       }
+      API.gettongxinlu({'token': localStorage.getItem('token')})
+          .then(({
+            data
+          }) => {
+            this.fromData = data.tongxinlu;
+          });
   },
   data() {
     return {
@@ -184,8 +190,8 @@ export default {
         nigaoren:'',
         userlist: [],
         riqi: this.getToday(),
-        starttime:'08:00',
-        endtime:'08:00',
+        kaishitime:'08:00',
+        jieshutime:'08:00',
         beizhu:'',
         shenpihis:{},
         fileList: [],
@@ -214,12 +220,6 @@ export default {
     },
     querensend() {
         this.istongxinlu = 1;
-        API.gettongxinlu({'token': localStorage.getItem('token')})
-          .then(({
-            data
-          }) => {
-            this.fromData = data.tongxinlu;
-          });
       },
     add(fromData, toData, obj) {
         this.fromData = fromData;

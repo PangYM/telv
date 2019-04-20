@@ -70,7 +70,7 @@
           label="图片名称"
           width="150">
           <template slot-scope="scope">
-            <a v-if="scope.row.url.length" :href="scope.row.url">{{scope.row.url}}</a>
+            <a v-if="scope.row.url.length" :href="scope.row.url">{{base+scope.row.url}}</a>
             <div>
               <el-upload
                 class="upload-demo"
@@ -160,7 +160,7 @@ export default {
   components: {
     VueEditor,
   },
-  created() {
+  mounted() {
     var userdata = JSON.parse(localStorage.getItem('userdata'));
     this.quanxian=userdata.quanxian;
     },
@@ -171,6 +171,7 @@ export default {
       youqing:0,
       dengluye:0,
       userid:'',
+      base:API.base,
       lunbotuUrl:API.baseurl+'lunbotuUrl',
       uploadlist:[{'token':localStorage.getItem('token'),'xuhao':0},{'token':localStorage.getItem('token'),'xuhao':1},{'token':localStorage.getItem('token'),'xuhao':2},{'token':localStorage.getItem('token'),'xuhao':3},{'token':localStorage.getItem('token'),'xuhao':4}],
       dengluyelist:[{
@@ -191,7 +192,7 @@ export default {
   },
   methods: {
     onsuccess(response, file, fileList){
-      this.lunbotulist[response.xuhao].url=API.base+'/data/'+response.lunbotuUrl;
+      this.lunbotulist[response.xuhao].url='/data/'+response.lunbotuUrl;
     },
     beforeAvatarUpload(file) {
         const isJPG = (file.type === 'image/jpeg'||file.type === 'image/png');

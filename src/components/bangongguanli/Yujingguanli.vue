@@ -108,7 +108,7 @@
 <script>
 import * as API from '@/api';
 export default {
-  created() {
+  mounted() {
       API.getfasongguanli({
         'token': localStorage.getItem('token'),
         'doctype': 'yujing',

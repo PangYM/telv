@@ -71,7 +71,7 @@
     components: {
       VueEditor
     },
-    created() {
+    mounted() {
       API.getdaibanfawen({
         'token': localStorage.getItem('token'),
         'doctype':'fawen',

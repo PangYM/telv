@@ -44,9 +44,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item v-if="form.starttime.length" label="发起时间">
-                <el-input v-if="xiugai" :disabled="!xiugai" v-model="form.starttime" placeholder=""></el-input>
-                <div v-else class="xianshi">{{form.starttime}}</div>
+              <el-form-item v-if="form.faqitime.length" label="发起时间">
+                <el-input v-if="xiugai" :disabled="!xiugai" v-model="form.faqitime" placeholder=""></el-input>
+                <div v-else class="xianshi">{{form.faqitime}}</div>
               </el-form-item>
             </el-col>
           </el-row>
@@ -91,7 +91,7 @@ export default {
     VueEditor,
     treeTransfer
   },
-  created() {
+  mounted() {
       var userdata = JSON.parse(localStorage.getItem('userdata'));
       if (this.$route.query.wendangid) {
         API.getmindocid({
@@ -149,7 +149,7 @@ export default {
         nigaoren: '',
         nigaodanwei:'',
         jinji:'公开',
-        starttime:'',
+        faqitime:'',
         content: '',
         shenpihis:{},
         fileList: [],

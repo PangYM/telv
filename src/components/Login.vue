@@ -6,14 +6,14 @@
     <img class="touban" :src="toubanimg" />
     <div class="kuang">
       <div class="shouhang">
-        <div v-for="(item, index) in dengluyelist">
+        <div v-for="(item, index) in dengluyelist" :key="item">
         <el-button class="anniutext" @click="xuanzeanniu(index)">{{item.title}}</el-button>
         </div>
       </div>
       <div class="body">
         <el-carousel class="toubanimg" :interval="4000" arrow="always">
           <el-carousel-item class="toubanimg1" v-for="item in lunbotulist" :key="item">
-            <img :src="item.url" width="100%" height="100%" />
+            <img :src="base+item.url" width="100%" height="100%" />
           </el-carousel-item>
         </el-carousel>
         <div class="youbian">
@@ -40,7 +40,7 @@
         </div>
         <div class="youbian">
           <div class="lianjietitle">友情链接</div>
-          <div v-for="item in youqinglist">
+          <div v-for="item in youqinglist" :key="item">
           <div class="lianjiecontent" ><a target="_blank" :href="item.url">{{item.title}}</a></div>
           </div>
         </div>
@@ -52,7 +52,7 @@
 <script>
   import * as API from '../api';
   export default {
-    created() {
+    mounted() {
       API.getdengluyelist()
       .then(({
         data
@@ -75,7 +75,8 @@
     },
     data() {
       return {
-        toubanimg: API.base + "/data/login.png",
+        base:API.base,
+        toubanimg: API.base + "/data/login.jpg",
         lunbotulist: [],
         dengluyelist:[],
         youqinglist:[],

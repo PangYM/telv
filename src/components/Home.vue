@@ -93,31 +93,10 @@
   import * as API from '@/api'
   export default {
     name: 'home',
-    created() {
+    mounted() {
       var userdata = JSON.parse(localStorage.getItem('userdata'));
       this.quanxian=userdata.quanxian;
-      API.getifzaixian({'token':localStorage.getItem('token')}).then(({
-        data
-      }) => {
-        if(data.MSG=='NO'){
-          this.$message({
-            showClose: true,
-            message: '您已在其他地方登陆，请重新登陆',
-            duration: 10000
-          });
-          this.$router.push({
-                    path: '/login'
-                  });
-        }
-      });
-      API.settouxiangUrl({'token':localStorage.getItem('token')}).then(({
-        data
-      }) => {
-        this.touxiangUrl = API.base + '/data/' + data.touxiangUrl;
-      });
-    },
-    mounted() {
-      this.showTime();
+      this.dono();
     },
     data() {
       return {
@@ -136,6 +115,33 @@
       };
     },
     methods: {
+      dono(){
+        let _this=this;
+        setTimeout(_this.dono1, 1000);
+      },
+      dono1(){
+        API.getifzaixian({'token':localStorage.getItem('token')}).then(({
+          data
+        }) => {
+          if(data.MSG=='NO'){
+            this.$message({
+              showClose: true,
+              message: '您已在其他地方登陆，请重新登陆',
+              duration: 10000
+            });
+            this.$router.push({
+                      path: '/login'
+                    });
+          }
+        });
+        API.settouxiangUrl({'token':localStorage.getItem('token')}).then(({
+          data
+        }) => {
+          this.touxiangUrl = API.base + '/data/' + data.touxiangUrl;
+        });
+        let _this=this;
+        setTimeout(_this.showTime, 1000);
+      },
       showTime() {
         var show_day = new Array(
           '星期日',
@@ -161,7 +167,8 @@
         this.dateList.date = year + '年' + month + '月' + date + '日';
         this.dateList.weekday = show_day[day];
         this.dateList.time = hour + ':' + minutes;
-        setTimeout(this.showTime, 10000);
+        let that=this;
+        setTimeout(that.showTime, 10000);
       },
       handleSelect(index) {
         this.defaultActiveIndex = index;

@@ -151,7 +151,7 @@ import * as API from '@/api';
             return this.files.filter( file => file.type != '' );
         }
     },
-    created() {
+    mounted() {
       var userdata = JSON.parse(localStorage.getItem('userdata'));
       this.userid=userdata.id;
       API.huoqubumenwenjian({
@@ -166,7 +166,6 @@ import * as API from '@/api';
     return {
         quanxuanlabel:0,
         baseurl: API.base,
-        loading: false,
         userid:'',
         baocunwenjian: API.baseurl + 'baocunwenjian',
         upload: {'selectedOptions':'[]','token':localStorage.getItem('token')},
@@ -196,7 +195,7 @@ import * as API from '@/api';
                 API.wenjianshanchu({
                     'token': localStorage.getItem('token'),
                     'selectedOptions':this.selectedOptions,
-                    'value':this.files[i].value,
+                    'bianhao':this.files[i].bianhao,
                     }).then(({
                     data
                     }) => {
@@ -255,12 +254,12 @@ import * as API from '@/api';
                     API.xinjianwenjianjia({
                         'token': localStorage.getItem('token'),
                         'selectedOptions':this.selectedOptions,
-                        'label':value,
+                        'value':value,
                         }).then(({
                         data
                         }) => {
                             this.options=data.options;
-                            this.files.push({'value': data.value, 'label': value, 'type': '', 'select': 0, 'children': [], 'userid': data.userid});
+                            this.files.push({'value': value, 'label': value, 'bianhao':data.bianhao ,'type': '', 'select': 0, 'children': [], 'userid': data.userid});
                         });
                     this.$message({
                         type: 'success',
@@ -283,7 +282,7 @@ import * as API from '@/api';
                 this.upload.selectedOptions=JSON.stringify(this.selectedOptions);
           }
           else{
-              window.open(API.base + '/data/bumenwenjian/'+file.value+'/'+file.label);
+              window.open(API.base + '/data/bumenwenjian/'+file.bianhao+'/'+file.label);
           }
       },
     select(label){
@@ -329,8 +328,10 @@ import * as API from '@/api';
       for(var i=0;i<val.length;++i){
           for(var j=0;j<this.files.length;++j){
               if(this.files[j].label==val[i]){
-                this.files=this.files[j].children;
-                break;
+                if(this.files[j].type==''){
+                    this.files=this.files[j].children;
+                    break;
+                }
               }
           }
           this.selectedOptions1.push({'label':val[i]});
