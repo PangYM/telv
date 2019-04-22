@@ -153,7 +153,7 @@ let router = new Router({
       component: Home,
       redirect: '/main',
       menuShow: true,
-      iconCls: 'iconfont icon-component', 
+      iconCls: 'iconfont icon-component',
       leaf: true,
       children: [
         {
@@ -181,7 +181,7 @@ let router = new Router({
       component: Home,
       redirect: '/main',
       menuShow: true,
-      iconCls: 'iconfont icon-component', 
+      iconCls: 'iconfont icon-component',
       children: [
         {
           path: '/person/fasongyoujian',
@@ -244,7 +244,7 @@ let router = new Router({
       component: Home,
       name: '公文发文',
       menuShow: true,
-      iconCls: 'iconfont icon-survey1', 
+      iconCls: 'iconfont icon-survey1',
       children: [
         {
           path: '/fawen/Yangban',
@@ -297,7 +297,7 @@ let router = new Router({
       component: Home,
       name: '公文收文',
       menuShow: true,
-      iconCls: 'iconfont icon-survey1', 
+      iconCls: 'iconfont icon-survey1',
       children: [
         {
           path: '/shouwen/shouwendengji',
@@ -405,7 +405,7 @@ let router = new Router({
       component: Home,
       name: '系统管理',
       menuShow: true,
-      iconCls: 'iconfont icon-set', 
+      iconCls: 'iconfont icon-set',
       children: [
         {
           path: '/xitongguanli/profile',
@@ -479,17 +479,17 @@ router.beforeEach((to, from, next) => {
   //获取store里面的token
   let token = localStorage.getItem('token');
   //判断要去的路由有没有requiresAuth
-  if(to.meta.requiresAuth){
-    if(token){
+  if (to.meta.requiresAuth) {
+    if (token) {
       next();
-    }else{
+    } else {
       next({
         path: '/login',
         query: { redirect: to.fullPath }  // 将刚刚要去的路由path（却无权限）作为参数，方便登录成功后直接跳转到该路由
       });
     }
 
-  }else{
+  } else {
     next();//如果无需token,那么随它去吧
   }
 });

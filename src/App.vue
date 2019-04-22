@@ -5,9 +5,9 @@
 </template>
 
 <script>
-import Vue from 'vue';
+import Vue from "vue";
 export default {
-  name: 'app'
+  name: "app"
 };
 </script>
 
@@ -20,7 +20,7 @@ a {
   text-decoration: none;
 }
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: left;

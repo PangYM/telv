@@ -21,145 +21,106 @@
       :data="qiefendataTable"
       stripe
       border
-      style="width: 100%" :default-sort = "{prop: 'starttime', order: 'descending'}">
-      <el-table-column
-        sortable
-        prop="biaoti"
-        label="交办事项"
-        align="center"
-        min-width="200">
-      </el-table-column>
-      <el-table-column
-        sortable
-        prop="nigaoren"
-        label="发起人"
-        align="center"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        sortable
-        prop="starttime"
-        align="center"
-        width="120"
-        label="发起时间">
-      </el-table-column>
-      <el-table-column
-        sortable
-        prop="jinji"
-        align="center"
-        width="120"
-        label="督办类型">
-      </el-table-column>
-      <el-table-column
-        sortable
-        prop="zhuangtai"
-        align="center"
-        width="120"
-        label="状态">
+      style="width: 100%"
+      :default-sort="{prop: 'starttime', order: 'descending'}"
+    >
+      <el-table-column sortable prop="biaoti" label="交办事项" align="center" min-width="200"></el-table-column>
+      <el-table-column sortable prop="nigaoren" label="发起人" align="center" width="120"></el-table-column>
+      <el-table-column sortable prop="starttime" align="center" width="120" label="发起时间"></el-table-column>
+      <el-table-column sortable prop="jinji" align="center" width="120" label="督办类型"></el-table-column>
+      <el-table-column sortable prop="zhuangtai" align="center" width="120" label="状态">
         <template slot-scope="scope">
           <a v-if="scope.row.zhuangtai!='办理完成'" style="color:#FF0000">{{scope.row.zhuangtai}}</a>
           <a v-else style="color:#00BB00">{{scope.row.zhuangtai}}</a>
         </template>
       </el-table-column>
-      <el-table-column
-        sortable
-        prop="endtime"
-        align="center"
-        width="120"
-        label="完成时间">
-      </el-table-column>
-      <el-table-column
-        fixed="right"
-        align="center"
-        label="操作"
-        width="80">
+      <el-table-column sortable prop="endtime" align="center" width="120" label="完成时间"></el-table-column>
+      <el-table-column fixed="right" align="center" label="操作" width="80">
         <template slot-scope="scope">
-          <el-button type="text" @click="handleEdit(scope.$index, scope.row)" size="small"><i class="iconfont icon-search"></i></el-button>
+          <el-button type="text" @click="handleEdit(scope.$index, scope.row)" size="small">
+            <i class="iconfont icon-search"></i>
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
     <div class="pailei">
-    <el-pagination
-    @current-change="handleCurrentChange"
-  background
-  :page-size="20"
-  :pager-count="11"
-  layout="prev, pager, next"
-  :total="dataTable.length">
-</el-pagination>
-</div>
+      <el-pagination
+        @current-change="handleCurrentChange"
+        background
+        :page-size="20"
+        :pager-count="11"
+        layout="prev, pager, next"
+        :total="dataTable.length"
+      ></el-pagination>
+    </div>
   </div>
 </template>
 <script>
-import * as API from '@/api';
+import * as API from "@/api";
 export default {
   mounted() {
-      API.getjieshouguanli({
-        'token': localStorage.getItem('token'),
-        'doctype': 'duban',
-        'query':this.query,
-      }).then(({
-        data
-      }) => {
-        this.dataTable = data.dataTable;
-        this.qiefendataTable=this.dataTable.slice(0,20);
-      });
-    },
+    API.getjieshouguanli({
+      token: localStorage.getItem("token"),
+      doctype: "duban",
+      query: this.query
+    }).then(({ data }) => {
+      this.dataTable = data.dataTable;
+      this.qiefendataTable = this.dataTable.slice(0, 20);
+    });
+  },
   data() {
     return {
       dataTable: [],
-      qiefendataTable:[],
-      query:'',
+      qiefendataTable: [],
+      query: ""
     };
   },
   methods: {
     handleGoUrl() {
-      this.$router.push({ path: '/bangongguanli/duban' });
+      this.$router.push({ path: "/bangongguanli/duban" });
     },
-    chaxun(){
-        API.getjieshouguanli({
-        'token': localStorage.getItem('token'),
-        'doctype': 'duban',
-        'query':this.query,
-      }).then(({
-        data
-      }) => {
+    chaxun() {
+      API.getjieshouguanli({
+        token: localStorage.getItem("token"),
+        doctype: "duban",
+        query: this.query
+      }).then(({ data }) => {
         this.dataTable = data.dataTable;
-        this.qiefendataTable=this.dataTable.slice(0,20);
+        this.qiefendataTable = this.dataTable.slice(0, 20);
       });
-      },
-      handleCurrentChange(val){
-        this.qiefendataTable=this.dataTable.slice(20*val-20,val*20);
-      },
-      handleEdit(index, row) {
-          this.$router.push({
-            path: '/bangongguanli/duban',
-            query: {
-              'wendangid': row.wendangid,
-            },
-          });
-      }
+    },
+    handleCurrentChange(val) {
+      this.qiefendataTable = this.dataTable.slice(20 * val - 20, val * 20);
+    },
+    handleEdit(index, row) {
+      this.$router.push({
+        path: "/bangongguanli/duban",
+        query: {
+          wendangid: row.wendangid
+        }
+      });
+    }
   }
 };
 </script>
 <style lang="scss" scoped>
-.oa_search{
+.oa_search {
   margin-top: 30px;
-  background:#efefef;
+  background: #efefef;
 }
-.chaxun{
+.chaxun {
   width: 400px;
 }
 .demo-table-expand {
-    font-size: 0;
-  }
-  .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
-  }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
-  }
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
 </style>

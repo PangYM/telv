@@ -1,20 +1,20 @@
 <template>
   <div id="main" ref="main">
-    <svg width=500 height=1000></svg>
+    <svg width="500" height="1000"></svg>
   </div>
 </template>
 <script>
 // import $ from 'jquery'
 export default {
-  name: 'Main',
+  name: "Main",
   mounted() {
     this.drage();
   },
   data() {
-    return {}
+    return {};
   },
   methods: {
-    drage () {
+    drage() {
       // Create a new directed graph
       var g = new dagreD3.graphlib.Graph().setGraph({});
 
@@ -26,12 +26,14 @@ export default {
         },
 
         公文发行: {
-          description: "represents waiting for a connection request from any " +
-                       "remote TCP and port."
+          description:
+            "represents waiting for a connection request from any " +
+            "remote TCP and port."
         },
         处长审核: {
-          description: "represents waiting for a connection request from any " +
-                       "remote TCP and port."
+          description:
+            "represents waiting for a connection request from any " +
+            "remote TCP and port."
         },
         办公室修审: {},
         关联处室审批1: {},
@@ -70,24 +72,28 @@ export default {
       g.setEdge("机要员", "归档", { label: "" });
       g.setEdge("归档", "结束", { label: "" });
 
-
       // Create the renderer
       var render = new dagreD3.render();
 
       // Set up an SVG group so that we can translate the final graph.
       var svg = d3.select("svg"),
-          inner = svg.append("g");
+        inner = svg.append("g");
 
       // Set up zoom support
-      var zoom = d3.zoom()
-          .on("zoom", function() {
-            inner.attr("transform", d3.event.transform);
-          });
+      var zoom = d3.zoom().on("zoom", function() {
+        inner.attr("transform", d3.event.transform);
+      });
       svg.call(zoom);
 
       // Simple function to style the tooltip for the given node.
       var styleTooltip = function(name, description) {
-        return "<p class='name'>" + name + "</p><p class='description'>" + description + "</p>";
+        return (
+          "<p class='name'>" +
+          name +
+          "</p><p class='description'>" +
+          description +
+          "</p>"
+        );
       };
       // Run the renderer. This is what draws the final graph.
       render(inner, g);
@@ -98,17 +104,25 @@ export default {
 
       // Center the graph
       var initialScale = 0.75;
-      svg.call(zoom.transform, d3.zoomIdentity.translate((svg.attr("width") - g.graph().width * initialScale) / 2, 20).scale(initialScale));
+      svg.call(
+        zoom.transform,
+        d3.zoomIdentity
+          .translate(
+            (svg.attr("width") - g.graph().width * initialScale) / 2,
+            20
+          )
+          .scale(initialScale)
+      );
 
-      svg.attr('height', g.graph().height * initialScale + 40);
+      svg.attr("height", g.graph().height * initialScale + 40);
     }
   }
-}
+};
 </script>
 <style lang="scss">
-#main{
-  width:300px;
-  height:1500px;
+#main {
+  width: 300px;
+  height: 1500px;
 }
 text {
   font-weight: 300;

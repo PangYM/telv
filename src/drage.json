@@ -2,10 +2,12 @@
   name: '开始'，
   label: '',
   state: '',
-  grage:[
+  grage: [
     {
       name:'',
-      grage: [{}],
+      grage: [
+        {}
+      ],
       label: ''
       state: ''
     }

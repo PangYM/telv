@@ -28,9 +28,7 @@
                 <div class="xianshi">{{form.nigaoren}}</div>
               </el-form-item>
             </el-col>
-            <el-col :span="2">
-              &nbsp;
-            </el-col>
+            <el-col :span="2">&nbsp;</el-col>
             <el-col :span="10">
               <el-form-item label="发起单位">
                 <div class="xianshi">{{form.nigaodanwei}}</div>
@@ -40,29 +38,39 @@
           <el-form-item label="与会人员">
             <el-button type="primary" v-if="xiugai" @click="querensend">添加人员</el-button>
             <div class="renyuan" v-if="istongxinlu">
-              <tree-transfer class="tongxinlu" :title="title" :from_data='fromData' :to_data='toData' :defaultProps="{label:'label'}" @addBtn='add' @removeBtn='remove' :mode='mode' width="50%" height="500px" filter>
-              </tree-transfer>
+              <tree-transfer
+                class="tongxinlu"
+                :title="title"
+                :from_data="fromData"
+                :to_data="toData"
+                :defaultProps="{label:'label'}"
+                @addBtn="add"
+                @removeBtn="remove"
+                :mode="mode"
+                width="50%"
+                height="500px"
+                filter
+              ></tree-transfer>
             </div>
-            <li  v-bind="form.userlist" v-for="item in form.userlist" :key="item.name">
+            <li v-bind="form.userlist" v-for="item in form.userlist" :key="item.name">
               <a style="color:#0000FF">{{item.name}}</a>
             </li>
           </el-form-item>
           <el-row>
             <el-col :span="6">
               <el-form-item label="会议日期">
-                <el-date-picker v-if="xiugai"
+                <el-date-picker
+                  v-if="xiugai"
                   v-model="form.riqi"
                   value-format="yyyy-MM-dd"
                   type="date"
                   style="width:100%;"
-                  placeholder="选择日期">
-                </el-date-picker>
+                  placeholder="选择日期"
+                ></el-date-picker>
                 <div v-else class="xianshi">{{form.riqi}}</div>
               </el-form-item>
             </el-col>
-            <el-col :span="2">
-              &nbsp;
-            </el-col>
+            <el-col :span="2">&nbsp;</el-col>
             <el-col :span="6">
               <el-form-item label="开始时间">
                 <el-time-select
@@ -73,17 +81,15 @@
                     start: '08:00',
                     step: '00:15',
                     end: '20:00'
-                  }">
-                </el-time-select>
+                  }"
+                ></el-time-select>
                 <div v-else class="xianshi">{{form.kaishitime}}</div>
               </el-form-item>
             </el-col>
-            <el-col :span="2">
-              &nbsp;
-            </el-col>
+            <el-col :span="2">&nbsp;</el-col>
             <el-col :span="6">
               <el-form-item label="结束时间">
-                <el-time-select 
+                <el-time-select
                   v-if="xiugai"
                   placeholder="结束时间"
                   v-model="form.jieshutime"
@@ -91,8 +97,8 @@
                     start: '08:00',
                     step: '00:15',
                     end: '22:00'
-                  }">
-                </el-time-select>
+                  }"
+                ></el-time-select>
                 <div v-else class="xianshi">{{form.jieshutime}}</div>
               </el-form-item>
             </el-col>
@@ -102,17 +108,30 @@
             <div v-else class="xianshi">{{form.beizhu}}</div>
           </el-form-item>
           <el-form-item v-if="xiugai==0" label="附件">
-          <li v-bind="form.fileList" v-for="item in form.fileList" :key="item.name">
-              <a target="_blank" :href="baseurl+'/data/fujian/'+form.wendangid+'/'+item.name">
-                                                                              {{item.name}}
-                                                                              </a>
-          </li>
+            <li v-bind="form.fileList" v-for="item in form.fileList" :key="item.name">
+              <a
+                target="_blank"
+                :href="baseurl+'/data/fujian/'+form.wendangid+'/'+item.name"
+              >{{item.name}}</a>
+            </li>
           </el-form-item>
           <el-form-item v-if="xiugai" label="附件">
-      <el-upload drag ref="upload" :action="baocunfujian" :data="upload" :on-change="handlechange" :on-remove="handleremove" :file-list="form.fujianList" multiple>
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">将附件拖到此处，或<em>点击上传</em></div>
-      </el-upload>
+            <el-upload
+              drag
+              ref="upload"
+              :action="baocunfujian"
+              :data="upload"
+              :on-change="handlechange"
+              :on-remove="handleremove"
+              :file-list="form.fujianList"
+              multiple
+            >
+              <i class="el-icon-upload"></i>
+              <div class="el-upload__text">
+                将附件拖到此处，或
+                <em>点击上传</em>
+              </div>
+            </el-upload>
           </el-form-item>
           <el-form-item>
             <el-button v-if="xiugai" type="primary" @click="onSubmit">立即发起</el-button>
@@ -124,141 +143,138 @@
   </div>
 </template>
 <script>
-import * as API from '@/api';
-import treeTransfer from 'el-tree-transfer';
+import * as API from "@/api";
+import treeTransfer from "el-tree-transfer";
 export default {
   components: {
     treeTransfer
   },
   mounted() {
-    var userdata = JSON.parse(localStorage.getItem('userdata'));
+    var userdata = JSON.parse(localStorage.getItem("userdata"));
     if (this.$route.query.wendangid) {
-        API.getmindocid({
-          'token': localStorage.getItem('token'),
-          'wendangid': this.$route.query.wendangid
-        }).then(({
-          data
-        }) => {
-          this.form = data.data;
-          this.xiugai = 0;
-          this.upload.wendangid = this.form.wendangid;
-          this.form.fujianList = [];
-          for (var i = 0; i < this.form.fileList.length; ++i) {
-            this.form.fujianList.push({
-              'name': this.form.fileList[i].name,
-              'url': this.baseurl + '/data/fujian/' + this.form.wendangid + '/' + this.form.fileList[i].name
-            });
-          }
-        });
-  
-      } else {
-        API.getfawenhao().then(({
-          data
-        }) => {
-          this.form.wendangid = data.wendangid + data.suiji;
-          this.form.nigaoid = userdata.id;
-          this.form.nigaoren = userdata.name;
-          this.form.nigaodanwei = userdata.group;
-          this.upload.wendangid = this.form.wendangid;
-        });
-      }
-      API.gettongxinlu({'token': localStorage.getItem('token')})
-          .then(({
-            data
-          }) => {
-            this.fromData = data.tongxinlu;
+      API.getmindocid({
+        token: localStorage.getItem("token"),
+        wendangid: this.$route.query.wendangid
+      }).then(({ data }) => {
+        this.form = data.data;
+        this.xiugai = 0;
+        this.upload.wendangid = this.form.wendangid;
+        this.form.fujianList = [];
+        for (var i = 0; i < this.form.fileList.length; ++i) {
+          this.form.fujianList.push({
+            name: this.form.fileList[i].name,
+            url:
+              this.baseurl +
+              "/data/fujian/" +
+              this.form.wendangid +
+              "/" +
+              this.form.fileList[i].name
           });
+        }
+      });
+    } else {
+      API.getfawenhao().then(({ data }) => {
+        this.form.wendangid = data.wendangid + data.suiji;
+        this.form.nigaoid = userdata.id;
+        this.form.nigaoren = userdata.name;
+        this.form.nigaodanwei = userdata.group;
+        this.upload.wendangid = this.form.wendangid;
+      });
+    }
+    API.gettongxinlu({ token: localStorage.getItem("token") }).then(
+      ({ data }) => {
+        this.fromData = data.tongxinlu;
+      }
+    );
   },
   data() {
     return {
-      xiugai:1,
+      xiugai: 1,
       istongxinlu: 0,
-      title: ['未选列表', '已选列表'],
+      title: ["未选列表", "已选列表"],
       mode: "transfer",
-      fromData:[],
-      toData:[],
+      fromData: [],
+      toData: [],
       baseurl: API.base,
-      baocunfujian: API.baseurl + 'baocunfujian',
+      baocunfujian: API.baseurl + "baocunfujian",
       upload: {},
       form: {
-        doctype:'huiyifaqi',
-        zhuangtai:'',
-        wendangid:'',
-        biaoti: '',
-        didian: '',
-        nigaoid:'',
-        nigaoren:'',
+        doctype: "huiyifaqi",
+        zhuangtai: "",
+        wendangid: "",
+        biaoti: "",
+        didian: "",
+        nigaoid: "",
+        nigaoren: "",
         userlist: [],
         riqi: this.getToday(),
-        kaishitime:'08:00',
-        jieshutime:'08:00',
-        beizhu:'',
-        shenpihis:{},
+        kaishitime: "08:00",
+        jieshutime: "08:00",
+        beizhu: "",
+        shenpihis: {},
         fileList: [],
-        fujianList: [],
+        fujianList: []
       }
     };
   },
   methods: {
-    getToday(){
-        var date = new Date();
-        var seperator1 = "-";
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var strDate = date.getDate();
-        if (month >= 1 && month <= 9) {
-            month = "0" + month;
-        }
-        if (strDate >= 0 && strDate <= 9) {
-            strDate = "0" + strDate;
-        }
-        var currentdate = year + seperator1 + month + seperator1 + strDate;
-        return currentdate;
+    getToday() {
+      var date = new Date();
+      var seperator1 = "-";
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      var strDate = date.getDate();
+      if (month >= 1 && month <= 9) {
+        month = "0" + month;
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+      }
+      var currentdate = year + seperator1 + month + seperator1 + strDate;
+      return currentdate;
     },
-    guanbi(){
+    guanbi() {
       this.$router.go(-1);
     },
     querensend() {
-        this.istongxinlu = 1;
-      },
+      this.istongxinlu = 1;
+    },
     add(fromData, toData, obj) {
-        this.fromData = fromData;
-        this.toData = toData;
-      },
-      remove(fromData, toData, obj) {
-        this.fromData = fromData;
-        this.toData = toData;
-      },
+      this.fromData = fromData;
+      this.toData = toData;
+    },
+    remove(fromData, toData, obj) {
+      this.fromData = fromData;
+      this.toData = toData;
+    },
     onSubmit() {
-      if(this.toData.length==0){
-          this.$message({
-            showClose: true,
-            message: '请选择发送人',
-            duration: 2000
-          });
-          return "";
-        }
-      var fasongdata={
-          'toData': this.toData,
-          'wendang':this.form,
-          'token':localStorage.getItem('token'),
-        };
-      API.fasongmindoc(fasongdata).then(({
-          data
-        }) => {
-          this.$message.success({
-              showClose: true,
-              message: '发起成功',
-              duration: 2000
-            });
-          this.$router.go(-1);
+      if (this.toData.length == 0) {
+        this.$message({
+          showClose: true,
+          message: "请选择发送人",
+          duration: 2000
         });
+        return "";
+      }
+      var fasongdata = {
+        toData: this.toData,
+        wendang: this.form,
+        token: localStorage.getItem("token")
+      };
+      API.fasongmindoc(fasongdata).then(({ data }) => {
+        this.$message.success({
+          showClose: true,
+          message: "发起成功",
+          duration: 2000
+        });
+        this.$router.go(-1);
+      });
     },
     handlechange(file, fileList) {
       this.form.fileList = [];
       for (var i = 0; i < fileList.length; ++i) {
         this.form.fileList.push({
-          'name': fileList[i].name
+          name: fileList[i].name
         });
       }
     },
@@ -266,23 +282,23 @@ export default {
       this.form.fileList = [];
       for (var i = 0; i < fileList.length; ++i) {
         this.form.fileList.push({
-          'name': fileList[i].name
+          name: fileList[i].name
         });
       }
-    },
+    }
   }
 };
 </script>
 <style lang="scss" scoped>
-.huiyifaqihuiyifaqi{
+.huiyifaqihuiyifaqi {
   text-align: center;
 }
-.huiyifaqi{
+.huiyifaqi {
   margin-top: 30px;
   width: 80%;
   margin-left: 10%;
 }
-.xianshi{
+.xianshi {
   background: #efefef;
 }
 </style>

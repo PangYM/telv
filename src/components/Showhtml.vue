@@ -10,12 +10,12 @@
 export default {
   created() {
     if (this.$route.query.content) {
-      this.content=this.$route.query.content;
+      this.content = this.$route.query.content;
     }
   },
   data() {
     return {
-      content:'',
+      content: ""
     };
   },
   mounted: function() {}

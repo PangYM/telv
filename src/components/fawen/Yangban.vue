@@ -23,58 +23,56 @@
 </template>
 
 <script>
-  import * as API from '@/api';
-  export default {
-    components: {
-    },
-    data() {
-      return {
-      };
-    },
-    methods: {
-      fawen(e){
-        if(e==1){
-          this.$router.push({
-            path: '/fawen/gongwen',
-          });
-        }
-        if(e==2){
-          this.$router.push({
-            path: '/fawen/fawen',
-          });
-        }
-        if(e==3){
-          this.$router.push({
-            path: '/fawen/huiyi',
-          });
-        }
-        if(e==4){
-          this.$router.push({
-            path: '/fawen/dangwu',
-          });
-        }
-        if(e==5){
-          this.$router.push({
-            path: '/fawen/dangwuhuiyi',
-          });
-        }
-        if(e==6){
-          this.$router.push({
-            path: '/fawen/qianbao',
-          });
-        }
-        if(e==7){
-          this.$router.push({
-            path: '/fawen/yian',
-          });
-        }
+import * as API from "@/api";
+export default {
+  components: {},
+  data() {
+    return {};
+  },
+  methods: {
+    fawen(e) {
+      if (e == 1) {
+        this.$router.push({
+          path: "/fawen/gongwen"
+        });
+      }
+      if (e == 2) {
+        this.$router.push({
+          path: "/fawen/fawen"
+        });
+      }
+      if (e == 3) {
+        this.$router.push({
+          path: "/fawen/huiyi"
+        });
+      }
+      if (e == 4) {
+        this.$router.push({
+          path: "/fawen/dangwu"
+        });
+      }
+      if (e == 5) {
+        this.$router.push({
+          path: "/fawen/dangwuhuiyi"
+        });
+      }
+      if (e == 6) {
+        this.$router.push({
+          path: "/fawen/qianbao"
+        });
+      }
+      if (e == 7) {
+        this.$router.push({
+          path: "/fawen/yian"
+        });
       }
     }
-  };
+  }
+};
 </script>
 
 <style lang="scss">
-.yangban{
+.yangban {
   margin-top: 30px;
   text-align: center;
 }

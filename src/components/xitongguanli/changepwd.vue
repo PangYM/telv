@@ -2,12 +2,14 @@
   <el-row class="warp">
     <el-col :span="24" class="warp-breadcrum">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/' }"><b>首页</b></el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/' }">
+          <b>首页</b>
+        </el-breadcrumb-item>
         <el-breadcrumb-item>设置</el-breadcrumb-item>
         <el-breadcrumb-item>修改密码</el-breadcrumb-item>
       </el-breadcrumb>
     </el-col>
-  
+
     <el-col :span="23" class="warp-main">
       <el-form ref="form" :model="form" label-width="120px">
         <el-form-item label="原密码">
@@ -28,54 +30,51 @@
 </template>
 
 <script>
-  import * as API from '@/api';
-  export default {
-    data() {
-      return {
-        form: {
-          oldPwd: '',
-          newPwd: '',
-          confirmPwd: ''
-        }
-      };
-    },
-    methods: {
-      handleChangepwd() {
-        if (this.form.oldPwd.length < 6) {
-          this.$message({
-            message: '原密码不正确，请重新输入',
-            duration: 2000
-          });
-        } else if (this.form.newPwd.length < 6) {
-          this.$message({
-            message: '密码长度低于6，请重新输入',
-            duration: 2000
-          });
-        } else if (this.form.newPwd != this.form.confirmPwd) {
-          this.$message({
-            message: '密码不一致，请重新输入',
-            duration: 2000
-          });
-        } else {
-          this.form.token=localStorage.getItem('token');
-          API.changepwd(this.form).then(({
-            data
-          }) => {
-            if (data.MSG == "NO") {
-              this.$message({
-                message: '原密码不正确，请重新输入',
-                duration: 2000
-              });
-            }
-            else if(data.MSG == "YES"){
-              this.$message.success({
-                message: '修改成功！',
-                duration: 2000
-              });
-            }
-          });
-        }
+import * as API from "@/api";
+export default {
+  data() {
+    return {
+      form: {
+        oldPwd: "",
+        newPwd: "",
+        confirmPwd: ""
+      }
+    };
+  },
+  methods: {
+    handleChangepwd() {
+      if (this.form.oldPwd.length < 6) {
+        this.$message({
+          message: "原密码不正确，请重新输入",
+          duration: 2000
+        });
+      } else if (this.form.newPwd.length < 6) {
+        this.$message({
+          message: "密码长度低于6，请重新输入",
+          duration: 2000
+        });
+      } else if (this.form.newPwd != this.form.confirmPwd) {
+        this.$message({
+          message: "密码不一致，请重新输入",
+          duration: 2000
+        });
+      } else {
+        this.form.token = localStorage.getItem("token");
+        API.changepwd(this.form).then(({ data }) => {
+          if (data.MSG == "NO") {
+            this.$message({
+              message: "原密码不正确，请重新输入",
+              duration: 2000
+            });
+          } else if (data.MSG == "YES") {
+            this.$message.success({
+              message: "修改成功！",
+              duration: 2000
+            });
+          }
+        });
       }
     }
-  };
+  }
+};
 </script>
