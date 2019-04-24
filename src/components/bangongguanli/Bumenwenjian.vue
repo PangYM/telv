@@ -194,7 +194,7 @@ export default {
   },
   mounted() {
     var userdata = JSON.parse(localStorage.getItem("userdata"));
-    this.userid = userdata.id;
+    this.userid = userdata.userid;
     API.huoqubumenwenjian({
       token: localStorage.getItem("token")
     }).then(({ data }) => {

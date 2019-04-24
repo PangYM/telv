@@ -249,7 +249,7 @@ export default {
       API.getfawenhao().then(({ data }) => {
         this.form.wendangid = data.wendangid + data.suiji;
         this.upload.wendangid = this.form.wendangid;
-        this.form.nigaoid = userdata.id;
+        this.form.nigaouserid = userdata.userid;
         this.form.nigaoren = userdata.name;
       });
     }
@@ -276,7 +276,7 @@ export default {
       upload: {},
       form: {
         doctype: "gongwen",
-        nigaoid: "",
+        nigaouserid: "",
         zhuangtai: "caogao",
         wendangid: "",
         leixing: "",
@@ -327,7 +327,8 @@ export default {
     querenyuedu() {
       API.yiyue({
         token: localStorage.getItem("token"),
-        wendangid: this.form.wendangid
+        wendangid: this.form.wendangid,
+        banli:'',
       }).then(({ data }) => {
         this.form.qianyuelist = data.qianyuelist;
         this.$message.success({

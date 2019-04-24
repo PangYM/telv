@@ -16,8 +16,6 @@
         <el-button type="primary" v-if="xiugai" @click="querenfasong">立即创建</el-button>
         <el-button type="primary" v-if="xiugai&&yulan" @click="querenyulan">预览</el-button>
         <el-button type="primary" v-if="xiugai==0&&yulan" @click="querenyulan">关闭预览</el-button>
-        <el-button type="primary" v-if="shenpi" @click="shenpifabu(0)">退文</el-button>
-        <el-button type="primary" v-if="shenpi" @click="shenpifabu(1)">审批发布</el-button>
         <el-button type="primary" @click="guanbi()">关闭</el-button>
       </div>
       <el-col :span="24">
@@ -31,21 +29,6 @@
             <el-col :span="12">
               <el-form-item label="发起人">
                 <div class="xianshi">{{form.nigaoren}}</div>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="公开类型">
-                <el-select
-                  v-if="xiugai"
-                  :disabled="!xiugai"
-                  v-model="form.jinji"
-                  placeholder
-                  style="width:100%;"
-                >
-                  <el-option label="公开" value="公开"></el-option>
-                  <el-option label="部门" value="部门"></el-option>
-                </el-select>
-                <div v-else class="xianshi">{{form.jinji}}</div>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -63,11 +46,6 @@
               v-model="form.content"
             ></vue-editor>
             <div class="html" v-else v-html="form.content"></div>
-            <!-- <vue-editor v-else disabled
-            useCustomImageHandler
-            @imageAdded="handleImageAdded"
-            v-model="form.content">
-            </vue-editor>-->
           </el-form-item>
           <el-form-item v-if="xiugai==0" label="附件">
             <li v-bind="form.fileList" v-for="item in form.fileList" :key="item.name">
@@ -101,20 +79,20 @@
   </div>
 </template>
 <script>
-import * as API from "@/api";
-import treeTransfer from "el-tree-transfer";
-import { VueEditor } from "vue2-editor";
-import axios from "axios";
+import * as API from '@/api';
+import treeTransfer from 'el-tree-transfer';
+import { VueEditor } from 'vue2-editor';
+import axios from 'axios';
 export default {
   components: {
     VueEditor,
     treeTransfer
   },
   mounted() {
-    var userdata = JSON.parse(localStorage.getItem("userdata"));
+    var userdata = JSON.parse(localStorage.getItem('userdata'));
     if (this.$route.query.wendangid) {
       API.getmindocid({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         wendangid: this.$route.query.wendangid
       }).then(({ data }) => {
         this.form = data.data;
@@ -126,12 +104,7 @@ export default {
         for (var i = 0; i < this.form.fileList.length; ++i) {
           this.form.fujianList.push({
             name: this.form.fileList[i].name,
-            url:
-              this.baseurl +
-              "/data/fujian/" +
-              this.form.wendangid +
-              "/" +
-              this.form.fileList[i].name
+            url: this.baseurl + '/data/fujian/' + this.form.wendangid + '/' + this.form.fileList[i].name
           });
         }
       });
@@ -139,7 +112,7 @@ export default {
       API.getfawenhao().then(({ data }) => {
         this.form.wendangid = data.wendangid + data.suiji;
         this.upload.wendangid = this.form.wendangid;
-        this.form.nigaoid = userdata.id;
+        this.form.nigaouserid = userdata.userid;
         this.form.nigaoren = userdata.name;
         this.form.nigaodanwei = userdata.group;
       });
@@ -149,27 +122,24 @@ export default {
     return {
       yulan: 1,
       xiugai: 1,
-      shenpi: 0,
       istongxinlu: 0,
-      title: ["未选列表", "已选列表"],
-      mode: "transfer",
+      title: ['未选列表', '已选列表'],
+      mode: 'transfer',
       istongxinlu: 0,
       fromData: [],
       toData: [],
       baseurl: API.base,
-      baocunfujian: API.baseurl + "baocunfujian",
+      baocunfujian: API.baseurl + 'baocunfujian',
       upload: {},
       form: {
-        doctype: "gonggao",
-        zhuangtai: "待审批",
-        wendangid: "",
-        biaoti: "",
-        nigaoid: "",
-        nigaoren: "",
-        nigaodanwei: "",
-        jinji: "公开",
-        faqitime: "",
-        content: "",
+        doctype: 'gonggao',
+        wendangid: '',
+        biaoti: '',
+        nigaouserid: '',
+        nigaoren: '',
+        nigaodanwei: '',
+        faqitime: '',
+        content: '',
         shenpihis: {},
         fileList: [],
         fujianList: []
@@ -180,33 +150,11 @@ export default {
     querenyulan() {
       this.xiugai = 1 - this.xiugai;
     },
-    shenpifabu(e) {
-      this.shenpi = 0;
-      API.gonggaofabu({
-        token: localStorage.getItem("token"),
-        caozuo: e,
-        wendangid: this.$route.query.wendangid
-      }).then(({ data }) => {
-        if (e) {
-          this.$message.success({
-            showClose: true,
-            message: "发布成功",
-            duration: 2000
-          });
-        } else {
-          this.$message.success({
-            showClose: true,
-            message: "退文成功",
-            duration: 2000
-          });
-        }
-      });
-    },
     handleImageAdded(file, Editor, cursorLocation, resetUploader) {
       API.baocunimage(file).then(result => {
         let url = result.data.url;
-        url = API.base + "/data/" + url;
-        Editor.insertEmbed(cursorLocation, "image", url);
+        url = API.base + '/data/' + url;
+        Editor.insertEmbed(cursorLocation, 'image', url);
         resetUploader();
       });
     },
@@ -214,23 +162,23 @@ export default {
       if (this.form.biaoti.length == 0) {
         this.$message({
           showClose: true,
-          message: "公告标题不能为空",
+          message: '公告标题不能为空',
           duration: 2000
         });
-        return "";
+        return '';
       }
       var fasongdata = {
         wendang: this.form,
-        token: localStorage.getItem("token")
+        token: localStorage.getItem('token')
       };
       API.fasongmindoc(fasongdata).then(({ data }) => {
         this.$message.success({
           showClose: true,
-          message: "发送成功",
+          message: '发送成功',
           duration: 2000
         });
         this.$router.push({
-          path: "/main"
+          path: '/main'
         });
       });
     },

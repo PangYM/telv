@@ -43,7 +43,7 @@
         <el-button type="primary" @click="guanbi(1)">关闭</el-button>
       </div>
       <el-row class="huiyi" id="huiyi">
-        <div class="bantou">中国铁路南宁局集团有限公司会议纪要发文稿纸</div>
+        <div class="bantou">广西铁路旅游传媒集团有限责任公司会议纪要发文稿纸</div>
         <div class="riqi">
           日期：
           <el-date-picker
@@ -97,8 +97,7 @@
             <div class="kuang22">
               <div class="qianmingtou">会签：</div>
               <li v-bind="form.minlingdaolist" v-for="item in form.minlingdaolist" :key="item.name">
-                <img class="qianming" :src="getImgUrl(item.imageurl)">
-                <a style="color:#000000">{{item.time}} {{item.yijian}}</a>
+                <a style="color:#000000">{{item.name}} {{item.time}} {{item.yijian}}</a>
               </li>
             </div>
           </div>
@@ -297,11 +296,12 @@ export default {
       API.getfawenhao().then(({ data }) => {
         this.form.wendangid = data.wendangid + data.suiji;
         this.upload.wendangid = this.form.wendangid;
-        this.form.nigaoid = userdata.id;
+        this.form.nigaouserid = userdata.userid;
         this.form.nigaoren = userdata.name;
         this.form.nigaodanwei = userdata.group;
         this.form.nigaorendianhua = userdata.phone;
-        if (userdata.quanxian == 30) {
+        if (userdata.quanxian >= 28 && userdata.quanxian <= 30) {
+          this.hegao = 1;
           this.form.hegaoren = userdata.name;
           this.form.hegaodanwei = userdata.group;
           this.form.hegaorendianhua = userdata.phone;
@@ -337,7 +337,7 @@ export default {
       form: {
         doctype: "huiyi",
         wendangid: "",
-        nigaoid: "",
+        nigaouserid: "",
         zhuangtai: "caogao",
         leixing: "",
         riqi: this.getToday(),
@@ -384,19 +384,12 @@ export default {
             lingdaopishi: this.lingdaopishi,
             pishi: this.pishi
           }).then(({ data }) => {
-            this.form.biglingdaolist = data.biglingdaolist;
-            this.form.midlingdaolist = data.midlingdaolist;
-            this.form.minlingdaolist = data.minlingdaolist;
-            this.form.falvlingdaolist = data.falvlingdaolist;
-            this.hegao = 0;
-            this.tuiwen = 0;
-            this.xiugai = 0;
-            this.pishi = 0;
-          });
-          this.$message({
-            type: "success",
-            message: "退回成功!",
-            duration: 1000
+            this.$router.go(-1);
+            this.$message({
+              type: 'success',
+              message: '退回上一级成功!',
+              duration: 1000
+            });
           });
         })
         .catch(() => {});
@@ -421,7 +414,7 @@ export default {
               message: "撤回成功!",
               duration: 1000
             });
-            this.mounted();
+            this.$router.go(0);
           });
         })
         .catch(() => {});
@@ -495,19 +488,12 @@ export default {
             lingdaopishi: this.lingdaopishi,
             pishi: this.pishi
           }).then(({ data }) => {
-            this.form.biglingdaolist = data.biglingdaolist;
-            this.form.midlingdaolist = data.midlingdaolist;
-            this.form.minlingdaolist = data.minlingdaolist;
-            this.form.falvlingdaolist = data.falvlingdaolist;
-            this.hegao = 0;
-            this.tuiwen = 0;
-            this.xiugai = 0;
-            this.pishi = 0;
-          });
-          this.$message({
-            type: "success",
-            message: "退文成功!",
-            duration: 1000
+            this.$router.go(-1);
+            this.$message({
+              type: 'success',
+              message: '退文成功!',
+              duration: 1000
+            });
           });
         })
         .catch(() => {});

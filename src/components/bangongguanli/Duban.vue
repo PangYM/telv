@@ -205,7 +205,7 @@ export default {
       API.getfawenhao().then(({ data }) => {
         this.form.wendangid = data.wendangid + data.suiji;
         this.upload.wendangid = this.form.wendangid;
-        this.form.nigaoid = userdata.id;
+        this.form.nigaouserid = userdata.userid;
         this.form.nigaoren = userdata.name;
         if (userdata.quanxian == 30) this.hegao = 1;
       });

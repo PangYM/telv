@@ -42,8 +42,8 @@
             label-width="0px"
           >
             <h3 class="title">用户登录</h3>
-            <el-form-item prop="username">
-              <el-input type="text" v-model="account.username" auto-complete="off" placeholder="账号"></el-input>
+            <el-form-item prop="zhanghao">
+              <el-input type="text" v-model="account.zhanghao" auto-complete="off" placeholder="账号"></el-input>
             </el-form-item>
             <el-form-item prop="pwd">
               <el-input
@@ -110,11 +110,11 @@ export default {
       xianshi: false,
       content: "",
       account: {
-        username: "",
+        zhanghao: "",
         pwd: ""
       },
       rules: {
-        username: [
+        zhanghao: [
           {
             required: true,
             message: "请输入账号",
@@ -147,7 +147,7 @@ export default {
         if (valid) {
           this.loading = true;
           let loginParams = {
-            username: this.account.username,
+            zhanghao: this.account.zhanghao,
             pwd: this.account.pwd
           };
           API.userLogin(loginParams)
@@ -155,7 +155,7 @@ export default {
               localStorage.removeItem("token");
               if (data.MSG == "YES") {
                 localStorage.setItem("token", data.token);
-                localStorage.setItem("userdata", data.data);
+                localStorage.setItem("userdata", JSON.stringify(data.userdata));
                 that.$router.push({
                   path: "/"
                 });

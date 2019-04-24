@@ -60,10 +60,18 @@ function setUserProfile(data){
     return instance.post(baseurl+'setUserProfile',data);
 }
 //获取用户头像
+function gettouxiangUrl(data){
+    return instance.post(baseurl+'gettouxiangUrl',data);
+}
+//获取用户头像
 function settouxiangUrl(data){
     return instance.post(baseurl+'settouxiangUrl',data);
 }
 //获取用户签名
+function getqianmingUrl(data){
+    return instance.post(baseurl+'getqianmingUrl',data);
+}
+//设置用户签名
 function setqianmingUrl(data){
     return instance.post(baseurl+'setqianmingUrl',data);
 }
@@ -162,10 +170,6 @@ function mindocyiyue(data){
 //公告管理
 function getgonggaoguanli(data){
     return instance.post(baseurl+'getgonggaoguanli',data);
-}
-//公告审批发布
-function gonggaofabu(data){
-    return instance.post(baseurl+'gonggaofabu',data);
 }
 //获取首页未读
 function getshouyeweidu(data){
@@ -282,7 +286,6 @@ export{
     huoqubumenwenjian,
     xinjianwenjianjia,
     getshouyeweidu,
-    gonggaofabu,
     getgonggaoguanli,
     mindocyiyue,
     wanchengmindoc,
@@ -297,7 +300,9 @@ export{
     userLogin,
     getUser,
     setUserProfile,
+    gettouxiangUrl,
     settouxiangUrl,
+    getqianmingUrl,
     setqianmingUrl,
     changepwd,
     getfawenhao,

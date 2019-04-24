@@ -6,11 +6,11 @@
         <el-breadcrumb>
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>公文收文</el-breadcrumb-item>
-          <el-breadcrumb-item>发文样板</el-breadcrumb-item>
+          <el-breadcrumb-item>发文稿纸</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
-    <div class="yangban">
+    <div class="gaozhi">
       <el-button size="mini" type="primary" @click="fawen(1)">公文印发单</el-button>
       <el-button size="mini" type="primary" @click="fawen(2)">发文</el-button>
       <el-button size="mini" type="primary" @click="fawen(3)">会议发文</el-button>
@@ -72,7 +72,7 @@ export default {
 </script>
 
 <style lang="scss">
-.yangban {
+.gaozhi {
   margin-top: 30px;
   text-align: center;
 }

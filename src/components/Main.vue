@@ -55,11 +55,11 @@
           <div class="todo_l">
             <el-row>
               <el-col :span="12" class="tl">
-                <span>预警待办</span>
+                <span>提醒待办</span>
               </el-col>
               <el-col :span="12" class="tr">
-                <el-button type="text" @click="handleGoUrl('/bangongguanli/yujingguanli')">
-                  <i>{{yujing}}</i>
+                <el-button type="text" @click="handleGoUrl('/bangongguanli/tixingguanli')">
+                  <i>{{tixing}}</i>
                 </el-button>
               </el-col>
             </el-row>
@@ -122,8 +122,8 @@
                 label="发起时间"
                 width="100"
                 show-overflow-tooltip
+                fixed="right"
               ></el-table-column>
-              <el-table-column prop="jinji" align="center" label="公开类型" width="100" fixed="right"></el-table-column>
             </el-table>
           </div>
         </el-card>
@@ -134,7 +134,7 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span class="title">
-              <i class="iconfont icon-inquirytemplate"></i> 代办发文
+              <i class="iconfont icon-inquirytemplate"></i> 待办发文
             </span>
             <el-tooltip class="item" effect="dark" content="查看更多" placement="top-start">
               <i
@@ -174,7 +174,7 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span class="title">
-              <i class="iconfont icon-inquirytemplate"></i> 代办收文
+              <i class="iconfont icon-inquirytemplate"></i> 待办收文
             </span>
             <el-tooltip class="item" effect="dark" content="查看更多" placement="top-start">
               <i
@@ -215,140 +215,128 @@
 </template>
 
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 export default {
-  name: "Main",
+  name: 'Main',
   mounted() {
-    localStorage.setItem("ifgengxin", 1);
-    this.dono();
-  },
-  destroyed() {
-    localStorage.setItem("ifgengxin", 0);
+    this.gengxin();
   },
   data() {
     return {
       ifnew: 1,
       lunbotulist: [],
       dateList: {
-        date: "",
-        weekday: "",
-        time: ""
+        date: '',
+        weekday: '',
+        time: ''
       },
       base: API.base,
       duban: 0,
       huiyifaqi: 0,
       youjian: 0,
-      yujing: 0,
+      tixing: 0,
       gonggao: [],
       daibanfawen: [],
       daibanshouwen: []
     };
   },
   methods: {
-    dono() {
-      let _this = this;
-      setTimeout(_this.gengxin, 1000);
-    },
     showcontent(content) {
       this.$router.push({
-        path: "/showhtml",
+        path: '/showhtml',
         query: {
           content: content
         }
       });
     },
     gengxin() {
-      var ifgengxin = localStorage.getItem("ifgengxin");
-      if (ifgengxin == 0) return "";
       API.getlunbotulist({}).then(({ data }) => {
         this.lunbotulist = data.lunbotulist;
       });
       API.getshouyeweidu({
-        token: localStorage.getItem("token")
+        token: localStorage.getItem('token')
       }).then(({ data }) => {
         this.duban = data.duban;
         this.huiyifaqi = data.huiyifaqi;
         this.youjian = data.youjian;
-        this.yujing = data.yujing;
+        this.tixing = data.tixing;
       });
       API.getgonggaoguanli({
-        token: localStorage.getItem("token"),
-        doctype: "gonggao",
-        query: ""
+        token: localStorage.getItem('token'),
+        doctype: 'gonggao',
+        query: ''
       }).then(({ data }) => {
         this.gonggao = data.dataTable.slice(0, 5);
       });
       API.getdaibanfawen({
-        token: localStorage.getItem("token"),
-        doctype: "fawen",
-        query: ""
+        token: localStorage.getItem('token'),
+        doctype: 'fawen',
+        query: ''
       }).then(({ data }) => {
         this.daibanfawen = data.dataTable.slice(0, 5);
       });
       API.getdaibanfawen({
-        token: localStorage.getItem("token"),
-        doctype: "shouwen",
-        query: ""
+        token: localStorage.getItem('token'),
+        doctype: 'shouwen',
+        query: ''
       }).then(({ data }) => {
         this.daibanshouwen = data.dataTable.slice(0, 5);
       });
-      let that = this;
-      setTimeout(that.gengxin, 10000);
     },
     handleEdit(e, row) {
       if (e == 0) {
         this.$router.push({
-          path: "/bangongguanli/gonggao",
+          path: '/bangongguanli/gonggao',
           query: {
             wendangid: row.wendangid
           }
         });
       } else if (e == 1) {
-        if (row.doctype == "gongwen") {
+        if (row.doctype == 'gongwen') {
           this.$router.push({
-            path: "/fawen/gongwen",
+            path: '/fawen/gongwen',
             query: {
               wendangid: row.wendangid
             }
           });
-        } else if (row.doctype == "fawen") {
+        } else if (row.doctype == 'fawen') {
           this.$router.push({
-            path: "/fawen/fawen",
+            path: '/fawen/fawen',
             query: {
               wendangid: row.wendangid
             }
           });
-        } else if (row.doctype == "huiyi") {
+        } else if (row.doctype == 'huiyi') {
           this.$router.push({
-            path: "/fawen/huiyi",
+            path: '/fawen/huiyi',
             query: {
               wendangid: row.wendangid
             }
           });
-        } else if (row.doctype == "dangwu") {
+        } else if (row.doctype == 'dangwu') {
           this.$router.push({
-            path: "/fawen/dangwu",
+            path: '/fawen/dangwu',
             query: {
               wendangid: row.wendangid
             }
           });
-        } else if (row.doctype == "dangwuhuiyi") {
+        } else if (row.doctype == 'dangwuhuiyi') {
           this.$router.push({
-            path: "/fawen/dangwuhuiyi",
+            path: '/fawen/dangwuhuiyi',
             query: {
               wendangid: row.wendangid
             }
           });
-        } else if (row.doctype == "qianbao") {
+        } else if (row.doctype == 'qianbao') {
           this.$router.push({
-            path: "/fawen/qianbao",
+            path: '/fawen/qianbao',
             query: {
               wendangid: row.wendangid
             }
           });
-        } else if (row.doctype == "yian") {
+        } else if (row.doctype == 'yian') {
           this.$router.push({
-            path: "/fawen/yian",
+            path: '/fawen/yian',
             query: {
               wendangid: row.wendangid
             }
@@ -356,7 +344,7 @@ export default {
         }
       } else {
         this.$router.push({
-          path: "/shouwen/shouwendengji",
+          path: '/shouwen/shouwendengji',
           query: {
             wendangid: row.wendangid
           }

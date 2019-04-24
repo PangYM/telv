@@ -140,7 +140,7 @@ export default {
       API.getfawenhao().then(({ data }) => {
         this.form.wendangid = data.wendangid + data.suiji;
         this.upload.wendangid = this.form.wendangid;
-        this.form.nigaoid = userdata.id;
+        this.form.nigaouserid = userdata.userid;
         this.form.nigaoren = userdata.name;
         this.form.nigaodanwei = userdata.group;
       });
@@ -163,7 +163,7 @@ export default {
         zhuangtai: "caogao",
         wendangid: "",
         biaoti: "",
-        nigaoid: "",
+        nigaouserid: "",
         nigaoren: "",
         nigaodanwei: "",
         starttime: "",

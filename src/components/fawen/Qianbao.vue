@@ -98,6 +98,16 @@
             </div>
           </div>
           <div class="kuang3">
+            <div class="kuang30">拟办意见</div>
+            <div class="biaoti">
+              <el-input v-if="hegao" size="small" v-model="form.nibanyijian.yijian" placeholder></el-input>
+              <a
+                v-else
+                style="color:#000000"
+              >{{form.nibanyijian.yijian}} {{form.nibanyijian.name}} {{form.nibanyijian.time}}</a>
+            </div>
+          </div>
+          <div class="kuang3">
             <div class="kuang30">标题</div>
             <div class="biaoti">
               <el-input v-if="xiugai" size="small" v-model="form.biaoti" placeholder></el-input>
@@ -121,8 +131,7 @@
           <div class="kuang3">
             <div class="kuang30">负责人签名</div>
             <div class="biaoti">
-              <div v-on="form.lingdao.imageurl" v-if="form.lingdao.imageurl">
-                <img class="qianming" :src="getImgUrl(form.lingdao.imageurl)">
+              <div v-on="form.lingdao.name" v-if="form.lingdao.name">
                 <a style="color:#000000">{{form.lingdao.time}}</a>
               </div>
             </div>
@@ -201,20 +210,20 @@
 </template>
 
 <script>
-import * as API from "@/api";
-import treeTransfer from "el-tree-transfer";
-import { VueEditor } from "vue2-editor";
+import * as API from '@/api';
+import treeTransfer from 'el-tree-transfer';
+import { VueEditor } from 'vue2-editor';
 export default {
   components: {
     VueEditor,
     treeTransfer
   },
   mounted() {
-    var userdata = JSON.parse(localStorage.getItem("userdata"));
+    var userdata = JSON.parse(localStorage.getItem('userdata'));
     this.quanxian = userdata.quanxian;
     if (this.$route.query.wendangid) {
       API.getwendangid({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         wendangid: this.$route.query.wendangid
       }).then(({ data }) => {
         this.form = data.data;
@@ -225,7 +234,7 @@ export default {
         this.yuedu = data.yuedu;
         this.upload.wendangid = this.form.wendangid;
         if (this.hegao) {
-          this.form.lingdao.imageurl = userdata.qianmingUrl;
+          this.form.lingdao.name = userdata.name;
           var myDate = new Date();
           this.form.lingdao.time = myDate.toLocaleString();
         }
@@ -233,12 +242,7 @@ export default {
         for (var i = 0; i < this.form.fileList.length; ++i) {
           this.form.fujianList.push({
             name: this.form.fileList[i].name,
-            url:
-              this.baseurl +
-              "/data/fujian/" +
-              this.form.wendangid +
-              "/" +
-              this.form.fileList[i].name
+            url: this.baseurl + '/data/fujian/' + this.form.wendangid + '/' + this.form.fileList[i].name
           });
         }
       });
@@ -246,22 +250,26 @@ export default {
       API.getfawenhao().then(({ data }) => {
         this.form.wendangid = data.wendangid + data.suiji;
         this.upload.wendangid = this.form.wendangid;
-        this.form.nigaoid = userdata.id;
+        this.form.nigaouserid = userdata.userid;
         this.form.nigaoren = userdata.name;
         this.form.nigaodanwei = userdata.group;
         this.form.nigaorendianhua = userdata.phone;
-        if (userdata.quanxian == 30) {
+        if (userdata.quanxian >= 28 && userdata.quanxian <= 30) {
+          this.hegao = 1;
+          if (this.hegao) {
+            this.form.lingdao.name = userdata.name;
+            var myDate = new Date();
+            this.form.lingdao.time = myDate.toLocaleString();
+          }
           this.form.hegaoren = userdata.name;
           this.form.hegaodanwei = userdata.group;
           this.form.hegaorendianhua = userdata.phone;
         }
       });
     }
-    API.gettongxinlu({ token: localStorage.getItem("token") }).then(
-      ({ data }) => {
-        this.fromData = data.tongxinlu;
-      }
-    );
+    API.gettongxinlu({ token: localStorage.getItem('token') }).then(({ data }) => {
+      this.fromData = data.tongxinlu;
+    });
   },
   data() {
     return {
@@ -272,42 +280,41 @@ export default {
       tuiwen: 0,
       pishi: 0,
       yuedu: 0,
-      lingdaopishi: "",
-      banli: "",
-      title: ["未选列表", "已选列表"],
-      mode: "transfer",
+      lingdaopishi: '',
+      banli: '',
+      title: ['未选列表', '已选列表'],
+      mode: 'transfer',
       istongxinlu: 0,
       fromData: [],
       toData: [],
       baseurl: API.base,
       loading: false,
-      baocunfujian: API.baseurl + "baocunfujian",
+      baocunfujian: API.baseurl + 'baocunfujian',
       upload: {},
       form: {
-        doctype: "qianbao",
-        wendangid: "",
-        nigaoid: "",
-        zhuangtai: "caogao",
+        doctype: 'qianbao',
+        wendangid: '',
+        nigaouserid: '',
+        zhuangtai: 'caogao',
         riqi: this.getToday(),
-        bianhao: "",
+        bianhao: '',
         biglingdaolist: [],
         midlingdaolist: [],
         minlingdaolist: [],
         falvlingdaolist: [],
         lingdao: {
-          yijian: "",
-          imageurl: "",
-          time: ""
+          name: '',
+          time: ''
         },
-        biaoti: "",
-        neirong: "",
-        nigaoren: "",
-        nigaodanwei: "",
-        nigaorendianhua: "",
+        biaoti: '',
+        neirong: '',
+        nigaoren: '',
+        nigaodanwei: '',
+        nigaorendianhua: '',
         nibanyijian: {
-          yijian: "",
-          name: "",
-          time: ""
+          yijian: '',
+          name: '',
+          time: ''
         },
         shenpihis: {},
         liuchenglist: [],
@@ -319,45 +326,38 @@ export default {
   },
   methods: {
     querenfanhui() {
-      this.$confirm("确认退回上一级?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确认退回上一级?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(() => {
           API.fanhui({
-            token: localStorage.getItem("token"),
+            token: localStorage.getItem('token'),
             wendangid: this.form.wendangid,
             nibanyijian: this.form.nibanyijian,
             lingdaopishi: this.lingdaopishi,
             pishi: this.pishi
           }).then(({ data }) => {
-            this.form.biglingdaolist = data.biglingdaolist;
-            this.form.midlingdaolist = data.midlingdaolist;
-            this.form.minlingdaolist = data.minlingdaolist;
-            this.form.falvlingdaolist = data.falvlingdaolist;
-            this.hegao = 0;
-            this.tuiwen = 0;
-            this.xiugai = 0;
-            this.pishi = 0;
-          });
-          this.$message({
-            type: "success",
-            message: "退回成功!",
-            duration: 1000
+            this.$router.go(-1);
+            this.$message({
+              type: 'success',
+              message: '退回上一级成功!',
+              duration: 1000
+            });
           });
         })
         .catch(() => {});
     },
     querenchehui() {
-      this.$confirm("确认撤回?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确认撤回?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(() => {
           API.chehui({
-            token: localStorage.getItem("token"),
+            token: localStorage.getItem('token'),
             wendangid: this.form.wendangid
           }).then(({ data }) => {
             this.hegao = 0;
@@ -365,26 +365,26 @@ export default {
             this.xiugai = 0;
             this.pishi = 0;
             this.$message({
-              type: "success",
-              message: "撤回成功!",
+              type: 'success',
+              message: '撤回成功!',
               duration: 1000
             });
-            this.mounted();
+            this.$router.go(0);
           });
         })
         .catch(() => {});
     },
     getToday() {
       var date = new Date();
-      var seperator1 = "-";
+      var seperator1 = '-';
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       var strDate = date.getDate();
       if (month >= 1 && month <= 9) {
-        month = "0" + month;
+        month = '0' + month;
       }
       if (strDate >= 0 && strDate <= 9) {
-        strDate = "0" + strDate;
+        strDate = '0' + strDate;
       }
       var currentdate = year + seperator1 + month + seperator1 + strDate;
       return currentdate;
@@ -394,7 +394,7 @@ export default {
     },
     querenyuedu() {
       API.yiyue({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         wendangid: this.form.wendangid,
         banli: this.banli
       }).then(({ data }) => {
@@ -402,8 +402,7 @@ export default {
         if (this.tongxinlu == 0) {
           this.$message.success({
             showClose: true,
-            message:
-              this.form.zhuangtai != "退文" ? "办理成功！" : "已阅成功！",
+            message: this.form.zhuangtai != '退文' ? '办理成功！' : '已阅成功！',
             duration: 1000
           });
         }
@@ -411,7 +410,7 @@ export default {
       });
     },
     getImgUrl(imageurl) {
-      return API.base + "/data/" + imageurl;
+      return API.base + '/data/' + imageurl;
     },
     querensend() {
       this.istongxinlu = 1;
@@ -430,39 +429,32 @@ export default {
       }
     },
     querentuiwen() {
-      this.$confirm("确认退文至发起人?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确认退文至发起人?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(() => {
           API.tuiwen({
-            token: localStorage.getItem("token"),
+            token: localStorage.getItem('token'),
             wendangid: this.form.wendangid,
             nibanyijian: this.form.nibanyijian,
             lingdaopishi: this.lingdaopishi,
             pishi: this.pishi
           }).then(({ data }) => {
-            this.form.biglingdaolist = data.biglingdaolist;
-            this.form.midlingdaolist = data.midlingdaolist;
-            this.form.minlingdaolist = data.minlingdaolist;
-            this.form.falvlingdaolist = data.falvlingdaolist;
-            this.hegao = 0;
-            this.tuiwen = 0;
-            this.xiugai = 0;
-            this.pishi = 0;
-          });
-          this.$message({
-            type: "success",
-            message: "退文成功!",
-            duration: 1000
+            this.$router.go(-1);
+            this.$message({
+              type: 'success',
+              message: '退文成功!',
+              duration: 1000
+            });
           });
         })
         .catch(() => {});
     },
     querenshenpi() {
       API.pishi({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         wendangid: this.form.wendangid,
         pishi: this.pishi,
         lingdaopishi: this.lingdaopishi
@@ -476,7 +468,7 @@ export default {
       if (this.tongxinlu == 0) {
         this.$message.success({
           showClose: true,
-          message: "审批成功",
+          message: '审批成功',
           duration: 1000
         });
       }
@@ -485,23 +477,23 @@ export default {
       if (e && this.toData.length == 0) {
         this.$message({
           showClose: true,
-          message: "请选择发送人",
+          message: '请选择发送人',
           duration: 1000
         });
-        return "";
+        return '';
       }
       this.loading = true;
       var fasongdata = {
         toData: this.toData,
         wendang: this.form,
-        token: localStorage.getItem("token")
+        token: localStorage.getItem('token')
       };
       if (!e) fasongdata.toData = [];
       API.fasongwendang(fasongdata).then(({ data }) => {
         this.loading = false;
         this.$message.success({
           showClose: true,
-          message: "发送成功",
+          message: '发送成功',
           duration: 1000
         });
         if (e) this.$router.go(-1);
@@ -567,10 +559,10 @@ export default {
     display: flex;
     line-height: 50px;
     .riqi1 {
-      margin-right: 45%;
+      margin-right: 33%;
     }
     .bianhao {
-      width: 80px;
+      width: 200px;
     }
   }
   .kuang {

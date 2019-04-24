@@ -6,7 +6,7 @@
         <el-breadcrumb>
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>办公管理</el-breadcrumb-item>
-          <el-breadcrumb-item>预警管理</el-breadcrumb-item>
+          <el-breadcrumb-item>提醒管理</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
@@ -14,7 +14,7 @@
     <div class="oa_search">
       <el-input class="chaxun" v-model="query" placeholder="全文搜索"></el-input>
       <el-button type="primary" icon="el-icon-search" @click="chaxun">查询</el-button>
-      <el-button type="success" icon="el-icon-circle-plus-outline" @click="handleGoUrl">新增预警</el-button>
+      <el-button type="success" icon="el-icon-circle-plus-outline" @click="handleGoUrl">新增提醒</el-button>
     </div>
     <!--list-->
     <el-table
@@ -24,20 +24,25 @@
       style="width: 100%"
       :default-sort="{prop: 'starttime', order: 'descending'}"
     >
-      <el-table-column sortable prop="biaoti" label="预警标题" align="center" min-width="200"></el-table-column>
+      <el-table-column sortable prop="biaoti" label="提醒标题" align="center" min-width="200"></el-table-column>
       <el-table-column sortable prop="nigaoren" label="发起人" align="center" width="120"></el-table-column>
-      <el-table-column sortable prop="jinji" align="center" width="120" label="预警程度"></el-table-column>
+      <el-table-column sortable prop="jiange" align="center" width="120" label="提醒间隔">
+        <template slot-scope="scope">
+          <div>{{scope.row.jiange}}天</div>
+        </template>
+      </el-table-column>
       <el-table-column sortable prop="zhuangtai" align="center" width="120" label="状态">
         <template slot-scope="scope">
-          <a v-if="scope.row.zhuangtai=='预警未开始'" style="color:#0066CC">{{scope.row.zhuangtai}}</a>
-          <a v-if="scope.row.zhuangtai=='未处理'" style="color:#FF0000">{{scope.row.zhuangtai}}</a>
+          <a v-if="scope.row.zhuangtai=='提醒未开始'" style="color:#0066CC">{{scope.row.zhuangtai}}</a>
+          <a v-if="scope.row.zhuangtai=='正在提醒'" style="color:#FF0000">{{scope.row.zhuangtai}}</a>
+          <a v-if="scope.row.zhuangtai=='待唤醒中'" style="color:#FFCC00">{{scope.row.zhuangtai}}</a>
           <a v-if="scope.row.zhuangtai=='处理完成'" style="color:#00BB00">{{scope.row.zhuangtai}}</a>
         </template>
       </el-table-column>
       <el-table-column sortable prop="wanchengren" align="center" width="120" label="处理人"></el-table-column>
       <el-table-column sortable prop="wanchengtime" align="center" width="120" label="处理时间"></el-table-column>
-      <el-table-column sortable prop="starttime" align="center" label="预警开始" width="120"></el-table-column>
-      <el-table-column sortable prop="endtime" align="center" label="预警结束" width="120"></el-table-column>
+      <el-table-column sortable prop="starttime" align="center" label="提醒开始" width="120"></el-table-column>
+      <el-table-column sortable prop="endtime" align="center" label="提醒结束" width="120"></el-table-column>
       <el-table-column fixed="right" align="center" label="操作" width="80">
         <template slot-scope="scope">
           <el-button type="text" @click="handleEdit(scope.$index, scope.row)" size="small">
@@ -59,12 +64,12 @@
   </div>
 </template>
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 export default {
   mounted() {
     API.getfasongguanli({
-      token: localStorage.getItem("token"),
-      doctype: "yujing",
+      token: localStorage.getItem('token'),
+      doctype: 'tixing',
       query: this.query
     }).then(({ data }) => {
       this.dataTable = data.dataTable;
@@ -75,17 +80,17 @@ export default {
     return {
       dataTable: [],
       qiefendataTable: [],
-      query: ""
+      query: ''
     };
   },
   methods: {
     handleGoUrl() {
-      this.$router.push({ path: "/bangongguanli/yujing" });
+      this.$router.push({ path: '/bangongguanli/tixing' });
     },
     chaxun() {
       API.getfasongguanli({
-        token: localStorage.getItem("token"),
-        doctype: "yujing",
+        token: localStorage.getItem('token'),
+        doctype: 'tixing',
         query: this.query
       }).then(({ data }) => {
         this.dataTable = data.dataTable;
@@ -98,7 +103,7 @@ export default {
     handleEdit(index, row) {
       console.log(row);
       this.$router.push({
-        path: "/bangongguanli/yujing",
+        path: '/bangongguanli/tixing',
         query: {
           wendangid: row.wendangid
         }

@@ -12,7 +12,7 @@ import Tongxinlu from '@/components/person/Tongxinlu';
 import Changyongzu from '@/components/person/Changyongzu';
 
 //公文发文
-import Yangban from '@/components/fawen/Yangban';
+import Gaozhi from '@/components/fawen/Gaozhi';
 import Gongwen from '@/components/fawen/Gongwen';
 import Fawen from '@/components/fawen/Fawen';
 import Huiyi from '@/components/fawen/Huiyi';
@@ -40,8 +40,8 @@ import Huiyifaqi from '@/components/bangongguanli/Huiyifaqi';
 import Duban from '@/components/bangongguanli/Duban';
 import Dubanguanli from '@/components/bangongguanli/Dubanguanli';
 import Bumenwenjian from '@/components/bangongguanli/Bumenwenjian';
-import Yujingguanli from '@/components/bangongguanli/Yujingguanli';
-import Yujing from '@/components/bangongguanli/Yujing';
+import Tixingguanli from '@/components/bangongguanli/Tixingguanli';
+import Tixing from '@/components/bangongguanli/Tixing';
 
 //系统管理
 import UserChangePwd from '@/components/xitongguanli/Changepwd';
@@ -104,9 +104,9 @@ let router = new Router({
       }
     },
     {
-      path: '/bangongguanli/yujing',
-      component: Yujing,
-      name: '新增预警',
+      path: '/bangongguanli/tixing',
+      component: Tixing,
+      name: '新增提醒',
       menuShow: false,
       meta: {
         requiresAuth: true
@@ -247,9 +247,9 @@ let router = new Router({
       iconCls: 'iconfont icon-survey1',
       children: [
         {
-          path: '/fawen/Yangban',
-          name: '发文样版',
-          component: Yangban,
+          path: '/fawen/gaozhi',
+          name: '发文稿纸',
+          component: Gaozhi,
           meta: {
             requiresAuth: true
           }
@@ -390,9 +390,9 @@ let router = new Router({
           }
         },
         {
-          path: '/bangongguanli/yujingguanli',
-          component: Yujingguanli,
-          name: '预警管理',
+          path: '/bangongguanli/tixingguanli',
+          component: Tixingguanli,
+          name: '提醒管理',
           menuShow: true,
           meta: {
             requiresAuth: true

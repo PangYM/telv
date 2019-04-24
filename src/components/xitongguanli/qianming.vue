@@ -35,47 +35,44 @@
 </template>
 
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 
 export default {
   mounted() {
-    API.setqianmingUrl({ token: localStorage.getItem("token") }).then(
-      ({ data }) => {
-        this.imageUrl = API.base + "/data/" + data.qianmingUrl;
-        console.log(this.imageUrl);
-      }
-    );
+    API.getqianmingUrl({ token: localStorage.getItem('token') }).then(({ data }) => {
+      if (data.qianmingUrl.length > 0) this.imageUrl = API.base + '/data/' + data.qianmingUrl;
+    });
   },
   data() {
     return {
-      token: { token: localStorage.getItem("token") },
-      imageUrl: "",
-      qianmingUrl: API.baseurl + "qianmingUrl"
+      token: { token: localStorage.getItem('token') },
+      imageUrl: '',
+      qianmingUrl: API.baseurl + 'qianmingUrl'
     };
   },
   methods: {
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg" || file.type === "image/png";
+      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG/png 格式!");
+        this.$message.error('上传头像图片只能是 JPG/png 格式!');
       }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+        this.$message.error('上传头像图片大小不能超过 2MB!');
       }
       return isJPG && isLt2M;
     },
     handleSaveProfile() {
       this.$message.success({
         showClose: true,
-        message: "修改成功",
+        message: '修改成功',
         duration: 2000
       });
       API.setqianmingUrl(this.token).then(({ data }) => {
-        this.imageUrl = API.base + "/data/" + data.qianmingUrl;
+        this.imageUrl = API.base + '/data/' + data.qianmingUrl;
       });
       API.getUser(this.token).then(({ data }) => {
-        localStorage.setItem("userdata", data.userinfo);
+        localStorage.setItem('userdata', JSON.stringify(data.userinfo));
       });
     }
   }

@@ -24,10 +24,10 @@
 
         <!-- 修改人员 -->
         <el-form v-if="xiugai" class="renyuan" ref="form" :model="xiugaiform" label-width="80px">
-          <el-input v-model="userid" placeholder="请输入用户账号"></el-input>
+          <el-input v-model="zhanghao" placeholder="请输入用户账号"></el-input>
           <el-button class="anniu" type="primary" @click="chaxun">查询</el-button>
-          <el-form-item prop="id" label="账号">
-            <el-input v-model="xiugaiform.id" disabled></el-input>
+          <el-form-item prop="zhanghao" label="账号">
+            <el-input v-model="xiugaiform.zhanghao"></el-input>
           </el-form-item>
           <el-form-item prop="pwd" label="密码">
             <el-input v-model="xiugaiform.pwd"></el-input>
@@ -38,20 +38,12 @@
           <el-form-item prop="group" label="所在部门">
             <el-input v-model="xiugaiform.group"></el-input>
           </el-form-item>
-          <el-form-item prop="quanxian" label="权限">
+          <el-form-item prop="quanxian" label="职位级别">
             <el-select v-model="xiugaiform.quanxian" placeholder="普通员工" style="width:100%;">
               <el-option label="普通员工" value="50"></el-option>
-              <el-option label="部门副职" value="40"></el-option>
-              <el-option label="部门正职" value="30"></el-option>
+              <el-option label="部门主管" value="30"></el-option>
               <el-option label="分管领导" value="20"></el-option>
-              <el-option label="大领导" value="10"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item prop="isbumenzhang" label="职位级别">
-            <el-select v-model="xiugaiform.isbumenzhang" placeholder="普通员工" style="width:100%;">
-              <el-option label="普通员工" value="0"></el-option>
-              <el-option label="部门正职" value="1"></el-option>
-              <el-option label="部门副职" value="2"></el-option>
+              <el-option label="主要领导" value="10"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item prop="zhiweiname" label="职位名称">
@@ -70,8 +62,8 @@
 
         <!-- 新增人员 -->
         <el-form v-if="xinzeng" class="renyuan" ref="form" :model="xinzengform" label-width="80px">
-          <el-form-item prop="id" label="账号">
-            <el-input v-model="xinzengform.id"></el-input>
+          <el-form-item prop="zhanghao" label="账号">
+            <el-input v-model="xinzengform.zhanghao"></el-input>
           </el-form-item>
           <el-form-item prop="pwd" label="密码">
             <el-input v-model="xinzengform.pwd"></el-input>
@@ -82,20 +74,12 @@
           <el-form-item prop="group" label="所在部门">
             <el-input v-model="xinzengform.group"></el-input>
           </el-form-item>
-          <el-form-item prop="quanxian" label="权限">
+          <el-form-item prop="quanxian" label="职位级别">
             <el-select v-model="xinzengform.quanxian" placeholder="普通员工" style="width:100%;">
               <el-option label="普通员工" value="50"></el-option>
-              <el-option label="部门副职" value="40"></el-option>
-              <el-option label="部门正职" value="30"></el-option>
+              <el-option label="部门领导" value="30"></el-option>
               <el-option label="分管领导" value="20"></el-option>
-              <el-option label="大领导" value="10"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item prop="isbumenzhang" label="职位级别">
-            <el-select v-model="xinzengform.isbumenzhang" placeholder="普通员工" style="width:100%;">
-              <el-option label="普通员工" value="0"></el-option>
-              <el-option label="部门正职" value="1"></el-option>
-              <el-option label="部门副职" value="2"></el-option>
+              <el-option label="公司领导" value="10"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item prop="zhiweiname" label="职位名称">
@@ -168,8 +152,8 @@
 
         <div>
           <el-button v-if="xiugai" type="primary" @click="querenxiugai">确认修改</el-button>
-          <el-button v-if="shanchu" type="primary" @click="querenshanchu">确认删除</el-button>
           <el-button v-if="xinzeng" type="primary" @click="querenxinzeng">确认新增</el-button>
+          <el-button v-if="shanchu" type="primary" @click="querenshanchu">确认删除</el-button>
           <el-button v-if="xinjian" type="primary" @click="querenxinjian">确认新建</el-button>
           <el-button v-if="piliang" type="primary" @click="querenpiliang">确认导入</el-button>
         </div>
@@ -178,23 +162,25 @@
   </div>
 </template>
 <script>
-import * as API from "@/api";
-import treeTransfer from "el-tree-transfer";
-import { VueEditor } from "vue2-editor";
-import axios from "axios";
+import * as API from '@/api';
+import treeTransfer from 'el-tree-transfer';
+import { VueEditor } from 'vue2-editor';
+import axios from 'axios';
 export default {
   components: {
     VueEditor,
     treeTransfer
   },
   mounted() {
-    var userdata = JSON.parse(localStorage.getItem("userdata"));
+    var userdata = JSON.parse(localStorage.getItem('userdata'));
     this.quanxian = userdata.quanxian;
     API.gettongxinlu({
-      token: localStorage.getItem("token"),
+      token: localStorage.getItem('token'),
       isguanliyuan: 1
     }).then(({ data }) => {
       this.xinjianfrom = data.tongxinlu;
+      this.shanchufrom = data.tongxinlu;
+      this.shanchuto = [];
       this.xinjianto = [];
     });
   },
@@ -206,39 +192,41 @@ export default {
       shanchu: 0,
       xinjian: 0,
       piliang: 0,
-      userid: "",
-      upload: { token: localStorage.getItem("token") },
-      mode: "transfer",
-      xinjiantitle: ["现有人员", "新部门人员"],
-      shanchutitle: ["现有人员", "将删除人员"],
-      bumenmingcheng: "",
+      zhanghao: '',
+      upload: { token: localStorage.getItem('token') },
+      mode: 'transfer',
+      xinjiantitle: ['现有人员', '新部门人员'],
+      shanchutitle: ['现有人员', '将删除人员'],
+      bumenmingcheng: '',
       shanchufrom: [],
       shanchuto: [],
       xinjianfrom: [],
       xinjianto: [],
-      piliangdaoru: API.baseurl + "piliangdaoru",
+      piliangdaoru: API.baseurl + 'piliangdaoru',
       xiugaiform: {
-        id: "",
+        userid: '',
+        zhanghao: '',
         isbumenzhang: 0,
-        name: "",
-        pwd: "123456",
-        phone: "",
-        email: "",
-        dianhua: "",
-        zhiweiname: "",
-        group: "",
+        name: '',
+        pwd: '123456',
+        phone: '',
+        email: '',
+        dianhua: '',
+        zhiweiname: '',
+        group: '',
         quanxian: 50
       },
       xinzengform: {
-        id: "",
+        userid: '',
+        zhanghao: '',
         isbumenzhang: 0,
-        name: "",
-        pwd: "123456",
-        phone: "",
-        email: "",
-        dianhua: "",
-        zhiweiname: "",
-        group: "",
+        name: '',
+        pwd: '123456',
+        phone: '',
+        email: '',
+        dianhua: '',
+        zhiweiname: '',
+        group: '',
         quanxian: 50
       }
     };
@@ -248,39 +236,39 @@ export default {
       this.$refs.upload.submit();
     },
     onsuccess(response, file, fileList) {
-      if (response.MSG == "NO") {
+      if (response.MSG == 'NO') {
         this.$message({
-          type: "info",
-          message: "导入文件文件格式不正确！"
+          type: 'info',
+          message: '导入文件文件格式不正确！'
         });
       } else {
         this.$message.success({
           showClose: true,
-          message: "导入成功！",
+          message: '导入成功！',
           duration: 2000
         });
       }
     },
     chaxun() {
-      if (this.userid.length == 0) {
+      if (this.zhanghao.length == 0) {
         this.$message({
           showClose: true,
-          message: "用户账户不能为空",
+          message: '用户账户不能为空',
           duration: 2000
         });
-        return "";
+        return '';
       }
       API.getUser({
-        token: localStorage.getItem("token"),
-        userid: this.userid
+        token: localStorage.getItem('token'),
+        zhanghao: this.zhanghao
       }).then(({ data }) => {
-        if (data.MSG == "NO") {
+        if (data.MSG == 'NO') {
           this.$message({
             showClose: true,
-            message: "当前账户不存在",
+            message: '当前账户不存在',
             duration: 2000
           });
-          return "";
+          return '';
         }
         this.xiugaiform = data.userinfo;
       });
@@ -329,50 +317,56 @@ export default {
     },
     querenxiugai() {
       if (
-        this.xiugaiform.id.length == 0 ||
+        this.xiugaiform.zhanghao.length == 0 ||
         this.xiugaiform.pwd.length == 0 ||
         this.xiugaiform.name.length == 0 ||
         this.xiugaiform.group.length == 0
       ) {
         this.$message({
           showClose: true,
-          message: "账号/密码/姓名/所在部门不能为空",
+          message: '账号/密码/姓名/所在部门不能为空',
           duration: 2000
         });
-        return "";
+        return '';
       }
-      console.log(this.xiugaiform);
       API.setUserProfile(this.xiugaiform).then(({ data }) => {
-        this.$message.success({
-          showClose: true,
-          message: "修改成功！",
-          duration: 2000
-        });
-        return "";
+        if (data.MSG == 'YES') {
+          this.$message.success({
+            showClose: true,
+            message: '修改成功！',
+            duration: 2000
+          });
+        } else {
+          this.$message({
+            showClose: true,
+            message: '您输入的账号不合法',
+            duration: 2000
+          });
+        }
       });
     },
     querenxinzeng() {
       if (
-        this.xinzengform.id.length == 0 ||
+        this.xinzengform.zhanghao.length == 0 ||
         this.xinzengform.pwd.length == 0 ||
         this.xinzengform.name.length == 0 ||
         this.xinzengform.group.length == 0
       ) {
         this.$message({
           showClose: true,
-          message: "账号/密码/姓名/所在部门不能为空",
+          message: '账号/密码/姓名/所在部门不能为空',
           duration: 2000
         });
-        return "";
+        return '';
       }
       API.xinzengrenyuan({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         newuser: this.xinzengform
       }).then(({ data }) => {
-        if (data.MSG == "YES") {
+        if (data.MSG == 'YES') {
           this.$message.success({
             showClose: true,
-            message: "新增成功",
+            message: '新增成功',
             duration: 2000
           });
         }
@@ -382,25 +376,25 @@ export default {
       if (this.shanchuto.length == 0) {
         this.$message({
           showClose: true,
-          message: "请选择删除人员",
+          message: '请选择删除人员',
           duration: 2000
         });
-        return "";
+        return '';
       }
-      this.$confirm("确认删除？请谨慎操作", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确认删除？请谨慎操作', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(() => {
         API.shanchurenyuan({
-          token: localStorage.getItem("token"),
+          token: localStorage.getItem('token'),
           shanchuto: this.shanchuto
         }).then(({ data }) => {
-          if (data.MSG == "YES") {
+          if (data.MSG == 'YES') {
             this.guanbi();
             this.$message.success({
               showClose: true,
-              message: "修改成功",
+              message: '删除成功',
               duration: 2000
             });
           }
@@ -411,30 +405,30 @@ export default {
       if (this.bumenmingcheng.length == 0) {
         this.$message({
           showClose: true,
-          message: "请输入新建部门名称",
+          message: '请输入新建部门名称',
           duration: 2000
         });
-        return "";
+        return '';
       }
       if (this.xinjianto.length == 0) {
         this.$message({
           showClose: true,
-          message: "请添加人员到新部门",
+          message: '请添加人员到新部门',
           duration: 2000
         });
-        return "";
+        return '';
       }
       var fasongdata = {
         xinjianto: this.xinjianto,
         bumenmingcheng: this.bumenmingcheng,
-        token: localStorage.getItem("token")
+        token: localStorage.getItem('token')
       };
       API.xinjianbumen(fasongdata).then(({ data }) => {
-        if (data.MSG == "YES") {
+        if (data.MSG == 'YES') {
           this.guanbi();
           this.$message.success({
             showClose: true,
-            message: "新建成功",
+            message: '新建成功',
             duration: 2000
           });
         }

@@ -13,7 +13,7 @@
     <el-col :span="23" class="warpmain">
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="账号">
-          <div class="xianshi">{{form.id}}</div>
+          <div class="xianshi">{{form.zhanghao}}</div>
         </el-form-item>
         <el-form-item prop="name" label="姓名">
           <div class="xianshi">{{form.name}}</div>
@@ -36,35 +36,37 @@
 </template>
 
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 
 export default {
   mounted() {
-    API.getUser({ token: localStorage.getItem("token") }).then(({ data }) => {
+    API.getUser({ token: localStorage.getItem('token') }).then(({ data }) => {
       this.form = data.userinfo;
     });
   },
   data() {
     return {
       form: {
-        id: "",
-        name: "",
-        email: "",
-        phone: "",
-        dianhua: ""
+        zhanghao: '',
+        name: '',
+        email: '',
+        phone: '',
+        dianhua: ''
       }
     };
   },
   methods: {
     handleSaveProfile() {
       API.setUserProfile(this.form).then(({ data }) => {
-        localStorage.setItem("userdata", JSON.stringify(data));
-        this.$message.success({
-          showClose: true,
-          message: "修改成功！",
-          duration: 2000
-        });
-        return "";
+        if (data.MSG == 'YES') {
+          localStorage.setItem('userdata', JSON.stringify(data.userdata));
+          this.$message.success({
+            showClose: true,
+            message: '修改成功！',
+            duration: 1000
+          });
+          return '';
+        }
       });
     }
   }

@@ -22,7 +22,7 @@
             list-type="picture-card"
             :before-upload="beforeAvatarUpload"
           >
-            <img class="avatar" v-if="imageUrl" v-bind:src="imageUrl">
+            <img class="avatar" v-if="imageUrl.length>0" v-bind:src="imageUrl">
             <i v-else class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
@@ -35,43 +35,41 @@
 </template>
 
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 
 export default {
   mounted() {
-    API.settouxiangUrl({ token: localStorage.getItem("token") }).then(
-      ({ data }) => {
-        this.imageUrl = API.base + "/data/" + data.touxiangUrl;
-      }
-    );
+    API.gettouxiangUrl({ token: localStorage.getItem('token') }).then(({ data }) => {
+      if (data.touxiangUrl.length > 0) this.imageUrl = API.base + '/data/' + data.touxiangUrl;
+    });
   },
   data() {
     return {
-      token: { token: localStorage.getItem("token") },
-      imageUrl: "",
-      touxiangUrl: API.baseurl + "touxiangUrl"
+      token: { token: localStorage.getItem('token') },
+      imageUrl: '',
+      touxiangUrl: API.baseurl + 'touxiangUrl'
     };
   },
   methods: {
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg" || file.type === "image/png";
+      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG/png 格式!");
+        this.$message.error('上传头像图片只能是 JPG/png 格式!');
       }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+        this.$message.error('上传头像图片大小不能超过 2MB!');
       }
       return isJPG && isLt2M;
     },
     handleSaveProfile() {
       this.$message.success({
         showClose: true,
-        message: "修改成功",
+        message: '修改成功',
         duration: 2000
       });
       API.settouxiangUrl(this.token).then(({ data }) => {
-        this.imageUrl = API.base + "/data/" + data.touxiangUrl;
+        this.imageUrl = API.base + '/data/' + data.touxiangUrl;
       });
     }
   }

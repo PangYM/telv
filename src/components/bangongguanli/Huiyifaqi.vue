@@ -175,7 +175,7 @@ export default {
     } else {
       API.getfawenhao().then(({ data }) => {
         this.form.wendangid = data.wendangid + data.suiji;
-        this.form.nigaoid = userdata.id;
+        this.form.nigaouserid = userdata.userid;
         this.form.nigaoren = userdata.name;
         this.form.nigaodanwei = userdata.group;
         this.upload.wendangid = this.form.wendangid;
@@ -204,7 +204,7 @@ export default {
         wendangid: "",
         biaoti: "",
         didian: "",
-        nigaoid: "",
+        nigaouserid: "",
         nigaoren: "",
         userlist: [],
         riqi: this.getToday(),

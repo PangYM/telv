@@ -1,21 +1,21 @@
 <template>
-  <div class="yujingyujing">
+  <div class="tixingtixing">
     <!--面包屑-->
     <el-row>
       <el-col :span="24" class="warp-breadcrum">
         <el-breadcrumb>
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>办公管理</el-breadcrumb-item>
-          <el-breadcrumb-item>新增预警</el-breadcrumb-item>
+          <el-breadcrumb-item>新增提醒</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
     <!--form-->
-    <el-row class="yujing">
+    <el-row class="tixing">
       <el-form label-width="80px">
         <el-row>
-          <el-form-item label="预警标题">
-            <el-input v-if="xiugai" v-model="form.biaoti" placeholder="请输入预警标题"></el-input>
+          <el-form-item label="提醒标题">
+            <el-input v-if="xiugai" v-model="form.biaoti" placeholder="请输入提醒标题"></el-input>
             <div v-else class="xianshi">{{form.biaoti}}</div>
           </el-form-item>
         </el-row>
@@ -45,6 +45,25 @@
                 <el-option label="非常紧急" value="非常紧急"></el-option>
               </el-select>
               <div v-else class="xianshi">{{form.jinji}}</div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="提醒间隔">
+              <el-select
+                v-if="xiugai"
+                v-model="form.jiange"
+                placeholder="请选择提醒间隔"
+                style="width:100%;"
+              >
+                <el-option label="1天" value="1"></el-option>
+                <el-option label="7天" value="7"></el-option>
+                <el-option label="15天" value="15"></el-option>
+                <el-option label="30天" value="30"></el-option>
+                <el-option label="90天" value="90"></el-option>
+                <el-option label="180天" value="180"></el-option>
+                <el-option label="360天" value="360"></el-option>
+              </el-select>
+              <div v-else class="xianshi">{{form.jiange}}天</div>
             </el-form-item>
           </el-col>
         </el-row>
@@ -150,7 +169,7 @@ export default {
     } else {
       API.getfawenhao().then(({ data }) => {
         this.form.wendangid = data.wendangid + data.suiji;
-        this.form.nigaoid = userdata.id;
+        this.form.nigaouserid = userdata.userid;
         this.form.nigaoren = userdata.name;
         this.form.nigaodanwei = userdata.group;
         this.upload.wendangid = this.form.wendangid;
@@ -164,14 +183,15 @@ export default {
       baocunfujian: API.baseurl + "baocunfujian",
       upload: {},
       form: {
-        doctype: "yujing",
+        doctype: "tixing",
         zhuangtai: "未处理",
         wendangid: "",
         biaoti: "",
-        nigaoid: "",
+        nigaouserid: "",
         nigaoren: "",
         nigaodanwei: "",
-        jinji: "",
+        jinji: "普通",
+        jiange: "1",
         kaishitime: this.getToday(),
         jieshutime: this.getToday(),
         beizhu: "",
@@ -246,10 +266,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.yujingyujing {
+.tixingtixing {
   text-align: center;
 }
-.yujing {
+.tixing {
   margin-top: 30px;
   margin-left: 20%;
   width: 60%;

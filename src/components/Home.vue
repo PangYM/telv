@@ -2,8 +2,8 @@
   <el-row class="container">
     <el-row :span="24" class="topbar-wrap">
       <el-col :span="12" class="topbar-title">
-        <img :src="logourl" class="logo" @click="jumpTo('/')">
-        <img :src="toubanurl" class="touban" @click="jumpTo('/')">
+        <img :src="logourl" class="logo" @click="jumpTo('/main')">
+        <img :src="toubanurl" class="touban" @click="jumpTo('/main')">
       </el-col>
       <el-col :span="4" class="date_l">
         <el-row>
@@ -116,74 +116,57 @@
 </template>
 
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 export default {
-  name: "home",
+  name: 'home',
   mounted() {
-    localStorage.setItem("ifnew", 1);
-    var userdata = JSON.parse(localStorage.getItem("userdata"));
+    localStorage.setItem('ifnew', 1);
+    var userdata = JSON.parse(localStorage.getItem('userdata'));
     this.quanxian = userdata.quanxian;
-    this.dono();
+    this.xiando();
   },
   destroyed() {
-    localStorage.setItem("ifnew", 0);
+    localStorage.setItem('ifnew', 0);
   },
   data() {
     return {
       quanxian: 0,
-      touxiangUrl: "",
-      logourl: API.base + "/data/logo.png",
-      toubanurl: API.base + "/data/touban.jpg",
-      defaultActiveIndex: "0",
-      nickname: JSON.parse(localStorage.getItem("userdata")).name,
+      touxiangUrl: '',
+      logourl: API.base + '/data/logo.png',
+      toubanurl: API.base + '/data/touban.jpg',
+      defaultActiveIndex: '0',
+      nickname: JSON.parse(localStorage.getItem('userdata')).name,
       collapsed: false,
       dateList: {
-        date: "",
-        weekday: "",
-        time: ""
+        date: '',
+        weekday: '',
+        time: ''
       }
     };
   },
   methods: {
-    dono() {
-      let _this = this;
-      setTimeout(_this.dono1, 1000);
-    },
-    dono1() {
-      API.getifzaixian({ token: localStorage.getItem("token") }).then(
-        ({ data }) => {
-          if (data.MSG == "NO") {
-            this.$message({
-              showClose: true,
-              message: "您已在其他地方登陆，请重新登陆",
-              duration: 10000
-            });
-            this.$router.push({
-              path: "/login"
-            });
-          }
+    xiando() {
+      API.getifzaixian({ token: localStorage.getItem('token') }).then(({ data }) => {
+        if (data.MSG == 'NO') {
+          this.$message({
+            showClose: true,
+            message: '您已在其他地方登陆，请重新登陆',
+            duration: 10000
+          });
+          this.$router.push({
+            path: '/login'
+          });
         }
-      );
-      API.settouxiangUrl({ token: localStorage.getItem("token") }).then(
-        ({ data }) => {
-          this.touxiangUrl = API.base + "/data/" + data.touxiangUrl;
-        }
-      );
-      let _this = this;
-      setTimeout(_this.showTime, 1000);
+      });
+      API.settouxiangUrl({ token: localStorage.getItem('token') }).then(({ data }) => {
+        this.touxiangUrl = API.base + '/data/' + data.touxiangUrl;
+      });
+      this.showTime();
     },
     showTime() {
-      var ifnew = localStorage.getItem("ifnew");
-      if (ifnew == 0) return "";
-      var show_day = new Array(
-        "星期日",
-        "星期一",
-        "星期二",
-        "星期三",
-        "星期四",
-        "星期五",
-        "星期六"
-      );
+      var ifnew = localStorage.getItem('ifnew');
+      if (ifnew == 0) return '';
+      var show_day = new Array('星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六');
       var time = new Date();
       var year = time.getFullYear();
       var month = time.getMonth() + 1;
@@ -192,13 +175,13 @@ export default {
       var hour = time.getHours();
       var minutes = time.getMinutes();
       var second = time.getSeconds();
-      month < 10 ? (month = "0" + month) : month;
-      date < 10 ? (date = "0" + date) : date;
-      hour < 10 ? (hour = "0" + hour) : hour;
-      minutes < 10 ? (minutes = "0" + minutes) : minutes;
-      this.dateList.date = year + "年" + month + "月" + date + "日";
+      month < 10 ? (month = '0' + month) : month;
+      date < 10 ? (date = '0' + date) : date;
+      hour < 10 ? (hour = '0' + hour) : hour;
+      minutes < 10 ? (minutes = '0' + minutes) : minutes;
+      this.dateList.date = year + '年' + month + '月' + date + '日';
       this.dateList.weekday = show_day[day];
-      this.dateList.time = hour + ":" + minutes;
+      this.dateList.time = hour + ':' + minutes;
       let that = this;
       setTimeout(that.showTime, 10000);
     },
@@ -210,19 +193,22 @@ export default {
       this.collapsed = !this.collapsed;
     },
     jumpTo(url) {
+      if(this.$route.path=='/main'&&url=='/main'){
+        this.$router.go(0);
+      }
       this.defaultActiveIndex = url;
       this.$router.push(url); //用go刷新
     },
     logout() {
       let that = this;
-      this.$confirm("确认退出吗?", "提示", {
-        confirmButtonClass: "el-button--warning"
+      this.$confirm('确认退出吗?', '提示', {
+        confirmButtonClass: 'el-button--warning'
       })
         .then(() => {
           //确认
-          localStorage.removeItem("token");
+          localStorage.removeItem('token');
           that.loading = true;
-          that.$router.push("/login"); //用go刷新
+          that.$router.push('/login'); //用go刷新
         })
         .catch(() => {});
     }
