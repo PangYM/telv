@@ -17,7 +17,7 @@
       <div class="topbar-account">
         <el-dropdown trigger="click">
           <span class="el-dropdown-link userinfo-inner">
-            <img v-if="touxiangUrl" :src="touxiangUrl" class="user_pic">
+            <img v-if="touxiangUrl.length>0" :src="touxiangUrl" class="user_pic">
             <img v-else src="../assets/images/user.jpeg" class="user_pic">
             {{nickname}} &nbsp;&nbsp;
             <i class="iconfont icon-code"></i>
@@ -159,7 +159,7 @@ export default {
         }
       });
       API.settouxiangUrl({ token: localStorage.getItem('token') }).then(({ data }) => {
-        this.touxiangUrl = API.base + '/data/' + data.touxiangUrl;
+        if (data.touxiangUrl.length > 0) this.touxiangUrl = API.base + '/data/' + data.touxiangUrl;
       });
       this.showTime();
     },
@@ -193,7 +193,7 @@ export default {
       this.collapsed = !this.collapsed;
     },
     jumpTo(url) {
-      if(this.$route.path=='/main'&&url=='/main'){
+      if (this.$route.path == '/main' && url == '/main') {
         this.$router.go(0);
       }
       this.defaultActiveIndex = url;
