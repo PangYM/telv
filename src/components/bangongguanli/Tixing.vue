@@ -141,13 +141,13 @@
   </div>
 </template>
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 export default {
   mounted() {
-    var userdata = JSON.parse(localStorage.getItem("userdata"));
+    var userdata = JSON.parse(localStorage.getItem('userdata'));
     if (this.$route.query.wendangid) {
       API.getmindocid({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         wendangid: this.$route.query.wendangid
       }).then(({ data }) => {
         this.form = data.data;
@@ -157,12 +157,7 @@ export default {
         for (var i = 0; i < this.form.fileList.length; ++i) {
           this.form.fujianList.push({
             name: this.form.fileList[i].name,
-            url:
-              this.baseurl +
-              "/data/fujian/" +
-              this.form.wendangid +
-              "/" +
-              this.form.fileList[i].name
+            url: this.baseurl + '/data/fujian/' + this.form.wendangid + '/' + this.form.fileList[i].name
           });
         }
       });
@@ -180,21 +175,21 @@ export default {
     return {
       xiugai: 1,
       baseurl: API.base,
-      baocunfujian: API.baseurl + "baocunfujian",
+      baocunfujian: API.baseurl + 'baocunfujian',
       upload: {},
       form: {
-        doctype: "tixing",
-        zhuangtai: "未处理",
-        wendangid: "",
-        biaoti: "",
-        nigaouserid: "",
-        nigaoren: "",
-        nigaodanwei: "",
-        jinji: "普通",
-        jiange: "1",
+        doctype: 'tixing',
+        zhuangtai: '未处理',
+        wendangid: '',
+        biaoti: '',
+        nigaouserid: '',
+        nigaoren: '',
+        nigaodanwei: '',
+        jinji: '普通',
+        jiange: '1',
         kaishitime: this.getToday(),
         jieshutime: this.getToday(),
-        beizhu: "",
+        beizhu: '',
         shenpihis: {},
         fileList: [],
         fujianList: []
@@ -204,30 +199,30 @@ export default {
   methods: {
     getToday() {
       var date = new Date();
-      var seperator1 = "-";
+      var seperator1 = '-';
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       var strDate = date.getDate();
       if (month >= 1 && month <= 9) {
-        month = "0" + month;
+        month = '0' + month;
       }
       if (strDate >= 0 && strDate <= 9) {
-        strDate = "0" + strDate;
+        strDate = '0' + strDate;
       }
       var currentdate = year + seperator1 + month + seperator1 + strDate;
       return currentdate;
     },
     wancheng() {
       API.wanchengmindoc({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         wendangid: this.form.wendangid
       }).then(({ data }) => {
         this.$message.success({
           showClose: true,
-          message: "处理成功！",
+          message: '处理成功！',
           duration: 2000
         });
-        this.form.zhuangtai = "处理完成";
+        this.form.zhuangtai = '处理完成';
       });
     },
     guanbi() {
@@ -235,12 +230,12 @@ export default {
     },
     onSubmit() {
       API.fasongmindoc({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         wendang: this.form
       }).then(({ data }) => {
         this.$message.success({
           showClose: true,
-          message: "创建成功",
+          message: '创建成功',
           duration: 2000
         });
         this.$router.go(-1);

@@ -75,16 +75,16 @@
 </template>
 
 <script>
-import * as API from "@/api";
-import { VueEditor } from "vue2-editor";
+import * as API from '@/api';
+import { VueEditor } from 'vue2-editor';
 export default {
   components: {
     VueEditor
   },
   mounted() {
     API.getgonggaoguanli({
-      token: localStorage.getItem("token"),
-      doctype: "gonggao",
+      token: localStorage.getItem('token'),
+      doctype: 'gonggao',
       query: this.query
     }).then(({ data }) => {
       this.dataTable = data.dataTable;
@@ -93,19 +93,19 @@ export default {
   },
   data() {
     return {
-      query: "",
+      query: '',
       qiefendataTable: [],
       dataTable: []
     };
   },
   methods: {
     handleGoUrl() {
-      this.$router.push({ path: "/bangongguanli/gonggao" });
+      this.$router.push({ path: '/bangongguanli/gonggao' });
     },
     chaxun() {
       API.getgonggaoguanli({
-        token: localStorage.getItem("token"),
-        doctype: "gonggao",
+        token: localStorage.getItem('token'),
+        doctype: 'gonggao',
         query: this.query
       }).then(({ data }) => {
         this.dataTable = data.dataTable;
@@ -117,7 +117,7 @@ export default {
     },
     handleEdit(index, row) {
       this.$router.push({
-        path: "/bangongguanli/gonggao",
+        path: '/bangongguanli/gonggao',
         query: {
           wendangid: row.wendangid
         }

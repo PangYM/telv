@@ -18,12 +18,13 @@
       <el-button size="mini" type="primary" @click="fawen(5)">党务会议发文</el-button>
       <el-button size="mini" type="primary" @click="fawen(6)">签报</el-button>
       <el-button size="mini" type="primary" @click="fawen(7)">议案报告</el-button>
+      <el-button size="mini" type="primary" @click="fawen(8)">购置申请</el-button>
     </div>
   </div>
 </template>
 
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 export default {
   components: {},
   data() {
@@ -33,37 +34,42 @@ export default {
     fawen(e) {
       if (e == 1) {
         this.$router.push({
-          path: "/fawen/gongwen"
+          path: '/fawen/gongwen'
         });
       }
       if (e == 2) {
         this.$router.push({
-          path: "/fawen/fawen"
+          path: '/fawen/fawen'
         });
       }
       if (e == 3) {
         this.$router.push({
-          path: "/fawen/huiyi"
+          path: '/fawen/huiyi'
         });
       }
       if (e == 4) {
         this.$router.push({
-          path: "/fawen/dangwu"
+          path: '/fawen/dangwu'
         });
       }
       if (e == 5) {
         this.$router.push({
-          path: "/fawen/dangwuhuiyi"
+          path: '/fawen/dangwuhuiyi'
         });
       }
       if (e == 6) {
         this.$router.push({
-          path: "/fawen/qianbao"
+          path: '/fawen/qianbao'
         });
       }
       if (e == 7) {
         this.$router.push({
-          path: "/fawen/yian"
+          path: '/fawen/yian'
+        });
+      }
+      if (e == 8) {
+        this.$router.push({
+          path: '/fawen/gouzhi'
         });
       }
     }

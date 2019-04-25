@@ -341,14 +341,21 @@ export default {
               wendangid: row.wendangid
             }
           });
-        }
-      } else {
+        } else if (row.doctype == 'gouzhi') {
+        this.$router.push({
+          path: '/fawen/gouzhi',
+          query: {
+            wendangid: row.wendangid
+          }
+        });
+      } else if (row.doctype == 'shouwen') {
         this.$router.push({
           path: '/shouwen/shouwendengji',
           query: {
             wendangid: row.wendangid
           }
         });
+      }
       }
     },
     handleGoUrl(url) {

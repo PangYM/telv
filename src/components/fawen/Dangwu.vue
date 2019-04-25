@@ -143,7 +143,7 @@
               <a
                 v-else
                 style="color:#000000"
-              >{{form.nibanyijian.yijian}} {{form.nibanyijian.name}} {{form.nibanyijian.time}}</a>
+              >{{form.nibanyijian.name}} {{form.nibanyijian.time}} {{form.nibanyijian.yijian}}</a>
             </div>
           </div>
           <div class="kuang4">
@@ -494,7 +494,7 @@ export default {
             wendangid: this.form.wendangid,
             nibanyijian: this.form.nibanyijian,
             lingdaopishi: this.lingdaopishi,
-            pishi: this.pishi,
+            pishi: this.pishi
           }).then(({ data }) => {
             this.$router.go(-1);
             this.$message({
@@ -547,7 +547,7 @@ export default {
         this.loading = false;
         this.$message.success({
           showClose: true,
-          message: '发送成功',
+          message: e == 1 ? '发送成功' : '保存成功',
           duration: 1000
         });
         if (e) this.$router.go(-1);

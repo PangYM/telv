@@ -52,12 +52,12 @@
   </div>
 </template>
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 export default {
   mounted() {
     API.getjieshouguanli({
-      token: localStorage.getItem("token"),
-      doctype: "huiyifaqi",
+      token: localStorage.getItem('token'),
+      doctype: 'huiyifaqi',
       query: this.query
     }).then(({ data }) => {
       this.dataTable = data.dataTable;
@@ -68,17 +68,17 @@ export default {
     return {
       dataTable: [],
       qiefendataTable: [],
-      query: ""
+      query: ''
     };
   },
   methods: {
     handleGoUrl() {
-      this.$router.push({ path: "/bangongguanli/huiyifaqi" });
+      this.$router.push({ path: '/bangongguanli/huiyifaqi' });
     },
     chaxun() {
       API.getjieshouguanli({
-        token: localStorage.getItem("token"),
-        doctype: "huiyifaqi",
+        token: localStorage.getItem('token'),
+        doctype: 'huiyifaqi',
         query: this.query
       }).then(({ data }) => {
         this.dataTable = data.dataTable;
@@ -90,7 +90,7 @@ export default {
     },
     handleEdit(index, row) {
       this.$router.push({
-        path: "/bangongguanli/huiyifaqi",
+        path: '/bangongguanli/huiyifaqi',
         query: {
           wendangid: row.wendangid
         }

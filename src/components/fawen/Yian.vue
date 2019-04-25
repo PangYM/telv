@@ -63,9 +63,8 @@
             <div class="kuang11">主要领导批示</div>
             <div class="kuang12">
               <li v-bind="form.biglingdaolist" v-for="item in form.biglingdaolist" :key="item.name">
-                <a style="color:#000000">{{item.yijian}}</a>
                 <img class="qianming" :src="getImgUrl(item.imageurl)">
-                <a style="color:#000000">{{item.time}}</a>
+                <a style="color:#000000">{{item.time}} {{item.yijian}}</a>
               </li>
               <el-input
                 class="neirong"
@@ -80,9 +79,8 @@
             <div class="kuang11">分管领导批示</div>
             <div class="kuang12">
               <li v-bind="form.midlingdaolist" v-for="item in form.midlingdaolist" :key="item.name">
-                <a style="color:#000000">{{item.yijian}}</a>
                 <img class="qianming" :src="getImgUrl(item.imageurl)">
-                <a style="color:#000000">{{item.time}}</a>
+                <a style="color:#000000">{{item.time}} {{item.yijian}}</a>
               </li>
               <el-input
                 class="neirong"
@@ -107,7 +105,7 @@
               <a
                 v-else
                 style="color:#000000"
-              >{{form.nibanyijian.yijian}} {{form.nibanyijian.name}} {{form.nibanyijian.time}}</a>
+              >{{form.nibanyijian.name}} {{form.nibanyijian.time}} {{form.nibanyijian.yijian}}</a>
             </div>
           </div>
           <div class="kuang1">
@@ -400,7 +398,7 @@ export default {
       API.yiyue({
         token: localStorage.getItem('token'),
         wendangid: this.form.wendangid,
-        banli: this.banli,
+        banli: this.banli
       }).then(({ data }) => {
         this.form.qianyuelist = data.qianyuelist;
         if (this.tongxinlu == 0) {
@@ -497,7 +495,7 @@ export default {
         this.loading = false;
         this.$message.success({
           showClose: true,
-          message: '发送成功',
+          message: e == 1 ? '发送成功' : '保存成功',
           duration: 1000
         });
         if (e) this.$router.go(-1);

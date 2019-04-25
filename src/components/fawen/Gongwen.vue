@@ -42,7 +42,6 @@
           广西铁路旅游传媒集团有限责任公司(
           <el-input v-if="xiugai" class="leixing" size="medium" v-model="form.leixing" placeholder></el-input>
           <a v-else style="color:#000000">{{form.leixing}}</a>
-
           )公文印发单
         </div>
         <div class="kuang">
@@ -213,19 +212,19 @@
 </template>
 
 <script>
-import * as API from "@/api";
-import treeTransfer from "el-tree-transfer";
-import { VueEditor } from "vue2-editor";
+import * as API from '@/api';
+import treeTransfer from 'el-tree-transfer';
+import { VueEditor } from 'vue2-editor';
 export default {
   components: {
     VueEditor,
     treeTransfer
   },
   mounted() {
-    var userdata = JSON.parse(localStorage.getItem("userdata"));
+    var userdata = JSON.parse(localStorage.getItem('userdata'));
     if (this.$route.query.wendangid) {
       API.getwendangid({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         wendangid: this.$route.query.wendangid
       }).then(({ data }) => {
         this.form = data.data;
@@ -236,12 +235,7 @@ export default {
         for (var i = 0; i < this.form.fileList.length; ++i) {
           this.form.fujianList.push({
             name: this.form.fileList[i].name,
-            url:
-              this.baseurl +
-              "/data/fujian/" +
-              this.form.wendangid +
-              "/" +
-              this.form.fileList[i].name
+            url: this.baseurl + '/data/fujian/' + this.form.wendangid + '/' + this.form.fileList[i].name
           });
         }
       });
@@ -253,11 +247,9 @@ export default {
         this.form.nigaoren = userdata.name;
       });
     }
-    API.gettongxinlu({ token: localStorage.getItem("token") }).then(
-      ({ data }) => {
-        this.fromData = data.tongxinlu;
-      }
-    );
+    API.gettongxinlu({ token: localStorage.getItem('token') }).then(({ data }) => {
+      this.fromData = data.tongxinlu;
+    });
   },
   data() {
     return {
@@ -266,33 +258,33 @@ export default {
       istongxinlu: 0,
       xiugai: 1,
       yuedu: 0,
-      title: ["未选列表", "已选列表"],
-      mode: "transfer",
+      title: ['未选列表', '已选列表'],
+      mode: 'transfer',
       fromData: [],
       toData: [],
       baseurl: API.base,
       loading: false,
-      baocunfujian: API.baseurl + "baocunfujian",
+      baocunfujian: API.baseurl + 'baocunfujian',
       upload: {},
       form: {
-        doctype: "gongwen",
-        nigaouserid: "",
-        zhuangtai: "caogao",
-        wendangid: "",
-        leixing: "",
-        biaoti: "",
-        fawenzihao: "",
-        zhifadanhao: "",
-        zhusongjiguan: "",
-        chaosongjiguan: "",
-        zhubanbumen: "",
-        nigaoren: "",
-        qianfadanhao: "",
-        qianfaren: "",
+        doctype: 'gongwen',
+        nigaouserid: '',
+        zhuangtai: 'caogao',
+        wendangid: '',
+        leixing: '',
+        biaoti: '',
+        fawenzihao: '',
+        zhifadanhao: '',
+        zhusongjiguan: '',
+        chaosongjiguan: '',
+        zhubanbumen: '',
+        nigaoren: '',
+        qianfadanhao: '',
+        qianfaren: '',
         qianfariqi: this.getToday(),
-        xiaoyinren: "",
+        xiaoyinren: '',
         zhifariqi: this.getToday(),
-        zhifashuoming: "",
+        zhifashuoming: '',
         shenpihis: {},
         liuchenglist: [],
         qianyuelist: [],
@@ -304,15 +296,15 @@ export default {
   methods: {
     getToday() {
       var date = new Date();
-      var seperator1 = "-";
+      var seperator1 = '-';
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       var strDate = date.getDate();
       if (month >= 1 && month <= 9) {
-        month = "0" + month;
+        month = '0' + month;
       }
       if (strDate >= 0 && strDate <= 9) {
-        strDate = "0" + strDate;
+        strDate = '0' + strDate;
       }
       var currentdate = year + seperator1 + month + seperator1 + strDate;
       return currentdate;
@@ -326,14 +318,14 @@ export default {
     },
     querenyuedu() {
       API.yiyue({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         wendangid: this.form.wendangid,
-        banli:'',
+        banli: ''
       }).then(({ data }) => {
         this.form.qianyuelist = data.qianyuelist;
         this.$message.success({
           showClose: true,
-          message: "已阅成功！",
+          message: '已阅成功！',
           duration: 1000
         });
         this.yuedu = 0;
@@ -359,30 +351,24 @@ export default {
       if (e && this.toData.length == 0) {
         this.$message({
           showClose: true,
-          message: "请选择发送人",
+          message: '请选择发送人',
           duration: 1000
         });
-        return "";
+        return '';
       }
       this.loading = true;
-      this.form.bianhao =
-        this.form.bianhao1 +
-        "【" +
-        this.form.bianhao2 +
-        "】" +
-        this.form.bianhao3 +
-        "号";
+      this.form.bianhao = this.form.bianhao1 + '【' + this.form.bianhao2 + '】' + this.form.bianhao3 + '号';
       var fasongdata = {
         toData: this.toData,
         wendang: this.form,
-        token: localStorage.getItem("token")
+        token: localStorage.getItem('token')
       };
       if (!e) fasongdata.toData = [];
       API.fasongwendang(fasongdata).then(({ data }) => {
         this.loading = false;
         this.$message.success({
           showClose: true,
-          message: "发送成功",
+          message: e == 1 ? '发送成功' : '保存成功',
           duration: 1000
         });
         if (e) this.$router.go(-1);

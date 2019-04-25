@@ -127,39 +127,37 @@
 </template>
 
 <script>
-import * as API from "@/api";
-import { VueEditor } from "vue2-editor";
+import * as API from '@/api';
+import { VueEditor } from 'vue2-editor';
 export default {
   components: {
     VueEditor
   },
   mounted() {
     API.getdaibanfawen({
-      token: localStorage.getItem("token"),
-      doctype: "fawen",
+      token: localStorage.getItem('token'),
+      doctype: 'fawen',
       query: this.query
     }).then(({ data }) => {
       this.dataTable = data.dataTable;
       for (var i = 0; i < this.dataTable.length; ++i) {
-        this.dataTable[i].clour = this.zhuangtai_clour[
-          this.dataTable[i].zhuangtai
-        ];
+        this.dataTable[i].clour = this.zhuangtai_clour[this.dataTable[i].zhuangtai];
       }
       this.qiefendataTable = this.dataTable.slice(0, 20);
     });
   },
   data() {
     return {
-      query: "",
+      query: '',
       qiefendataTable: [],
       dataTable: [],
-      newclour: "#008B00",
+      newclour: '#008B00',
       zhuangtai_clour: {
-        已完成: "#008B00",
-        未通过: "#FF0000",
-        审批中: "#EEB422",
-        已撤销: "#DA70D6",
-        退文: "#9400D3"
+        已完成: '#008B00',
+        未通过: '#FF0000',
+        审批中: '#EEB422',
+        已撤销: '#DA70D6',
+        退文: '#9400D3'
       }
     };
   },
@@ -169,65 +167,70 @@ export default {
     },
     chaxun() {
       API.getdaibanfawen({
-        token: localStorage.getItem("token"),
-        doctype: "fawen",
+        token: localStorage.getItem('token'),
+        doctype: 'fawen',
         query: this.query
       }).then(({ data }) => {
         this.dataTable = data.dataTable;
         for (var i = 0; i < this.dataTable.length; ++i) {
-          this.dataTable[i].clour = this.zhuangtai_clour[
-            this.dataTable[i].zhuangtai
-          ];
+          this.dataTable[i].clour = this.zhuangtai_clour[this.dataTable[i].zhuangtai];
         }
         this.qiefendataTable = this.dataTable.slice(0, 20);
       });
     },
     handleEdit(index, row) {
-      if (row.doctype == "gongwen") {
+      if (row.doctype == 'gongwen') {
         this.$router.push({
-          path: "/fawen/gongwen",
+          path: '/fawen/gongwen',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "fawen") {
+      } else if (row.doctype == 'fawen') {
         this.$router.push({
-          path: "/fawen/fawen",
+          path: '/fawen/fawen',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "huiyi") {
+      } else if (row.doctype == 'huiyi') {
         this.$router.push({
-          path: "/fawen/huiyi",
+          path: '/fawen/huiyi',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "dangwu") {
+      } else if (row.doctype == 'dangwu') {
         this.$router.push({
-          path: "/fawen/dangwu",
+          path: '/fawen/dangwu',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "dangwuhuiyi") {
+      } else if (row.doctype == 'dangwuhuiyi') {
         this.$router.push({
-          path: "/fawen/dangwuhuiyi",
+          path: '/fawen/dangwuhuiyi',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "qianbao") {
+      } else if (row.doctype == 'qianbao') {
         this.$router.push({
-          path: "/fawen/qianbao",
+          path: '/fawen/qianbao',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "yian") {
+      } else if (row.doctype == 'yian') {
         this.$router.push({
-          path: "/fawen/yian",
+          path: '/fawen/yian',
+          query: {
+            wendangid: row.wendangid
+          }
+        });
+      } else if (row.doctype == 'gouzhi') {
+        this.$router.push({
+          path: '/fawen/gouzhi',
           query: {
             wendangid: row.wendangid
           }

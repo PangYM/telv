@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     handleEdit(index, row) {
-      localStorage.setItem("fileList", JSON.stringify(row.fileList));
+      // localStorage.setItem("fileList", JSON.stringify(row.fileList));
       this.$router.push({
         path: "/shouwen/shouwendengji",
         query: {

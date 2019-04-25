@@ -20,6 +20,7 @@ import Dangwu from '@/components/fawen/Dangwu';
 import Dangwuhuiyi from '@/components/fawen/Dangwuhuiyi';
 import Qianbao from '@/components/fawen/Qianbao';
 import Yian from '@/components/fawen/Yian';
+import Gouzhi from '@/components/fawen/Gouzhi';
 import Daibanfawen from '@/components/fawen/Daibanfawen';
 import Fawenguanli from '@/components/fawen/Fawenguanli';
 import Fawencaogao from '@/components/fawen/Fawencaogao';
@@ -146,6 +147,11 @@ let router = new Router({
       path: '/fawen/yian',
       name: '议案报告',
       component: Yian
+    },
+    {
+      path: '/fawen/gouzhi',
+      name: '购置申请',
+      component: Gouzhi
     },
     {
       path: '/',

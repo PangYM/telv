@@ -45,8 +45,8 @@
 </template>
 
 <script>
-import * as API from "@/api";
-import { VueEditor } from "vue2-editor";
+import * as API from '@/api';
+import { VueEditor } from 'vue2-editor';
 export default {
   components: {
     VueEditor
@@ -54,8 +54,8 @@ export default {
   mounted() {
     let that = this;
     API.getfawencaogao({
-      token: localStorage.getItem("token"),
-      doctype: "fawen"
+      token: localStorage.getItem('token'),
+      doctype: 'fawen'
     }).then(({ data }) => {
       that.dataTable = data.dataTable;
     });
@@ -67,38 +67,59 @@ export default {
   },
   methods: {
     handleEdit(index, row) {
-      localStorage.setItem("fileList", JSON.stringify(row.fileList));
-      if (row.doctype == "gongwen") {
+      // localStorage.setItem('fileList', JSON.stringify(row.fileList));
+      if (row.doctype == 'gongwen') {
         this.$router.push({
-          path: "/fawen/gongwen",
+          path: '/fawen/gongwen',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "fawen") {
+      } else if (row.doctype == 'fawen') {
         this.$router.push({
-          path: "/fawen/fawen",
+          path: '/fawen/fawen',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "huiyifawen") {
+      } else if (row.doctype == 'huiyi') {
         this.$router.push({
-          path: "/fawen/huiyifawen",
+          path: '/fawen/huiyi',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "dangwufawen") {
+      } else if (row.doctype == 'dangwu') {
         this.$router.push({
-          path: "/fawen/dangwufawen",
+          path: '/fawen/dangwu',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "dangwuhuiyifawen") {
+      } else if (row.doctype == 'dangwuhuiyi') {
         this.$router.push({
-          path: "/fawen/dangwuhuiyifawen",
+          path: '/fawen/dangwuhuiyi',
+          query: {
+            wendangid: row.wendangid
+          }
+        });
+      } else if (row.doctype == 'qianbao') {
+        this.$router.push({
+          path: '/fawen/qianbao',
+          query: {
+            wendangid: row.wendangid
+          }
+        });
+      } else if (row.doctype == 'yian') {
+        this.$router.push({
+          path: '/fawen/yian',
+          query: {
+            wendangid: row.wendangid
+          }
+        });
+      } else if (row.doctype == 'gouzhi') {
+        this.$router.push({
+          path: '/fawen/gouzhi',
           query: {
             wendangid: row.wendangid
           }
@@ -109,12 +130,12 @@ export default {
       API.deletefawencaogao({
         wendangid: row.wendangid
       }).then(({ data }) => {
-        if (data == "YES") {
+        if (data == 'YES') {
           this.dataTable.splice(index, 1);
         } else {
-          this.$confirm("当前文档已经发送，您无权限删除", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
+          this.$confirm('当前文档已经发送，您无权限删除', '提示', {
+            confirmButtonText: '确定',
+            type: 'warning'
           })
             .then(() => {})
             .catch(() => {});

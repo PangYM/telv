@@ -169,19 +169,19 @@
   </div>
 </template>
 <script>
-import * as API from "@/api";
-import treeTransfer from "el-tree-transfer";
-import { VueEditor } from "vue2-editor";
+import * as API from '@/api';
+import treeTransfer from 'el-tree-transfer';
+import { VueEditor } from 'vue2-editor';
 export default {
   components: {
     VueEditor,
     treeTransfer
   },
   mounted() {
-    var userdata = JSON.parse(localStorage.getItem("userdata"));
+    var userdata = JSON.parse(localStorage.getItem('userdata'));
     if (this.$route.query.wendangid) {
       API.getmindocid({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         wendangid: this.$route.query.wendangid
       }).then(({ data }) => {
         this.form = data.data;
@@ -192,12 +192,7 @@ export default {
         for (var i = 0; i < this.form.fileList.length; ++i) {
           this.form.fujianList.push({
             name: this.form.fileList[i].name,
-            url:
-              this.baseurl +
-              "/data/fujian/" +
-              this.form.wendangid +
-              "/" +
-              this.form.fileList[i].name
+            url: this.baseurl + '/data/fujian/' + this.form.wendangid + '/' + this.form.fileList[i].name
           });
         }
       });
@@ -210,11 +205,9 @@ export default {
         if (userdata.quanxian == 30) this.hegao = 1;
       });
     }
-    API.gettongxinlu({ token: localStorage.getItem("token") }).then(
-      ({ data }) => {
-        this.fromData = data.tongxinlu;
-      }
-    );
+    API.gettongxinlu({ token: localStorage.getItem('token') }).then(({ data }) => {
+      this.fromData = data.tongxinlu;
+    });
   },
   data() {
     return {
@@ -223,27 +216,27 @@ export default {
       xianshi: 1,
       xiugai: 1,
       yuedu: 0,
-      title: ["未选列表", "已选列表"],
-      mode: "transfer",
+      title: ['未选列表', '已选列表'],
+      mode: 'transfer',
       fromData: [],
       toData: [],
       baseurl: API.base,
-      baocunfujian: API.baseurl + "baocunfujian",
+      baocunfujian: API.baseurl + 'baocunfujian',
       upload: {},
       form: {
-        doctype: "duban",
-        wendangid: "",
-        zhuangtai: "未完成",
-        biaoti: "",
-        jinji: "",
-        bumen: "",
+        doctype: 'duban',
+        wendangid: '',
+        zhuangtai: '未完成',
+        biaoti: '',
+        jinji: '',
+        bumen: '',
         tasks: [
           {
-            title: "",
-            name: ""
+            title: '',
+            name: ''
           }
         ],
-        beizhu: "",
+        beizhu: '',
         riqi: this.getToday(),
         shenpihis: {},
         fileList: [],
@@ -254,15 +247,15 @@ export default {
   methods: {
     getToday() {
       var date = new Date();
-      var seperator1 = "-";
+      var seperator1 = '-';
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
       var strDate = date.getDate();
       if (month >= 1 && month <= 9) {
-        month = "0" + month;
+        month = '0' + month;
       }
       if (strDate >= 0 && strDate <= 9) {
-        strDate = "0" + strDate;
+        strDate = '0' + strDate;
       }
       var currentdate = year + seperator1 + month + seperator1 + strDate;
       return currentdate;
@@ -276,12 +269,12 @@ export default {
     },
     querenyuedu() {
       API.mindocyiyue({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         wendangid: this.$route.query.wendangid
       }).then(({ data }) => {
         this.$message.success({
           showClose: true,
-          message: "办理成功！",
+          message: '办理成功！',
           duration: 2000
         });
         this.yuedu = 0;
@@ -315,24 +308,24 @@ export default {
       if (this.toData.length == 0) {
         this.$message({
           showClose: true,
-          message: "请选择发送人",
+          message: '请选择发送人',
           duration: 2000
         });
-        return "";
+        return '';
       }
       var fasongdata = {
         toData: this.toData,
         wendang: this.form,
-        token: localStorage.getItem("token")
+        token: localStorage.getItem('token')
       };
       API.fasongmindoc(fasongdata).then(({ data }) => {
         this.$message.success({
           showClose: true,
-          message: "发送成功",
+          message: '发送成功',
           duration: 2000
         });
         this.$router.push({
-          path: "/main"
+          path: '/main'
         });
       });
     },
@@ -348,8 +341,8 @@ export default {
     },
     handleAddTask() {
       this.form.tasks.push({
-        title: "",
-        puser: ""
+        title: '',
+        puser: ''
       });
     },
     handleRemoveTask(index) {

@@ -179,24 +179,22 @@
   </div>
 </template>
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 export default {
   computed: {
     // 每一个计算属性都是一个函数，函数的返回值就是这个函数对应的属性的值，计算属性使用的时候，使用的是方法对应的属性
     folderFiles() {
-      return this.showType == "all"
-        ? this.files.filter(file => file.type == "")
-        : [];
+      return this.showType == 'all' ? this.files.filter(file => file.type == '') : [];
     },
     otherFiles() {
-      return this.files.filter(file => file.type != "");
+      return this.files.filter(file => file.type != '');
     }
   },
   mounted() {
-    var userdata = JSON.parse(localStorage.getItem("userdata"));
+    var userdata = JSON.parse(localStorage.getItem('userdata'));
     this.userid = userdata.userid;
     API.huoqubumenwenjian({
-      token: localStorage.getItem("token")
+      token: localStorage.getItem('token')
     }).then(({ data }) => {
       this.options = data.options;
       this.files = this.options;
@@ -206,15 +204,15 @@ export default {
     return {
       quanxuanlabel: 0,
       baseurl: API.base,
-      userid: "",
-      baocunwenjian: API.baseurl + "baocunwenjian",
-      upload: { selectedOptions: "[]", token: localStorage.getItem("token") },
+      userid: '',
+      baocunwenjian: API.baseurl + 'baocunwenjian',
+      upload: { selectedOptions: '[]', token: localStorage.getItem('token') },
       selectedOptions: [],
       selectedOptions1: [],
       // 显示模式：缩略图、列表
-      showMode: "thumb",
+      showMode: 'thumb',
       // 显示的文件类型
-      showType: "all",
+      showType: 'all',
       // 所有的文件夹、文件信息
       options: [],
       files: []
@@ -226,20 +224,20 @@ export default {
         if (this.files[i].select == 1) {
           if (this.files[i].userid != this.userid) {
             this.$message({
-              type: "info",
-              message: this.files[i].label + "不是您上传的，您无权限删除"
+              type: 'info',
+              message: this.files[i].label + '不是您上传的，您无权限删除'
             });
           } else {
             API.wenjianshanchu({
-              token: localStorage.getItem("token"),
+              token: localStorage.getItem('token'),
               selectedOptions: this.selectedOptions,
               bianhao: this.files[i].bianhao
             }).then(({ data }) => {
               this.options = data.options;
               this.files = data.files;
               this.$message({
-                type: "success",
-                message: this.files[i]["label"] + "删除成功"
+                type: 'success',
+                message: this.files[i]['label'] + '删除成功'
               });
             });
           }
@@ -247,10 +245,10 @@ export default {
       }
     },
     onsuccess(response, file, fileList) {
-      if (response.MSG == "NO") {
+      if (response.MSG == 'NO') {
         this.$message({
-          type: "info",
-          message: "当前文件夹已存在相同的文件名，文件名为" + response.label
+          type: 'info',
+          message: '当前文件夹已存在相同的文件名，文件名为' + response.label
         });
       } else {
         this.options = response.options;
@@ -264,30 +262,30 @@ export default {
       }
     },
     xinjian() {
-      this.$prompt("请输入新建文件夹名称", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消"
+      this.$prompt('请输入新建文件夹名称', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
       })
         .then(({ value }) => {
           if (value == null) {
             this.$message({
-              type: "info",
-              message: "文件夹名称不能为空"
+              type: 'info',
+              message: '文件夹名称不能为空'
             });
           } else {
             var flag = 1;
             for (var i = 0; i < this.files.length; ++i) {
-              if (this.files[i].label == value && this.files[i].type == "") {
+              if (this.files[i].label == value && this.files[i].type == '') {
                 this.$message({
-                  type: "info",
-                  message: "新建名称与已有文件名重复"
+                  type: 'info',
+                  message: '新建名称与已有文件名重复'
                 });
                 flag = 0;
               }
             }
             if (flag) {
               API.xinjianwenjianjia({
-                token: localStorage.getItem("token"),
+                token: localStorage.getItem('token'),
                 selectedOptions: this.selectedOptions,
                 value: value
               }).then(({ data }) => {
@@ -296,36 +294,34 @@ export default {
                   value: value,
                   label: value,
                   bianhao: data.bianhao,
-                  type: "",
+                  type: '',
                   select: 0,
                   children: [],
                   userid: data.userid
                 });
               });
               this.$message({
-                type: "success",
-                message: "新建成功"
+                type: 'success',
+                message: '新建成功'
               });
             }
           }
         })
         .catch(() => {
           this.$message({
-            type: "info",
-            message: "取消新建"
+            type: 'info',
+            message: '取消新建'
           });
         });
     },
     querendakai(file) {
-      if (file.type == "") {
+      if (file.type == '') {
         this.files = file.children;
         this.selectedOptions1.push({ label: file.label });
         this.selectedOptions.push(file.label);
         this.upload.selectedOptions = JSON.stringify(this.selectedOptions);
       } else {
-        window.open(
-          API.base + "/data/bumenwenjian/" + file.bianhao + "/" + file.label
-        );
+        window.open(API.base + '/data/bumenwenjian/' + file.bianhao + '/' + file.label);
       }
     },
     select(label) {
@@ -370,7 +366,7 @@ export default {
       for (var i = 0; i < val.length; ++i) {
         for (var j = 0; j < this.files.length; ++j) {
           if (this.files[j].label == val[i]) {
-            if (this.files[j].type == "") {
+            if (this.files[j].type == '') {
               this.files = this.files[j].children;
               break;
             }
@@ -409,7 +405,7 @@ li {
   list-style: none;
 }
 .clearfix:after {
-  content: "";
+  content: '';
   display: block;
   clear: both;
 }
@@ -544,7 +540,7 @@ li {
 }
 .menu-list li.cur a:before {
   position: absolute;
-  content: "";
+  content: '';
   left: 0;
   width: 4px;
   height: 28px;
@@ -818,10 +814,7 @@ li {
   // display: none;
 }
 .list-item-wrap-thumb .figure-list-item.cur .figure-list-item-inner .checkbox,
-.list-item-wrap-thumb
-  .figure-list-item:hover
-  .figure-list-item-inner
-  .checkbox {
+.list-item-wrap-thumb .figure-list-item:hover .figure-list-item-inner .checkbox {
   display: block;
 }
 /*.list-item-wrap .figure-list-item.cur .figure-list-item-inner .icon-checkbox{*/
@@ -846,7 +839,7 @@ li {
   height: 100%;
 }
 .list-item-wrap-thumb .img-wrapper:before {
-  content: "";
+  content: '';
   display: inline-block;
   width: 0;
   height: 100%;
@@ -867,7 +860,7 @@ li {
   background-repeat: no-repeat;
 }
 .list-item-wrap-thumb .figure-list-item-pic .icon-l:before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -876,7 +869,7 @@ li {
   background-size: cover;
 }
 .list-item-wrap-thumb .figure-list-item-pic .icon-l:after {
-  content: "";
+  content: '';
   display: block;
   padding-top: 100%;
 }

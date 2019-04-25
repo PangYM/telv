@@ -56,12 +56,12 @@
   </div>
 </template>
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 export default {
   mounted() {
     API.getjieshouguanli({
-      token: localStorage.getItem("token"),
-      doctype: "duban",
+      token: localStorage.getItem('token'),
+      doctype: 'duban',
       query: this.query
     }).then(({ data }) => {
       this.dataTable = data.dataTable;
@@ -72,17 +72,17 @@ export default {
     return {
       dataTable: [],
       qiefendataTable: [],
-      query: ""
+      query: ''
     };
   },
   methods: {
     handleGoUrl() {
-      this.$router.push({ path: "/bangongguanli/duban" });
+      this.$router.push({ path: '/bangongguanli/duban' });
     },
     chaxun() {
       API.getjieshouguanli({
-        token: localStorage.getItem("token"),
-        doctype: "duban",
+        token: localStorage.getItem('token'),
+        doctype: 'duban',
         query: this.query
       }).then(({ data }) => {
         this.dataTable = data.dataTable;
@@ -94,7 +94,7 @@ export default {
     },
     handleEdit(index, row) {
       this.$router.push({
-        path: "/bangongguanli/duban",
+        path: '/bangongguanli/duban',
         query: {
           wendangid: row.wendangid
         }

@@ -3,7 +3,7 @@
  */
 var SIGN_REGEXP = /([yMdhsm])(\1*)/g
 var DEFAULT_PATTERN = 'yyyy-MM-dd'
-function padding (s, len) {
+function padding(s, len) {
   let l = len - (s + '').length
   for (var i = 0; i < l; i++) { s = '0' + s }
   return s
