@@ -151,7 +151,7 @@ export default {
           this.$message({
             showClose: true,
             message: '您已在其他地方登陆，请重新登陆',
-            duration: 10000
+            duration: 2000
           });
           this.$router.push({
             path: '/login'

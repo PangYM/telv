@@ -63,7 +63,7 @@ export default {
           this.$message.success({
             showClose: true,
             message: '修改成功！',
-            duration: 1000
+            duration: 2000
           });
           return '';
         }

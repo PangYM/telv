@@ -341,7 +341,7 @@ export default {
             this.$message({
               type: 'success',
               message: '退回上一级成功!',
-              duration: 1000
+              duration: 2000
             });
           });
         })
@@ -365,7 +365,7 @@ export default {
             this.$message({
               type: 'success',
               message: '撤回成功!',
-              duration: 1000
+              duration: 2000
             });
             this.$router.go(0);
           });
@@ -401,7 +401,7 @@ export default {
           this.$message.success({
             showClose: true,
             message: this.form.zhuangtai != '退文' ? '办理成功！' : '已阅成功！',
-            duration: 1000
+            duration: 2000
           });
         }
         this.yuedu = 0;
@@ -444,7 +444,7 @@ export default {
             this.$message({
               type: 'success',
               message: '退文成功!',
-              duration: 1000
+              duration: 2000
             });
           });
         })
@@ -467,7 +467,7 @@ export default {
         this.$message.success({
           showClose: true,
           message: '审批成功',
-          duration: 1000
+          duration: 2000
         });
       }
     },
@@ -476,7 +476,7 @@ export default {
         this.$message({
           showClose: true,
           message: '请选择发送人',
-          duration: 1000
+          duration: 2000
         });
         return '';
       }
@@ -492,7 +492,7 @@ export default {
         this.$message.success({
           showClose: true,
           message: e == 1 ? '发送成功' : '保存成功',
-          duration: 1000
+          duration: 2000
         });
         if (e) this.$router.go(-1);
       });

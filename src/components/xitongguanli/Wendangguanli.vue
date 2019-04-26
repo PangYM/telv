@@ -109,7 +109,7 @@ export default {
         this.$message({
           showClose: true,
           message: "文档编号不能为空",
-          duration: 3000
+          duration: 2000
         });
         return "";
       }
@@ -121,7 +121,7 @@ export default {
           this.$message({
             showClose: true,
             message: "当前文档编号不存在",
-            duration: 3000
+            duration: 2000
           });
         } else {
           this.dataTable = data.dataTable;

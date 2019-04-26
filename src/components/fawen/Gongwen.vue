@@ -326,7 +326,7 @@ export default {
         this.$message.success({
           showClose: true,
           message: '已阅成功！',
-          duration: 1000
+          duration: 2000
         });
         this.yuedu = 0;
       });
@@ -352,7 +352,7 @@ export default {
         this.$message({
           showClose: true,
           message: '请选择发送人',
-          duration: 1000
+          duration: 2000
         });
         return '';
       }
@@ -369,7 +369,7 @@ export default {
         this.$message.success({
           showClose: true,
           message: e == 1 ? '发送成功' : '保存成功',
-          duration: 1000
+          duration: 2000
         });
         if (e) this.$router.go(-1);
       });
