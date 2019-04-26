@@ -133,7 +133,7 @@ export default {
       quanxian: 0,
       touxiangUrl: '',
       logourl: API.base + '/data/logo.png',
-      toubanurl: API.base + '/data/touban.jpg',
+      toubanurl: API.base + '/data/touban.png',
       defaultActiveIndex: '0',
       nickname: JSON.parse(localStorage.getItem('userdata')).name,
       collapsed: false,
@@ -227,7 +227,7 @@ export default {
   .topbar-wrap {
     height: 100px;
     line-height: 100px;
-    background: #0c23ff;
+    background: #bbe3f6;
     padding: 0px;
     .topbar-title {
       width: 1400px;
@@ -243,7 +243,7 @@ export default {
     .touban {
       position: absolute;
       height: 100px;
-      width: 60%;
+      width: 58%;
       top: 0px;
       left: 200px;
     }
@@ -255,7 +255,7 @@ export default {
     }
     .date_l {
       margin-left: 73%;
-      color: #ffffff;
+      color: #000000;
       height: 100px;
       width: 16%;
       .tl {
@@ -285,7 +285,7 @@ export default {
     }
     .userinfo-inner {
       cursor: pointer;
-      color: #ffffff;
+      color: #000000;
       opacity: 0.8;
       padding-left: 10px;
       position: relative;

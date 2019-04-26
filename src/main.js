@@ -6,7 +6,7 @@ import router from './router';
 import ElementUI from 'element-ui';
 import fullCalendar from 'vue-fullcalendar';
 import VueParticles from 'vue-particles';
-import Print from 'vue-print-nb'
+import Print from 'vue-print-nb';
 
 import 'element-ui/lib/theme-chalk/index.css';
 import '@/assets/iconfont/iconfont.css';
