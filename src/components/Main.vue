@@ -342,20 +342,20 @@ export default {
             }
           });
         } else if (row.doctype == 'gouzhi') {
-        this.$router.push({
-          path: '/fawen/gouzhi',
-          query: {
-            wendangid: row.wendangid
-          }
-        });
-      } else if (row.doctype == 'shouwen') {
+          this.$router.push({
+            path: '/fawen/gouzhi',
+            query: {
+              wendangid: row.wendangid
+            }
+          });
+        }
+      } else if (e == 2) {
         this.$router.push({
           path: '/shouwen/shouwendengji',
           query: {
             wendangid: row.wendangid
           }
         });
-      }
       }
     },
     handleGoUrl(url) {

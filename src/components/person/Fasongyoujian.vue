@@ -127,12 +127,13 @@ export default {
             url: this.baseurl + '/data/fujian/' + this.form.wendangid + '/' + this.form.fileList[i].name
           });
         }
+        if (this.form.zhuangtai != 'caogao') {
+          API.mindocyiyue({
+            token: localStorage.getItem('token'),
+            wendangid: this.$route.query.wendangid
+          }).then(({ data }) => {});
+        }
       });
-      if (this.form.zhuangtai != 'caogao')
-        API.mindocyiyue({
-          token: localStorage.getItem('token'),
-          wendangid: this.$route.query.wendangid
-        }).then(({ data }) => {});
     } else {
       API.getfawenhao().then(({ data }) => {
         this.form.wendangid = data.wendangid + data.suiji;

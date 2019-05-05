@@ -44,7 +44,7 @@ instance.interceptors.response.use(
 );
 
 //基地址
-export const base = 'http://192.168.105.120';
+export const base = 'http://192.168.199.149';
 export const port = ':16888/api/';
 export const baseurl = base + port;
 //用户登录
