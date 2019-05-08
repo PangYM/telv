@@ -104,6 +104,12 @@
               <el-input v-if="xiugai" type="textarea" v-model="form.mark" :rows="5"></el-input>
               <div v-else class="xianshi">{{form.mark}}</div>
             </el-form-item>
+            <el-form-item label="办理情况" class="editer">
+              <li v-bind="form.qianyuelist" v-for="item in form.qianyuelist" :key="item.name">
+                <a style="color:#000000">{{item.name}} {{item.time}} {{item.yijian}}</a>
+              </li>
+              <el-input v-if="yuedu" type="textarea" v-model="banli" :rows="5"></el-input>
+            </el-form-item>
             <el-form-item label="办结期限">
               <el-date-picker
                 v-if="xiugai"
@@ -220,6 +226,7 @@ export default {
       mode: 'transfer',
       fromData: [],
       toData: [],
+      banli: '',
       baseurl: API.base,
       baocunfujian: API.baseurl + 'baocunfujian',
       upload: {},
@@ -230,6 +237,7 @@ export default {
         biaoti: '',
         jinji: '',
         bumen: '',
+        qianyuelist: [],
         tasks: [
           {
             title: '',
@@ -270,8 +278,10 @@ export default {
     querenyuedu() {
       API.mindocyiyue({
         token: localStorage.getItem('token'),
-        wendangid: this.$route.query.wendangid
+        wendangid: this.$route.query.wendangid,
+        banli: this.banli
       }).then(({ data }) => {
+        this.form.qianyuelist = data.qianyuelist;
         this.$message.success({
           showClose: true,
           message: '办理成功！',

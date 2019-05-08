@@ -53,7 +53,6 @@ import Renyuanguanli from '@/components/xitongguanli/Renyuanguanli';
 import Wendangguanli from '@/components/xitongguanli/Wendangguanli';
 import Yemianguanli from '@/components/xitongguanli/Yemianguanli';
 
-import Drage from '@/components/Drage'
 import Showhtml from '@/components/Showhtml'
 
 // 懒加载方式，当路由被访问的时候才加载对应组件
@@ -68,14 +67,6 @@ let router = new Router({
       path: '/login',
       name: '登录',
       component: Login
-    },
-    {
-      path: '/D3',
-      name: 'D3',
-      component: Drage,
-      meta: {
-        requiresAuth: true
-      }
     },
     {
       path: '/bangongguanli/gonggao',

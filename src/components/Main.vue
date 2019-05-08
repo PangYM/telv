@@ -2,14 +2,14 @@
   <div class="oa_main">
     <!--面包屑-->
     <el-row class="oa_main_card">
-      <el-col :span="6">
+      <el-col :span="4">
         <el-card style="background:#67C23A;">
           <div class="todo_l">
             <el-row>
-              <el-col :span="12" class="tl">
+              <el-col :span="16" class="tl">
                 <span>我的督办</span>
               </el-col>
-              <el-col :span="12" class="tr">
+              <el-col :span="8" class="tr">
                 <el-button type="text" @click="handleGoUrl('/bangongguanli/dubanguanli')">
                   <i>{{duban}}</i>
                 </el-button>
@@ -18,14 +18,14 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="4">
         <el-card style="background:#E6A23C;">
           <div class="todo_l">
             <el-row>
-              <el-col :span="12" class="tl">
+              <el-col :span="16" class="tl">
                 <span>我的会议</span>
               </el-col>
-              <el-col :span="12" class="tr">
+              <el-col :span="8" class="tr">
                 <el-button type="text" @click="handleGoUrl('/bangongguanli/huiyiguanli')">
                   <i>{{huiyifaqi}}</i>
                 </el-button>
@@ -34,14 +34,14 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="4">
         <el-card style="background:#409EFF;">
           <div class="todo_l">
             <el-row>
-              <el-col :span="12" class="tl">
+              <el-col :span="16" class="tl">
                 <span>未读邮件</span>
               </el-col>
-              <el-col :span="12" class="tr">
+              <el-col :span="8" class="tr">
                 <el-button type="text" @click="handleGoUrl('/person/yishouyoujian')">
                   <i>{{youjian}}</i>
                 </el-button>
@@ -50,16 +50,48 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="4">
         <el-card style="background:#F56C6C;">
           <div class="todo_l">
             <el-row>
-              <el-col :span="12" class="tl">
+              <el-col :span="16" class="tl">
                 <span>提醒待办</span>
               </el-col>
-              <el-col :span="12" class="tr">
+              <el-col :span="8" class="tr">
                 <el-button type="text" @click="handleGoUrl('/bangongguanli/tixingguanli')">
                   <i>{{tixing}}</i>
+                </el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="4">
+        <el-card style="background:#FFDD00;">
+          <div class="todo_l">
+            <el-row>
+              <el-col :span="16" class="tl">
+                <span>发文督办</span>
+              </el-col>
+              <el-col :span="8" class="tr">
+                <el-button type="text" @click="handleGoUrl('/fawen/fawenguanli')">
+                  <i>{{fawenduban}}</i>
+                </el-button>
+              </el-col>
+            </el-row>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="4">
+        <el-card style="background:#FF00FF;">
+          <div class="todo_l">
+            <el-row>
+              <el-col :span="16" class="tl">
+                <span>收文督办</span>
+              </el-col>
+              <el-col :span="8" class="tr">
+                <el-button type="text" @click="handleGoUrl('/shouwen/shouwenguanli')">
+                  <i>{{shouwenduban}}</i>
                 </el-button>
               </el-col>
             </el-row>
@@ -235,6 +267,8 @@ export default {
       huiyifaqi: 0,
       youjian: 0,
       tixing: 0,
+      fawenduban:0,
+      shouwenduban:0,
       gonggao: [],
       daibanfawen: [],
       daibanshouwen: []
@@ -260,6 +294,8 @@ export default {
         this.huiyifaqi = data.huiyifaqi;
         this.youjian = data.youjian;
         this.tixing = data.tixing;
+        this.fawenduban=data.fawenduban;
+        this.shouwenduban=data.shouwenduban;
       });
       API.getgonggaoguanli({
         token: localStorage.getItem('token'),

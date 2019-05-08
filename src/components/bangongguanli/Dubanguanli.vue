@@ -30,7 +30,7 @@
       <el-table-column sortable prop="jinji" align="center" width="120" label="督办类型"></el-table-column>
       <el-table-column sortable prop="zhuangtai" align="center" width="120" label="状态">
         <template slot-scope="scope">
-          <a v-if="scope.row.zhuangtai!='办理完成'" style="color:#FF0000">{{scope.row.zhuangtai}}</a>
+          <a v-if="scope.row.zhuangtai!='已完成'" style="color:#FF0000">{{scope.row.zhuangtai}}</a>
           <a v-else style="color:#00BB00">{{scope.row.zhuangtai}}</a>
         </template>
       </el-table-column>

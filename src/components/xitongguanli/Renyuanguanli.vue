@@ -49,6 +49,12 @@
           <el-form-item prop="zhiweiname" label="职位名称">
             <el-input v-model="xiugaiform.zhiweiname"></el-input>
           </el-form-item>
+          <el-form-item prop="neiwai" label="是否本部">
+            <el-select v-model="xiugaiform.neiwai" placeholder="是" style="width:100%;">
+              <el-option label="是" value="1"></el-option>
+              <el-option label="否" value="0"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item prop="phone" label="手机">
             <el-input v-model="xiugaiform.phone"></el-input>
           </el-form-item>
@@ -84,6 +90,12 @@
           </el-form-item>
           <el-form-item prop="zhiweiname" label="职位名称">
             <el-input v-model="xinzengform.zhiweiname"></el-input>
+          </el-form-item>
+          <el-form-item prop="neiwai" label="是否本部">
+            <el-select v-model="xinzengform.neiwai" placeholder="是" style="width:100%;">
+              <el-option label="是" value="1"></el-option>
+              <el-option label="否" value="0"></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item prop="phone" label="手机">
             <el-input v-model="xinzengform.phone"></el-input>
@@ -206,26 +218,26 @@ export default {
       xiugaiform: {
         userid: '',
         zhanghao: '',
-        isbumenzhang: 0,
         name: '',
-        pwd: '123456',
+        pwd: '',
         phone: '',
         email: '',
         dianhua: '',
         zhiweiname: '',
+        neiwai: '是',
         group: '',
-        quanxian: 50
+        quanxian: '普通员工'
       },
       xinzengform: {
         userid: '',
         zhanghao: '',
-        isbumenzhang: 0,
         name: '',
         pwd: '123456',
         phone: '',
         email: '',
         dianhua: '',
         zhiweiname: '',
+        neiwai: '1',
         group: '',
         quanxian: 50
       }
