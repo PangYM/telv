@@ -144,7 +144,10 @@
                 show-overflow-tooltip
               >
                 <template slot-scope="scope">
-                  <div @click="handleEdit(0, scope.row)">{{scope.row.biaoti}}</div>
+                  <div @click="handleEdit(0, scope.row)">
+                    <a v-if="scope.row.weidu" :style="{'color': '#008B00'}">{{scope.row.biaoti}}</a>
+                    <a v-else :style="{'color': '#000000'}">{{scope.row.biaoti}}</a>
+                  </div>
                 </template>
               </el-table-column>
               <el-table-column prop="nigaoren" align="center" label="发起人" width="100"></el-table-column>
@@ -267,8 +270,8 @@ export default {
       huiyifaqi: 0,
       youjian: 0,
       tixing: 0,
-      fawenduban:0,
-      shouwenduban:0,
+      fawenduban: 0,
+      shouwenduban: 0,
       gonggao: [],
       daibanfawen: [],
       daibanshouwen: []
@@ -294,8 +297,8 @@ export default {
         this.huiyifaqi = data.huiyifaqi;
         this.youjian = data.youjian;
         this.tixing = data.tixing;
-        this.fawenduban=data.fawenduban;
-        this.shouwenduban=data.shouwenduban;
+        this.fawenduban = data.fawenduban;
+        this.shouwenduban = data.shouwenduban;
       });
       API.getgonggaoguanli({
         token: localStorage.getItem('token'),

@@ -83,10 +83,8 @@
 
 <script>
 import * as API from "@/api";
-import { VueEditor } from "vue2-editor";
 export default {
   components: {
-    VueEditor
   },
   mounted() {
     API.getusers({

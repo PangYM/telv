@@ -16,6 +16,11 @@
       <el-button type="primary" @click="chaxun">查询</el-button>
       <el-button type="success" icon="el-icon-circle-plus-outline" @click="handleGoUrl">新增发起</el-button>
     </div>
+    <div class="chaxun">
+      标题颜色说明：
+      <a style="color: #008B00">未读</a>，
+      <a style="color: #000000">已读</a>
+    </div>
     <el-table
       border
       :data="qiefendataTable"
@@ -30,7 +35,12 @@
         label="标题"
         show-overflow-tooltip
         min-width="200"
-      ></el-table-column>
+      >
+        <template slot-scope="scope">
+          <a v-if="scope.row.weidu" :style="{'color': '#008B00'}">{{scope.row.biaoti}}</a>
+          <a v-else :style="{'color': '#000000'}">{{scope.row.biaoti}}</a>
+        </template>
+      </el-table-column>
       <el-table-column
         sortable
         prop="nigaoren"
@@ -47,40 +57,49 @@
         show-overflow-tooltip
         width="108"
       ></el-table-column>
+      <el-table-column
+        sortable
+        prop="laiwenren"
+        align="center"
+        label="来文人"
+        show-overflow-tooltip
+        width="108"
+      ></el-table-column>
+      <el-table-column
+        sortable
+        prop="laiwentime"
+        align="center"
+        label="来文时间"
+        show-overflow-tooltip
+        width="108"
+      ></el-table-column>
       <el-table-column fixed="right" align="center" width="120" label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
-  </div>
-</template>
-      </el-table-column>
-    </el-table>
     <div class="pailei">
-    <el-pagination
-    @current-change="handleCurrentChange"
-  background
-  :page-size="20"
-  :pager-count="11"
-  layout="prev, pager, next"
-  :total="dataTable.length">
-</el-pagination>
-</div>
+      <el-pagination
+        @current-change="handleCurrentChange"
+        background
+        :page-size="20"
+        :pager-count="11"
+        layout="prev, pager, next"
+        :total="dataTable.length"
+      ></el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
-import * as API from "@/api";
-import { VueEditor } from "vue2-editor";
+import * as API from '@/api';
 export default {
-  components: {
-    VueEditor
-  },
+  components: {},
   mounted() {
     API.getjieshouguanli({
-      token: localStorage.getItem("token"),
-      doctype: "youjian",
+      token: localStorage.getItem('token'),
+      doctype: 'youjian',
       query: this.query
     }).then(({ data }) => {
       this.dataTable = data.dataTable;
@@ -89,19 +108,19 @@ export default {
   },
   data() {
     return {
-      query: "",
+      query: '',
       qiefendataTable: [],
       dataTable: []
     };
   },
   methods: {
     handleGoUrl() {
-      this.$router.push({ path: "/person/fasongyoujian" });
+      this.$router.push({ path: '/person/fasongyoujian' });
     },
     chaxun() {
       API.getjieshouguanli({
-        token: localStorage.getItem("token"),
-        doctype: "youjian",
+        token: localStorage.getItem('token'),
+        doctype: 'youjian',
         query: this.query
       }).then(({ data }) => {
         this.dataTable = data.dataTable;
@@ -113,7 +132,7 @@ export default {
     },
     handleEdit(index, row) {
       this.$router.push({
-        path: "/person/fasongyoujian",
+        path: '/person/fasongyoujian',
         query: {
           wendangid: row.wendangid
         }

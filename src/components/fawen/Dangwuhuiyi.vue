@@ -253,10 +253,8 @@
 <script>
 import * as API from '@/api';
 import treeTransfer from 'el-tree-transfer';
-import { VueEditor } from 'vue2-editor';
 export default {
   components: {
-    VueEditor,
     treeTransfer
   },
   mounted() {

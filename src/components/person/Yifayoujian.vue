@@ -44,34 +44,27 @@
         </template>
       </el-table-column>
     </el-table>
-  </div>
-</template>
-      </el-table-column>
-    </el-table>
     <div class="pailei">
-    <el-pagination
-    @current-change="handleCurrentChange"
-  background
-  :page-size="20"
-  :pager-count="11"
-  layout="prev, pager, next"
-  :total="dataTable.length">
-</el-pagination>
-</div>
+      <el-pagination
+        @current-change="handleCurrentChange"
+        background
+        :page-size="20"
+        :pager-count="11"
+        layout="prev, pager, next"
+        :total="dataTable.length"
+      ></el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
-import * as API from "@/api";
-import { VueEditor } from "vue2-editor";
+import * as API from '@/api';
 export default {
-  components: {
-    VueEditor
-  },
+  components: {},
   mounted() {
     API.getfasongguanli({
-      token: localStorage.getItem("token"),
-      doctype: "youjian",
+      token: localStorage.getItem('token'),
+      doctype: 'youjian',
       query: this.query
     }).then(({ data }) => {
       this.dataTable = data.dataTable;
@@ -80,7 +73,7 @@ export default {
   },
   data() {
     return {
-      query: "",
+      query: '',
       qiefendataTable: [],
       dataTable: []
     };
@@ -88,8 +81,8 @@ export default {
   methods: {
     chaxun() {
       API.getfasongguanli({
-        token: localStorage.getItem("token"),
-        doctype: "youjian",
+        token: localStorage.getItem('token'),
+        doctype: 'youjian',
         query: this.query
       }).then(({ data }) => {
         this.dataTable = data.dataTable;
@@ -101,7 +94,7 @@ export default {
     },
     handleEdit(index, row) {
       this.$router.push({
-        path: "/person/fasongyoujian",
+        path: '/person/fasongyoujian',
         query: {
           wendangid: row.wendangid
         }

@@ -16,6 +16,11 @@
       <el-button type="primary" @click="chaxun">查询</el-button>
       <el-button type="success" icon="el-icon-circle-plus-outline" @click="handleGoUrl">新增公告</el-button>
     </div>
+    <div class="chaxun">
+      标题颜色说明：
+      <a style="color: #008B00">未读</a>，
+      <a style="color: #000000">已读</a>
+    </div>
     <el-table
       border
       :data="qiefendataTable"
@@ -30,7 +35,12 @@
         label="标题"
         show-overflow-tooltip
         min-width="200"
-      ></el-table-column>
+      >
+        <template slot-scope="scope">
+          <a v-if="scope.row.weidu" :style="{'color': '#008B00'}">{{scope.row.biaoti}}</a>
+          <a v-else :style="{'color': '#000000'}">{{scope.row.biaoti}}</a>
+        </template>
+      </el-table-column>
       <el-table-column
         sortable
         prop="nigaoren"
@@ -76,11 +86,8 @@
 
 <script>
 import * as API from '@/api';
-import { VueEditor } from 'vue2-editor';
 export default {
-  components: {
-    VueEditor
-  },
+  components: {},
   mounted() {
     API.getgonggaoguanli({
       token: localStorage.getItem('token'),

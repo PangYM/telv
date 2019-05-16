@@ -107,6 +107,10 @@ export default {
             url: this.baseurl + '/data/fujian/' + this.form.wendangid + '/' + this.form.fileList[i].name
           });
         }
+        API.mindocyiyue({
+            token: localStorage.getItem('token'),
+            wendangid: this.$route.query.wendangid
+          }).then(({ data }) => {});
       });
     } else {
       API.getfawenhao().then(({ data }) => {
@@ -139,7 +143,7 @@ export default {
         nigaoren: '',
         nigaodanwei: '',
         faqitime: '',
-        content: '',
+        content: ' ',
         shenpihis: {},
         fileList: [],
         fujianList: []

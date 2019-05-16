@@ -52,9 +52,9 @@
                 filter
               ></tree-transfer>
             </div>
-            <li v-bind="form.userlist" v-for="item in form.userlist" :key="item.name">
+            <a v-bind="form.userlist" v-for="item in form.userlist" :key="item.name">
               <a style="color:#0000FF">{{item.name}}</a>
-            </li>
+            </a>
           </el-form-item>
           <el-row>
             <el-col :span="6">

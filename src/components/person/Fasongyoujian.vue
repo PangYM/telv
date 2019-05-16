@@ -15,6 +15,7 @@
       <div class="fasong">
         <el-button type="primary" v-if="xiugai" @click="querenfasong(0)">保存</el-button>
         <el-button type="primary" v-if="xiugai" @click="querensend">发送</el-button>
+        <el-button type="primary" v-if="xiugai==0" @click="querensend">转发</el-button>
         <el-button type="primary" @click="guanbi(0)">关闭</el-button>
         <div class="renyuan" v-if="istongxinlu">
           <tree-transfer
@@ -54,6 +55,11 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <el-form-item label="收件人">
+            <a v-bind="form.userlist" v-for="item in form.userlist" :key="item.name">
+              <a :span="4" style="color:#0000FF">{{item.name}};</a>
+            </a>
+          </el-form-item>
           <el-form-item label="正文" class="editer">
             <vue-editor
               v-if="xiugai"
@@ -165,7 +171,8 @@ export default {
         nigaoren: '',
         nigaodanwei: '',
         starttime: '',
-        content: '',
+        content: ' ',
+        userlist: [],
         shenpihis: {},
         fileList: [],
         fujianList: []
