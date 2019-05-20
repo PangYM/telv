@@ -136,7 +136,7 @@
               <a
                 v-else
                 style="color:#000000"
-              >{{form.nibanyijian.name}} {{form.nibanyijian.time}} {{form.nibanyijian.yijian}} </a>
+              >{{form.nibanyijian.name}} {{form.nibanyijian.time}} {{form.nibanyijian.yijian}}</a>
             </div>
           </div>
           <div class="kuang1">
@@ -340,7 +340,7 @@ export default {
       yuedu: 0,
       cailiao: '',
       caiwu: '',
-      banli:'',
+      banli: '',
       lingdaopishi: '',
       title: ['未选列表', '已选列表'],
       mode: 'transfer',
@@ -359,7 +359,7 @@ export default {
         riqi: this.getToday(),
         jine: '',
         wupinlist: [],
-        biaoti:'',
+        biaoti: '',
         biglingdaolist: [],
         midlingdaolist: [],
         minlingdaolist: [],
@@ -466,7 +466,7 @@ export default {
       API.yiyue({
         token: localStorage.getItem('token'),
         wendangid: this.form.wendangid,
-        banli: this.banli,
+        banli: this.banli
       }).then(({ data }) => {
         this.form.qianyuelist = data.qianyuelist;
         if (this.tongxinlu == 0) {

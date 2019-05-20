@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import * as API from "../api";
+import * as API from '../api';
 export default {
   mounted() {
     API.getdengluyelist().then(({ data }) => {
@@ -102,31 +102,31 @@ export default {
   data() {
     return {
       base: API.base,
-      toubanimg: API.base + "/data/login.jpg",
+      toubanimg: API.base + '/data/login.jpg',
       lunbotulist: [],
       dengluyelist: [],
       youqinglist: [],
       loading: false,
       xianshi: false,
-      content: "",
+      content: '',
       account: {
-        zhanghao: "",
-        pwd: ""
+        zhanghao: '',
+        pwd: ''
       },
       rules: {
         zhanghao: [
           {
             required: true,
-            message: "请输入账号",
-            trigger: "blur"
+            message: '请输入账号',
+            trigger: 'blur'
           }
           //{ validator: validaePass }
         ],
         pwd: [
           {
             required: true,
-            message: "请输入密码",
-            trigger: "blur"
+            message: '请输入密码',
+            trigger: 'blur'
           }
           //{ validator: validaePass2 }
         ]
@@ -152,12 +152,12 @@ export default {
           };
           API.userLogin(loginParams)
             .then(({ data }) => {
-              localStorage.removeItem("token");
-              if (data.MSG == "YES") {
-                localStorage.setItem("token", data.token);
-                localStorage.setItem("userdata", JSON.stringify(data.userdata));
+              localStorage.removeItem('token');
+              if (data.MSG == 'YES') {
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('userdata', JSON.stringify(data.userdata));
                 that.$router.push({
-                  path: "/"
+                  path: '/'
                 });
               } else {
                 that.xianshi = true;
@@ -170,7 +170,7 @@ export default {
             .catch(() => {
               that.loading = false;
               this.$message({
-                message: "网络错误!"
+                message: '网络错误!'
               });
             });
         }

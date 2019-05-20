@@ -56,28 +56,26 @@
   </div>
 </template>
 <script>
-import * as API from "@/api";
-import treeTransfer from "el-tree-transfer";
-import axios from "axios";
+import * as API from '@/api';
+import treeTransfer from 'el-tree-transfer';
+import axios from 'axios';
 export default {
   components: {
     treeTransfer
   },
   mounted() {
-    API.getchangyongzu({ token: localStorage.getItem("token") }).then(
-      ({ data }) => {
-        this.changyongzulist = data.changyongzulist;
-      }
-    );
+    API.getchangyongzu({ token: localStorage.getItem('token') }).then(({ data }) => {
+      this.changyongzulist = data.changyongzulist;
+    });
   },
   data() {
     return {
       xiugai: 0,
       istongxinlu: 0,
-      title: ["未选列表", "已选列表"],
-      mode: "transfer",
+      title: ['未选列表', '已选列表'],
+      mode: 'transfer',
       istongxinlu: 0,
-      changyongzu: "",
+      changyongzu: '',
       changyongzulist: [],
       fromData: [],
       toData: []
@@ -86,12 +84,12 @@ export default {
   methods: {
     querenxiugai() {
       API.xiugaichangyongzu({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         changyongzulist: this.changyongzulist
       }).then(({ data }) => {
         this.$message.success({
           showClose: true,
-          message: "修改成功",
+          message: '修改成功',
           duration: 2000
         });
       });
@@ -107,36 +105,36 @@ export default {
       if (this.changyongzu.length == 0) {
         this.$message({
           showClose: true,
-          message: "请输入常用组名",
+          message: '请输入常用组名',
           duration: 2000
         });
-        return "";
+        return '';
       }
       if (this.toData.length == 0) {
         this.$message({
           showClose: true,
-          message: "请选择发送人",
+          message: '请选择发送人',
           duration: 2000
         });
-        return "";
+        return '';
       }
       var fasongdata = {
         toData: this.toData,
         changyongzu: this.changyongzu,
-        token: localStorage.getItem("token")
+        token: localStorage.getItem('token')
       };
       API.setchangyongzu(fasongdata).then(({ data }) => {
-        if (data.MSG == "NO") {
+        if (data.MSG == 'NO') {
           this.$message({
             showClose: true,
-            message: "常用组名不合法！",
+            message: '常用组名不合法！',
             duration: 2000
           });
         } else {
           this.changyongzulist = data.changyongzulist;
           this.$message.success({
             showClose: true,
-            message: "发送成功",
+            message: '发送成功',
             duration: 2000
           });
           this.guanbi(1);
@@ -145,16 +143,14 @@ export default {
     },
     tianjia() {
       this.istongxinlu = 1;
-      API.gettongxinlu({ token: localStorage.getItem("token") }).then(
-        ({ data }) => {
-          this.fromData = data.tongxinlu;
-        }
-      );
+      API.gettongxinlu({ token: localStorage.getItem('token') }).then(({ data }) => {
+        this.fromData = data.tongxinlu;
+      });
     },
     guanbi(e) {
       if (e == 0) {
         this.$router.push({
-          path: "/main"
+          path: '/main'
         });
       } else {
         this.istongxinlu = 0;

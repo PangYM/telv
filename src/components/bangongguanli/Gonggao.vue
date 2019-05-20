@@ -108,9 +108,9 @@ export default {
           });
         }
         API.mindocyiyue({
-            token: localStorage.getItem('token'),
-            wendangid: this.$route.query.wendangid
-          }).then(({ data }) => {});
+          token: localStorage.getItem('token'),
+          wendangid: this.$route.query.wendangid
+        }).then(({ data }) => {});
       });
     } else {
       API.getfawenhao().then(({ data }) => {

@@ -105,8 +105,7 @@
 <script>
 import * as API from '@/api';
 export default {
-  components: {
-  },
+  components: {},
   mounted() {
     API.getfawenguanli({
       token: localStorage.getItem('token'),

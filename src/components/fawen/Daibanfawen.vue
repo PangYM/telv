@@ -129,8 +129,7 @@
 <script>
 import * as API from '@/api';
 export default {
-  components: {
-  },
+  components: {},
   mounted() {
     API.getdaibanfawen({
       token: localStorage.getItem('token'),

@@ -129,8 +129,7 @@
 <script>
 import * as API from '@/api';
 export default {
-  components: {
-  },
+  components: {},
   mounted() {
     API.getshouwenguanli({
       token: localStorage.getItem('token'),

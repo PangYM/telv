@@ -52,8 +52,9 @@
                 filter
               ></tree-transfer>
             </div>
-            <a v-bind="form.userlist" v-for="item in form.userlist" :key="item.name">
-              <a style="color:#0000FF">{{item.name}}</a>
+            <a v-bind="form.shenpihis" v-for="item in form.shenpihis" :key="item.name">
+              <a v-if="item.caozuo=='未完成'" :span="4" style="color:#0000FF">{{item.name}};</a>
+              <a v-else :span="4" style="color:#000000">{{item.name}};</a>
             </a>
           </el-form-item>
           <el-row>
@@ -199,7 +200,6 @@ export default {
         didian: '',
         nigaouserid: '',
         nigaoren: '',
-        userlist: [],
         riqi: this.getToday(),
         kaishitime: '08:00',
         jieshutime: '08:00',

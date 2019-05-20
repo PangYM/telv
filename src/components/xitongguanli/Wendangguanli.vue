@@ -65,36 +65,35 @@
 </template>
 
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 export default {
-  components: {
-  },
+  components: {},
   mounted() {
-    var userdata = JSON.parse(localStorage.getItem("userdata"));
+    var userdata = JSON.parse(localStorage.getItem('userdata'));
     this.quanxian = userdata.quanxian;
   },
   data() {
     return {
-      wendangid: "",
+      wendangid: '',
       quanxian: 0,
       dataTable: []
     };
   },
   methods: {
     handleDelete(index, row) {
-      this.$confirm("确认删除文档?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      this.$confirm('确认删除文档?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(() => {
         API.shanchuwendang({
-          token: localStorage.getItem("token"),
+          token: localStorage.getItem('token'),
           wendangid: row.wendangid
         }).then(({ data }) => {
-          if (data.MSG == "YES") {
+          if (data.MSG == 'YES') {
             this.$message.success({
               showClose: true,
-              message: "删除文档成功！",
+              message: '删除文档成功！',
               duration: 2000
             });
             this.dataTable = [];
@@ -106,19 +105,19 @@ export default {
       if (this.wendangid.length == 0) {
         this.$message({
           showClose: true,
-          message: "文档编号不能为空",
+          message: '文档编号不能为空',
           duration: 2000
         });
-        return "";
+        return '';
       }
       API.chaxunwendang({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         wendangid: this.wendangid
       }).then(({ data }) => {
-        if (data.MSG == "NO") {
+        if (data.MSG == 'NO') {
           this.$message({
             showClose: true,
-            message: "当前文档编号不存在",
+            message: '当前文档编号不存在',
             duration: 2000
           });
         } else {
@@ -127,93 +126,93 @@ export default {
       });
     },
     handleEdit(index, row) {
-      if (row.doctype == "duban") {
+      if (row.doctype == 'duban') {
         this.$router.push({
-          path: "/bangongguanli/duban",
+          path: '/bangongguanli/duban',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "huiyifaqi") {
+      } else if (row.doctype == 'huiyifaqi') {
         this.$router.push({
-          path: "/bangongguanli/huiyifaqi",
+          path: '/bangongguanli/huiyifaqi',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "youjian") {
+      } else if (row.doctype == 'youjian') {
         this.$router.push({
-          path: "/person/fasongyoujian",
+          path: '/person/fasongyoujian',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "yujing") {
+      } else if (row.doctype == 'yujing') {
         this.$router.push({
-          path: "/bangongguanli/yujing",
+          path: '/bangongguanli/yujing',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "gonggao") {
+      } else if (row.doctype == 'gonggao') {
         this.$router.push({
-          path: "/bangongguanli/gonggao",
+          path: '/bangongguanli/gonggao',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "shouwen") {
+      } else if (row.doctype == 'shouwen') {
         this.$router.push({
-          path: "/shouwen/shouwendengji",
+          path: '/shouwen/shouwendengji',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "gongwen") {
+      } else if (row.doctype == 'gongwen') {
         this.$router.push({
-          path: "/fawen/gongwen",
+          path: '/fawen/gongwen',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "fawen") {
+      } else if (row.doctype == 'fawen') {
         this.$router.push({
-          path: "/fawen/fawen",
+          path: '/fawen/fawen',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "huiyi") {
+      } else if (row.doctype == 'huiyi') {
         this.$router.push({
-          path: "/fawen/huiyi",
+          path: '/fawen/huiyi',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "dangwu") {
+      } else if (row.doctype == 'dangwu') {
         this.$router.push({
-          path: "/fawen/dangwu",
+          path: '/fawen/dangwu',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "dangwuhuiyi") {
+      } else if (row.doctype == 'dangwuhuiyi') {
         this.$router.push({
-          path: "/fawen/dangwuhuiyi",
+          path: '/fawen/dangwuhuiyi',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "qianbao") {
+      } else if (row.doctype == 'qianbao') {
         this.$router.push({
-          path: "/fawen/qianbao",
+          path: '/fawen/qianbao',
           query: {
             wendangid: row.wendangid
           }
         });
-      } else if (row.doctype == "yian") {
+      } else if (row.doctype == 'yian') {
         this.$router.push({
-          path: "/fawen/yian",
+          path: '/fawen/yian',
           query: {
             wendangid: row.wendangid
           }

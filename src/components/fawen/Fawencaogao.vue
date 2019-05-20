@@ -47,8 +47,7 @@
 <script>
 import * as API from '@/api';
 export default {
-  components: {
-  },
+  components: {},
   mounted() {
     let that = this;
     API.getfawencaogao({

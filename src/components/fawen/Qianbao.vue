@@ -88,11 +88,20 @@
               </li>
               <el-input
                 class="neirong"
-                v-if="pishi>1"
+                v-if="pishi==2"
                 size="medium"
                 v-model="lingdaopishi"
                 placeholder
               ></el-input>
+            </div>
+          </div>
+          <div class="kuang3">
+            <div class="kuang30">办公室意见</div>
+            <div class="biaoti">
+              <el-input v-if="pishi>2" size="small" v-model="lingdaopishi" placeholder></el-input>
+              <li v-bind="form.minlingdaolist" v-for="item in form.minlingdaolist" :key="item.name">
+                <a style="color:#000000">{{item.name}} {{item.time}} {{item.yijian}}</a>
+              </li>
             </div>
           </div>
           <div class="kuang3">

@@ -30,14 +30,14 @@
 </template>
 
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 export default {
   data() {
     return {
       form: {
-        oldPwd: "",
-        newPwd: "",
-        confirmPwd: ""
+        oldPwd: '',
+        newPwd: '',
+        confirmPwd: ''
       }
     };
   },
@@ -45,30 +45,30 @@ export default {
     handleChangepwd() {
       if (this.form.oldPwd.length < 6) {
         this.$message({
-          message: "原密码不正确，请重新输入",
+          message: '原密码不正确，请重新输入',
           duration: 2000
         });
       } else if (this.form.newPwd.length < 6) {
         this.$message({
-          message: "密码长度低于6，请重新输入",
+          message: '密码长度低于6，请重新输入',
           duration: 2000
         });
       } else if (this.form.newPwd != this.form.confirmPwd) {
         this.$message({
-          message: "密码不一致，请重新输入",
+          message: '密码不一致，请重新输入',
           duration: 2000
         });
       } else {
-        this.form.token = localStorage.getItem("token");
+        this.form.token = localStorage.getItem('token');
         API.changepwd(this.form).then(({ data }) => {
-          if (data.MSG == "NO") {
+          if (data.MSG == 'NO') {
             this.$message({
-              message: "原密码不正确，请重新输入",
+              message: '原密码不正确，请重新输入',
               duration: 2000
             });
-          } else if (data.MSG == "YES") {
+          } else if (data.MSG == 'YES') {
             this.$message.success({
-              message: "修改成功！",
+              message: '修改成功！',
               duration: 2000
             });
           }

@@ -45,15 +45,14 @@
 </template>
 
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 export default {
-  components: {
-  },
+  components: {},
   mounted() {
     let that = this;
     API.getfawencaogao({
-      token: localStorage.getItem("token"),
-      doctype: "shouwen"
+      token: localStorage.getItem('token'),
+      doctype: 'shouwen'
     }).then(({ data }) => {
       that.dataTable = data.dataTable;
     });
@@ -67,7 +66,7 @@ export default {
     handleEdit(index, row) {
       // localStorage.setItem("fileList", JSON.stringify(row.fileList));
       this.$router.push({
-        path: "/shouwen/shouwendengji",
+        path: '/shouwen/shouwendengji',
         query: {
           wendangid: row.wendangid
         }
@@ -77,12 +76,12 @@ export default {
       API.deletefawencaogao({
         wendangid: row.wendangid
       }).then(({ data }) => {
-        if (data == "YES") {
+        if (data == 'YES') {
           this.dataTable.splice(index, 1);
         } else {
-          this.$confirm("当前文档已经发送，您无权限删除", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
+          this.$confirm('当前文档已经发送，您无权限删除', '提示', {
+            confirmButtonText: '确定',
+            type: 'warning'
           })
             .then(() => {})
             .catch(() => {});

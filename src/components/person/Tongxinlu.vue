@@ -82,10 +82,9 @@
 </template>
 
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 export default {
-  components: {
-  },
+  components: {},
   mounted() {
     API.getusers({
       query: this.query
@@ -95,7 +94,7 @@ export default {
   },
   data() {
     return {
-      query: "",
+      query: '',
       dataTable: []
     };
   },

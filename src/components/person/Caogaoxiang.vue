@@ -49,15 +49,14 @@
 </template>
 
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 export default {
-  components: {
-  },
+  components: {},
   mounted() {
     let that = this;
     API.getmindoccaogao({
-      token: localStorage.getItem("token"),
-      doctype: "youjian"
+      token: localStorage.getItem('token'),
+      doctype: 'youjian'
     }).then(({ data }) => {
       that.dataTable = data.dataTable;
     });
@@ -71,7 +70,7 @@ export default {
     handleEdit(index, row) {
       // localStorage.setItem("fileList", JSON.stringify(row.fileList));
       this.$router.push({
-        path: "/person/fasongyoujian",
+        path: '/person/fasongyoujian',
         query: {
           wendangid: row.wendangid
         }
@@ -81,12 +80,12 @@ export default {
       API.deletefawencaogao({
         wendangid: row.wendangid
       }).then(({ data }) => {
-        if (data == "YES") {
+        if (data == 'YES') {
           this.dataTable.splice(index, 1);
         } else {
-          this.$confirm("当前邮件已经发送，您无权限删除", "提示", {
-            confirmButtonText: "确定",
-            type: "warning"
+          this.$confirm('当前邮件已经发送，您无权限删除', '提示', {
+            confirmButtonText: '确定',
+            type: 'warning'
           })
             .then(() => {})
             .catch(() => {});

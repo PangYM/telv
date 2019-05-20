@@ -96,52 +96,47 @@
 </template>
 
 <script>
-import * as API from "@/api";
+import * as API from '@/api';
 export default {
-  components: {
-  },
+  components: {},
   mounted() {
     API.getfawenguanli({
-      token: localStorage.getItem("token"),
-      doctype: "shouwen",
+      token: localStorage.getItem('token'),
+      doctype: 'shouwen',
       query: this.query
     }).then(({ data }) => {
       this.dataTable = data.dataTable;
       for (var i = 0; i < this.dataTable.length; ++i) {
-        this.dataTable[i].clour = this.zhuangtai_clour[
-          this.dataTable[i].zhuangtai
-        ];
+        this.dataTable[i].clour = this.zhuangtai_clour[this.dataTable[i].zhuangtai];
       }
       this.qiefendataTable = this.dataTable.slice(0, 20);
     });
   },
   data() {
     return {
-      query: "",
+      query: '',
       qiefendataTable: [],
       dataTable: [],
-      newclour: "#008B00",
+      newclour: '#008B00',
       zhuangtai_clour: {
-        已完成: "#008B00",
-        未通过: "#FF0000",
-        审批中: "#EEB422",
-        已撤销: "#DA70D6",
-        退文: "#9400D3"
+        已完成: '#008B00',
+        未通过: '#FF0000',
+        审批中: '#EEB422',
+        已撤销: '#DA70D6',
+        退文: '#9400D3'
       }
     };
   },
   methods: {
     chaxun() {
       API.getfawenguanli({
-        token: localStorage.getItem("token"),
-        doctype: "shouwen",
+        token: localStorage.getItem('token'),
+        doctype: 'shouwen',
         query: this.query
       }).then(({ data }) => {
         this.dataTable = data.dataTable;
         for (var i = 0; i < this.dataTable.length; ++i) {
-          this.dataTable[i].clour = this.zhuangtai_clour[
-            this.dataTable[i].zhuangtai
-          ];
+          this.dataTable[i].clour = this.zhuangtai_clour[this.dataTable[i].zhuangtai];
         }
         this.qiefendataTable = this.dataTable.slice(0, 20);
       });
@@ -151,7 +146,7 @@ export default {
     },
     handleEdit(index, row) {
       this.$router.push({
-        path: "/shouwen/shouwendengji",
+        path: '/shouwen/shouwendengji',
         query: { wendangid: row.wendangid }
       });
     }

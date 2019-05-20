@@ -144,7 +144,7 @@
               >
                 <a style="color:#000000">
                   <img v-if="item.imageurl" class="qianming" :src="getImgUrl(item.imageurl)">
-                  <a v-else style="color:#000000"> {{item.name}}</a>
+                  <a v-else style="color:#000000">{{item.name}}</a>
                   {{item.time}} {{item.yijian}}
                 </a>
               </li>
@@ -478,7 +478,7 @@ export default {
         this.loading = false;
         this.$message.success({
           showClose: true,
-          message: e==1?"发送成功":"保存成功",
+          message: e == 1 ? '发送成功' : '保存成功',
           duration: 2000
         });
         if (e) this.$router.go(-1);

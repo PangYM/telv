@@ -171,15 +171,15 @@
   </div>
 </template>
 <script>
-import * as API from "@/api";
-import { VueEditor } from "vue2-editor";
-import axios from "axios";
+import * as API from '@/api';
+import { VueEditor } from 'vue2-editor';
+import axios from 'axios';
 export default {
   components: {
     VueEditor
   },
   mounted() {
-    var userdata = JSON.parse(localStorage.getItem("userdata"));
+    var userdata = JSON.parse(localStorage.getItem('userdata'));
     this.quanxian = userdata.quanxian;
   },
   data() {
@@ -188,90 +188,86 @@ export default {
       lunbotu: 0,
       youqing: 0,
       dengluye: 0,
-      userid: "",
+      userid: '',
       base: API.base,
-      lunbotuUrl: API.baseurl + "lunbotuUrl",
+      lunbotuUrl: API.baseurl + 'lunbotuUrl',
       uploadlist: [
-        { token: localStorage.getItem("token"), xuhao: 0 },
-        { token: localStorage.getItem("token"), xuhao: 1 },
-        { token: localStorage.getItem("token"), xuhao: 2 },
-        { token: localStorage.getItem("token"), xuhao: 3 },
-        { token: localStorage.getItem("token"), xuhao: 4 }
+        { token: localStorage.getItem('token'), xuhao: 0 },
+        { token: localStorage.getItem('token'), xuhao: 1 },
+        { token: localStorage.getItem('token'), xuhao: 2 },
+        { token: localStorage.getItem('token'), xuhao: 3 },
+        { token: localStorage.getItem('token'), xuhao: 4 }
       ],
       dengluyelist: [
         {
-          title: "",
-          content: " ",
+          title: '',
+          content: ' ',
           show: 0
         }
       ],
       lunbotulist: [
         {
-          url: "",
-          content: " ",
+          url: '',
+          content: ' ',
           show: 0
         }
       ],
       youqinglist: [
         {
-          title: "",
-          url: ""
+          title: '',
+          url: ''
         }
       ]
     };
   },
   methods: {
     onsuccess(response, file, fileList) {
-      this.lunbotulist[response.xuhao].url = "/data/" + response.lunbotuUrl;
+      this.lunbotulist[response.xuhao].url = '/data/' + response.lunbotuUrl;
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg" || file.type === "image/png";
+      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
       const isLt2M = file.size / 1024 / 1024 < 10;
       if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG/png 格式!");
+        this.$message.error('上传头像图片只能是 JPG/png 格式!');
       }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 10MB!");
+        this.$message.error('上传头像图片大小不能超过 10MB!');
       }
       return isJPG && isLt2M;
     },
     xianshireirong(index, row, e) {
       if (e == 1) {
-        for (var i = 0; i < this.dengluyelist.length; ++i)
-          this.dengluyelist[i].show = 0;
+        for (var i = 0; i < this.dengluyelist.length; ++i) this.dengluyelist[i].show = 0;
         this.dengluyelist[index].show = 1;
       } else {
-        for (var i = 0; i < this.dengluyelist.length; ++i)
-          this.dengluyelist[i].show = 0;
+        for (var i = 0; i < this.dengluyelist.length; ++i) this.dengluyelist[i].show = 0;
       }
     },
     xianshireirong1(index, row, e) {
       if (e == 1) {
-        for (var i = 0; i < this.lunbotulist.length; ++i)
-          this.lunbotulist[i].show = 0;
+        for (var i = 0; i < this.lunbotulist.length; ++i) this.lunbotulist[i].show = 0;
         this.lunbotulist[index].show = 1;
       } else {
-        for (var i = 0; i < this.lunbotulist.length; ++i)
-          this.lunbotulist[i].show = 0;
+        for (var i = 0; i < this.lunbotulist.length; ++i) this.lunbotulist[i].show = 0;
       }
     },
     handleImageAdded(file, Editor, cursorLocation, resetUploader) {
       API.baocunimage(file).then(result => {
         let url = result.data.url;
-        url = API.base + "/data/" + url;
-        Editor.insertEmbed(cursorLocation, "image", url);
+        url = API.base + '/data/' + url;
+        Editor.insertEmbed(cursorLocation, 'image', url);
         resetUploader();
       });
     },
     querenlunbotu() {
       API.setlunbotulist({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         lunbotulist: this.lunbotulist
       }).then(({ data }) => {
-        if (data.MSG == "YES") {
+        if (data.MSG == 'YES') {
           this.$message.success({
             showClose: true,
-            message: "设置轮播图成功！",
+            message: '设置轮播图成功！',
             duration: 2000
           });
         }
@@ -279,13 +275,13 @@ export default {
     },
     querendengluye() {
       API.setdengluyelist({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         dengluyelist: this.dengluyelist
       }).then(({ data }) => {
-        if (data.MSG == "YES") {
+        if (data.MSG == 'YES') {
           this.$message.success({
             showClose: true,
-            message: "设置登录页介绍成功！",
+            message: '设置登录页介绍成功！',
             duration: 2000
           });
         }
@@ -293,13 +289,13 @@ export default {
     },
     querenyouqing() {
       API.setyouqinglist({
-        token: localStorage.getItem("token"),
+        token: localStorage.getItem('token'),
         youqinglist: this.youqinglist
       }).then(({ data }) => {
-        if (data.MSG == "YES") {
+        if (data.MSG == 'YES') {
           this.$message.success({
             showClose: true,
-            message: "设置友情链接成功！",
+            message: '设置友情链接成功！',
             duration: 2000
           });
         }
@@ -307,8 +303,8 @@ export default {
     },
     handleAddTask0() {
       this.dengluyelist.push({
-        title: "",
-        content: "",
+        title: '',
+        content: '',
         show: 0
       });
     },
@@ -317,8 +313,8 @@ export default {
     },
     handleAddTask1() {
       this.lunbotulist.push({
-        url: "",
-        content: "",
+        url: '',
+        content: '',
         show: 0
       });
     },
@@ -327,8 +323,8 @@ export default {
     },
     handleAddTask2() {
       this.youqinglist.push({
-        title: "",
-        url: ""
+        title: '',
+        url: ''
       });
     },
     handleRemoveTask2(index) {
