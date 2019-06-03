@@ -124,7 +124,6 @@ export default {
       query: '',
       qiefendataTable: [],
       dataTable: [],
-      newclour: '#008B00',
       zhuangtai_clour: {
         已完成: '#008B00',
         未通过: '#FF0000',

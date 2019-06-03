@@ -137,6 +137,7 @@ export default {
       upload: {},
       form: {
         doctype: 'gonggao',
+        zhuangtai: '已完成',
         wendangid: '',
         biaoti: '',
         nigaouserid: '',
@@ -176,14 +177,20 @@ export default {
         token: localStorage.getItem('token')
       };
       API.fasongmindoc(fasongdata).then(({ data }) => {
-        this.$message.success({
-          showClose: true,
-          message: '发送成功',
-          duration: 2000
-        });
-        this.$router.push({
-          path: '/main'
-        });
+        if (data.MSG == 'YES') {
+          this.$message.success({
+            showClose: true,
+            message: '发送成功',
+            duration: 2000
+          });
+          this.$router.push({
+            path: '/main'
+          });
+        } else {
+          this.$message({
+            message: '参数错误，请刷新后重试'
+          });
+        }
       });
     },
     guanbi() {

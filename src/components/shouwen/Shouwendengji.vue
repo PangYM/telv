@@ -289,7 +289,6 @@ export default {
         zhuangtai: 'caogao',
         leixing: '',
         riqi: this.getToday(),
-        nigaouserid: '',
         nigaoren: '',
         wenzhong: '',
         biaoti: '',
@@ -387,7 +386,7 @@ export default {
         banli: this.banli
       }).then(({ data }) => {
         this.form.qianyuelist = data.qianyuelist;
-        if (this.tongxinlu == 0) {
+        if (this.istongxinlu == 0) {
           this.$message.success({
             showClose: true,
             message: this.form.zhuangtai != '退文' ? '办理成功！' : '已阅成功！',
@@ -476,12 +475,19 @@ export default {
       if (!e) fasongdata.toData = [];
       API.fasongwendang(fasongdata).then(({ data }) => {
         this.loading = false;
-        this.$message.success({
-          showClose: true,
-          message: e == 1 ? '发送成功' : '保存成功',
-          duration: 2000
-        });
-        if (e) this.$router.go(-1);
+        if (data.MSG == 'YES') {
+          this.$message.success({
+            showClose: true,
+            message: e == 1 ? '发送成功' : '保存成功',
+            duration: 2000
+          });
+          this.tongzhi = 0;
+          if (e) this.$router.go(-1);
+        } else {
+          this.$message({
+            message: '参数错误，请刷新后重试'
+          });
+        }
       });
     },
     add(fromData, toData, obj) {

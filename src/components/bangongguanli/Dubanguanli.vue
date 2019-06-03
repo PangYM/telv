@@ -16,6 +16,11 @@
       <el-button type="primary" icon="el-icon-search" @click="chaxun">查询</el-button>
       <el-button type="success" icon="el-icon-circle-plus-outline" @click="handleGoUrl">新增督办</el-button>
     </div>
+    <div class="chaxun">
+      标题颜色说明：
+      <a style="color: #00BB00">已完成</a>
+      <a style="color: #FF0000">未完成</a>
+    </div>
     <!--list-->
     <el-table
       :data="qiefendataTable"

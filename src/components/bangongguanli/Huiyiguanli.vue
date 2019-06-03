@@ -16,21 +16,31 @@
       <el-button type="primary" icon="el-icon-search" @click="chaxun">查询</el-button>
       <el-button type="success" icon="el-icon-circle-plus-outline" @click="handleGoUrl">新增会议</el-button>
     </div>
+    <div class="chaxun">
+      标题颜色说明：
+      <a style="color: #9400D3">未开始</a>
+      <a style="color: #EEB422">进行中</a>
+      <a style="color: #008B00">已结束</a>
+    </div>
     <!--list-->
     <el-table
       :data="qiefendataTable"
       stripe
       border
       style="width: 100%"
-      :default-sort="{prop: 'starttime', order: 'descending'}"
+      :default-sort="{prop: 'riqi', order: 'descending'}"
     >
       <el-table-column sortable prop="biaoti" label="会议主题" align="center" min-width="200"></el-table-column>
       <el-table-column sortable prop="nigaoren" label="发起人" align="center" width="120"></el-table-column>
       <el-table-column sortable prop="didian" align="center" width="120" label="会议地点"></el-table-column>
       <el-table-column sortable prop="riqi" align="center" width="120" label="会议日期"></el-table-column>
-      <el-table-column sortable prop="zhuangtai" align="center" width="120" label="状态"></el-table-column>
-      <el-table-column sortable prop="starttime" align="center" label="开始时间" width="120"></el-table-column>
-      <el-table-column sortable prop="endtime" align="center" label="结束时间" width="120"></el-table-column>
+      <el-table-column sortable prop="zhuangtai" align="center" width="120" label="状态">
+        <template slot-scope="scope">
+          <a v-if="scope.row.zhuangtai=='未开始'" :style="{'color': '#9400D3'}">{{scope.row.zhuangtai}}</a>
+          <a v-if="scope.row.zhuangtai=='进行中'" :style="{'color': '#EEB422'}">{{scope.row.zhuangtai}}</a>
+          <a v-if="scope.row.zhuangtai=='已结束'" :style="{'color': '#008B00'}">{{scope.row.zhuangtai}}</a>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" align="center" label="操作" width="80">
         <template slot-scope="scope">
           <el-button type="text" @click="handleEdit(scope.$index, scope.row)" size="small">

@@ -204,15 +204,21 @@ export default {
       };
       if (!e) fasongdata.toData = [];
       API.fasongmindoc(fasongdata).then(({ data }) => {
-        this.$message.success({
-          showClose: true,
-          message: e == 1 ? '发送成功' : '保存成功',
-          duration: 2000
-        });
-        if (e)
-          this.$router.push({
-            path: '/main'
+        if (data.MSG == 'YES') {
+          this.$message.success({
+            showClose: true,
+            message: e == 1 ? '发送成功' : '保存成功',
+            duration: 2000
           });
+          if (e)
+            this.$router.push({
+              path: '/main'
+            });
+        } else {
+          this.$message({
+            message: '参数错误，请刷新后重试'
+          });
+        }
       });
     },
     querensend() {

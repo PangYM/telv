@@ -16,18 +16,34 @@
         <el-input
           class="chaxun1"
           size="medium"
-          v-model="wendangid"
-          placeholder="请输入文档编号"
+          v-model="query"
+          placeholder="全文搜索"
           @keyup.enter.native="chaxun"
         ></el-input>
+        <el-select v-model="doctype" placeholder="请选择文档类型" style="width:15%;">
+          <el-option label="收文" value="shouwen"></el-option>
+          <el-option label="公文引发单" value="gongwen"></el-option>
+          <el-option label="发文" value="fawen"></el-option>
+          <el-option label="会议发文" value="huiyi"></el-option>
+          <el-option label="党务发文" value="dangwu"></el-option>
+          <el-option label="党务会议发文" value="dangwuhuiyi"></el-option>
+          <el-option label="签报" value="qianbao"></el-option>
+          <el-option label="议案报告" value="yian"></el-option>
+          <el-option label="购置申请" value="gouzhi"></el-option>
+          <el-option label="邮件" value="youjian"></el-option>
+          <el-option label="公告" value="gonggao"></el-option>
+          <el-option label="督办" value="duban"></el-option>
+          <el-option label="会议" value="huiyifaqi"></el-option>
+          <el-option label="提醒" value="tixing"></el-option>
+        </el-select>
         <el-button size="medium" type="primary" @click="chaxun">查询</el-button>
       </div>
       <el-table
         border
-        :data="dataTable"
+        :data="qiefendataTable"
         stripe
         style="width: 100%"
-        :default-sort="{prop: 'laiwentime', order: 'descending'}"
+        :default-sort="{prop: 'starttime', order: 'descending'}"
       >
         <el-table-column
           sortable
@@ -61,6 +77,16 @@
         </el-table-column>
       </el-table>
     </div>
+    <div class="pailei">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        background
+        :page-size="20"
+        :pager-count="11"
+        layout="prev, pager, next"
+        :total="dataTable.length"
+      ></el-pagination>
+    </div>
   </div>
 </template>
 
@@ -71,15 +97,21 @@ export default {
   mounted() {
     var userdata = JSON.parse(localStorage.getItem('userdata'));
     this.quanxian = userdata.quanxian;
+    this.chaxun();
   },
   data() {
     return {
-      wendangid: '',
+      query: '',
+      doctype: 'shouwen',
       quanxian: 0,
-      dataTable: []
+      dataTable: [],
+      qiefendataTable: []
     };
   },
   methods: {
+    handleCurrentChange(val) {
+      this.qiefendataTable = this.dataTable.slice(20 * val - 20, val * 20);
+    },
     handleDelete(index, row) {
       this.$confirm('确认删除文档?', '提示', {
         confirmButtonText: '确定',
@@ -102,17 +134,10 @@ export default {
       });
     },
     chaxun() {
-      if (this.wendangid.length == 0) {
-        this.$message({
-          showClose: true,
-          message: '文档编号不能为空',
-          duration: 2000
-        });
-        return '';
-      }
       API.chaxunwendang({
         token: localStorage.getItem('token'),
-        wendangid: this.wendangid
+        query: this.query,
+        doctype: this.doctype
       }).then(({ data }) => {
         if (data.MSG == 'NO') {
           this.$message({
@@ -122,46 +147,12 @@ export default {
           });
         } else {
           this.dataTable = data.dataTable;
+          this.qiefendataTable = this.dataTable.slice(0, 20);
         }
       });
     },
     handleEdit(index, row) {
-      if (row.doctype == 'duban') {
-        this.$router.push({
-          path: '/bangongguanli/duban',
-          query: {
-            wendangid: row.wendangid
-          }
-        });
-      } else if (row.doctype == 'huiyifaqi') {
-        this.$router.push({
-          path: '/bangongguanli/huiyifaqi',
-          query: {
-            wendangid: row.wendangid
-          }
-        });
-      } else if (row.doctype == 'youjian') {
-        this.$router.push({
-          path: '/person/fasongyoujian',
-          query: {
-            wendangid: row.wendangid
-          }
-        });
-      } else if (row.doctype == 'yujing') {
-        this.$router.push({
-          path: '/bangongguanli/yujing',
-          query: {
-            wendangid: row.wendangid
-          }
-        });
-      } else if (row.doctype == 'gonggao') {
-        this.$router.push({
-          path: '/bangongguanli/gonggao',
-          query: {
-            wendangid: row.wendangid
-          }
-        });
-      } else if (row.doctype == 'shouwen') {
+      if (row.doctype == 'shouwen') {
         this.$router.push({
           path: '/shouwen/shouwendengji',
           query: {
@@ -213,6 +204,48 @@ export default {
       } else if (row.doctype == 'yian') {
         this.$router.push({
           path: '/fawen/yian',
+          query: {
+            wendangid: row.wendangid
+          }
+        });
+      } else if (row.doctype == 'gouzhi') {
+        this.$router.push({
+          path: '/fawen/gouzhi',
+          query: {
+            wendangid: row.wendangid
+          }
+        });
+      } else if (row.doctype == 'youjian') {
+        this.$router.push({
+          path: '/person/fasongyoujian',
+          query: {
+            wendangid: row.wendangid
+          }
+        });
+      } else if (row.doctype == 'gonggao') {
+        this.$router.push({
+          path: '/bangongguanli/gonggao',
+          query: {
+            wendangid: row.wendangid
+          }
+        });
+      } else if (row.doctype == 'duban') {
+        this.$router.push({
+          path: '/bangongguanli/duban',
+          query: {
+            wendangid: row.wendangid
+          }
+        });
+      } else if (row.doctype == 'huiyifaqi') {
+        this.$router.push({
+          path: '/bangongguanli/huiyifaqi',
+          query: {
+            wendangid: row.wendangid
+          }
+        });
+      } else if (row.doctype == 'tixing') {
+        this.$router.push({
+          path: '/bangongguanli/tixing',
           query: {
             wendangid: row.wendangid
           }

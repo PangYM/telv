@@ -15,7 +15,7 @@
       <div class="dayin">
         <el-button type="primary" v-if="xiugai" @click="querenfasong(0)">保存</el-button>
         <el-button type="primary" v-if="yuedu" @click="querenyuedu">已阅</el-button>
-        <el-button type="primary" :loading="loading" @click="querensend">发送</el-button>
+        <el-button type="primary" v-if="fasong" :loading="loading" @click="querensend">发送</el-button>
         <el-button type="primary" v-if="!xiugai" @click="piyuejilu">查看批阅记录</el-button>
         <el-button type="primary" v-print="'#gongwen'">打印</el-button>
         <el-button type="primary" @click="guanbi(0)">关闭</el-button>
@@ -151,7 +151,7 @@
               <li v-bind="form.fileList" v-for="item in form.fileList" :key="item.name">
                 <a
                   target="_blank"
-                  :href="baseurl+'/data/fujian/'+form.bianhao+'/'+item.name"
+                  :href="baseurl+'/data/fujian/'+form.wendangid+'/'+item.name"
                 >{{item.name}}</a>
               </li>
             </div>
@@ -228,6 +228,7 @@ export default {
         this.form = data.data;
         this.xiugai = data.xiugai;
         this.yuedu = data.yuedu;
+        this.fasong = data.fasong;
         this.upload.wendangid = this.form.wendangid;
         this.form.fujianList = [];
         for (var i = 0; i < this.form.fileList.length; ++i) {
@@ -256,6 +257,7 @@ export default {
       istongxinlu: 0,
       xiugai: 1,
       yuedu: 0,
+      fasong: 1,
       title: ['未选列表', '已选列表'],
       mode: 'transfer',
       fromData: [],
@@ -355,7 +357,6 @@ export default {
         return '';
       }
       this.loading = true;
-      this.form.bianhao = this.form.bianhao1 + '【' + this.form.bianhao2 + '】' + this.form.bianhao3 + '号';
       var fasongdata = {
         toData: this.toData,
         wendang: this.form,
@@ -364,12 +365,19 @@ export default {
       if (!e) fasongdata.toData = [];
       API.fasongwendang(fasongdata).then(({ data }) => {
         this.loading = false;
-        this.$message.success({
-          showClose: true,
-          message: e == 1 ? '发送成功' : '保存成功',
-          duration: 2000
-        });
-        if (e) this.$router.go(-1);
+        if (data.MSG == 'YES') {
+          this.$message.success({
+            showClose: true,
+            message: e == 1 ? '发送成功' : '保存成功',
+            duration: 2000
+          });
+          this.tongzhi = 0;
+          if (e) this.$router.go(-1);
+        } else {
+          this.$message({
+            message: '参数错误，请刷新后重试'
+          });
+        }
       });
     },
     add(fromData, toData, obj) {

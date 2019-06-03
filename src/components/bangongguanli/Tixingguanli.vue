@@ -16,6 +16,14 @@
       <el-button type="primary" icon="el-icon-search" @click="chaxun">查询</el-button>
       <el-button type="success" icon="el-icon-circle-plus-outline" @click="handleGoUrl">新增提醒</el-button>
     </div>
+    <div class="chaxun">
+      标题颜色说明：
+      <a style="color: #0066CC">提醒未开始</a>
+      <a style="color: #FF0000">正在提醒</a>
+      <a style="color: #FFCC00">待唤醒中</a>
+      <a style="color: #000000">提醒已过期</a>
+      <a style="color: #00BB00">已完成</a>
+    </div>
     <!--list-->
     <el-table
       :data="qiefendataTable"
@@ -36,7 +44,8 @@
           <a v-if="scope.row.zhuangtai=='提醒未开始'" style="color:#0066CC">{{scope.row.zhuangtai}}</a>
           <a v-if="scope.row.zhuangtai=='正在提醒'" style="color:#FF0000">{{scope.row.zhuangtai}}</a>
           <a v-if="scope.row.zhuangtai=='待唤醒中'" style="color:#FFCC00">{{scope.row.zhuangtai}}</a>
-          <a v-if="scope.row.zhuangtai=='处理完成'" style="color:#00BB00">{{scope.row.zhuangtai}}</a>
+          <a v-if="scope.row.zhuangtai=='提醒已过期'" style="color:#000000">{{scope.row.zhuangtai}}</a>
+          <a v-if="scope.row.zhuangtai=='已完成'" style="color:#00BB00">{{scope.row.zhuangtai}}</a>
         </template>
       </el-table-column>
       <el-table-column sortable prop="wanchengren" align="center" width="120" label="处理人"></el-table-column>
@@ -118,7 +127,7 @@ export default {
   background: #efefef;
 }
 .chaxun {
-  width: 400px;
+  width: 500px;
 }
 .demo-table-expand {
   font-size: 0;

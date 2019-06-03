@@ -18,7 +18,7 @@
         <el-button type="primary" v-if="tuiwen" @click="querenfanhui">退回上一级</el-button>
         <el-button type="primary" v-if="quanxian<=20&&!pishi&&!yuedu" @click="querenchehui">撤回</el-button>
         <el-button type="primary" v-if="pishi" @click="querenshenpi">审批</el-button>
-        <el-button type="primary" :loading="loading" @click="querensend">发送</el-button>
+        <el-button type="primary" v-if="fasong" :loading="loading" @click="querensend">发送</el-button>
         <el-button type="primary" v-if="yuedu&&form.zhuangtai!='退文'" @click="querenyuedu">办理</el-button>
         <el-button type="primary" v-if="yuedu&&form.zhuangtai=='退文'" @click="querenyuedu">已阅</el-button>
         <el-button type="primary" v-if="!xiugai" @click="piyuejilu">查看批阅记录</el-button>
@@ -237,6 +237,7 @@ export default {
         this.tuiwen = data.tuiwen;
         this.pishi = data.pishi;
         this.yuedu = data.yuedu;
+        this.fasong = data.fasong;
         this.upload.wendangid = this.form.wendangid;
         if (this.hegao) {
           this.form.lingdao.name = userdata.name;
@@ -285,6 +286,7 @@ export default {
       tuiwen: 0,
       pishi: 0,
       yuedu: 0,
+      fasong: 1,
       lingdaopishi: '',
       banli: '',
       title: ['未选列表', '已选列表'],
@@ -404,7 +406,7 @@ export default {
         banli: this.banli
       }).then(({ data }) => {
         this.form.qianyuelist = data.qianyuelist;
-        if (this.tongxinlu == 0) {
+        if (this.istongxinlu == 0) {
           this.$message.success({
             showClose: true,
             message: this.form.zhuangtai != '退文' ? '办理成功！' : '已阅成功！',
@@ -470,7 +472,7 @@ export default {
         this.form.minlingdaolist = data.minlingdaolist;
         this.form.falvlingdaolist = data.falvlingdaolist;
       });
-      if (this.tongxinlu == 0) {
+      if (this.istongxinlu == 0) {
         this.$message.success({
           showClose: true,
           message: '审批成功',
@@ -496,12 +498,19 @@ export default {
       if (!e) fasongdata.toData = [];
       API.fasongwendang(fasongdata).then(({ data }) => {
         this.loading = false;
-        this.$message.success({
-          showClose: true,
-          message: e == 1 ? '发送成功' : '保存成功',
-          duration: 2000
-        });
-        if (e) this.$router.go(-1);
+        if (data.MSG == 'YES') {
+          this.$message.success({
+            showClose: true,
+            message: e == 1 ? '发送成功' : '保存成功',
+            duration: 2000
+          });
+          this.tongzhi = 0;
+          if (e) this.$router.go(-1);
+        } else {
+          this.$message({
+            message: '参数错误，请刷新后重试'
+          });
+        }
       });
     },
     add(fromData, toData, obj) {

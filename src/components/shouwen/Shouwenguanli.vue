@@ -34,7 +34,7 @@
       :data="qiefendataTable"
       stripe
       style="width: 100%"
-      :default-sort="{prop: 'laiwentime', order: 'descending'}"
+      :default-sort="{prop: 'starttime', order: 'descending'}"
     >
       <el-table-column
         sortable
@@ -148,7 +148,6 @@ export default {
       query: '',
       qiefendataTable: [],
       dataTable: [],
-      newclour: '#008B00',
       zhuangtai_clour: {
         已完成: '#008B00',
         未通过: '#FF0000',

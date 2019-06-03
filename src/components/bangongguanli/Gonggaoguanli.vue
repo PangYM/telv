@@ -47,7 +47,7 @@
         align="center"
         label="发起人"
         show-overflow-tooltip
-        width="108"
+        width="180"
       ></el-table-column>
       <el-table-column
         sortable
@@ -55,15 +55,7 @@
         align="center"
         label="发送时间"
         show-overflow-tooltip
-        width="108"
-      ></el-table-column>
-      <el-table-column
-        sortable
-        prop="jinji"
-        align="center"
-        label="公开类型"
-        show-overflow-tooltip
-        width="108"
+        width="180"
       ></el-table-column>
       <el-table-column fixed="right" align="center" width="120" label="操作">
         <template slot-scope="scope">

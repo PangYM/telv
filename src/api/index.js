@@ -44,7 +44,7 @@ instance.interceptors.response.use(
 );
 
 //基地址
-export const base = 'http://localhost';
+export const base = 'http://10.190.177.115';
 export const port = ':16888/api/';
 export const baseurl = base + port;
 //用户登录
@@ -263,7 +263,12 @@ function fanhui(data) {
 function chehui(data) {
     return instance.post(baseurl + 'chehui', data);
 }
+//通知董芸
+function tongzhidongyun(data) {
+    return instance.post(baseurl + 'tongzhidongyun', data);
+}
 export {
+    tongzhidongyun,
     chehui,
     fanhui,
     setlunbotulist,

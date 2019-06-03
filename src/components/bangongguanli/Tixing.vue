@@ -133,7 +133,7 @@
         </el-form-item>
         <el-form-item>
           <el-button v-if="xiugai" type="primary" @click="onSubmit">立即创建</el-button>
-          <el-button v-if="xiugai==0&&form.zhuangtai=='未处理'" type="primary" @click="wancheng">处理完成</el-button>
+          <el-button v-if="xiugai==0&&form.zhuangtai=='未完成'" type="primary" @click="wancheng">处理完成</el-button>
           <el-button type="primary" @click="guanbi">关闭</el-button>
         </el-form-item>
       </el-form>
@@ -179,7 +179,7 @@ export default {
       upload: {},
       form: {
         doctype: 'tixing',
-        zhuangtai: '未处理',
+        zhuangtai: '未完成',
         wendangid: '',
         biaoti: '',
         nigaouserid: '',
@@ -222,7 +222,7 @@ export default {
           message: '处理成功！',
           duration: 2000
         });
-        this.form.zhuangtai = '处理完成';
+        this.form.zhuangtai = '已完成';
       });
     },
     guanbi() {
@@ -233,12 +233,20 @@ export default {
         token: localStorage.getItem('token'),
         wendang: this.form
       }).then(({ data }) => {
-        this.$message.success({
-          showClose: true,
-          message: '创建成功',
-          duration: 2000
-        });
-        this.$router.go(-1);
+        if (data.MSG == 'YES') {
+          this.$message.success({
+            showClose: true,
+            message: '发送成功',
+            duration: 2000
+          });
+          this.$router.push({
+            path: '/main'
+          });
+        } else {
+          this.$message({
+            message: '参数错误，请刷新后重试'
+          });
+        }
       });
     },
     handlechange(file, fileList) {

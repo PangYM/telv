@@ -43,7 +43,12 @@
               <div v-else class="xianshi">{{form.biaoti}}</div>
             </el-form-item>
             <el-row>
-              <el-col :span="12">
+              <el-col :span="8">
+                <el-form-item label="发起人">
+                  <div class="xianshi">{{form.nigaoren}}</div>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
                 <el-form-item label="督办类型">
                   <el-select
                     v-if="xiugai"
@@ -60,7 +65,7 @@
                   <div v-else class="xianshi">{{form.jinji}}</div>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="8">
                 <el-form-item label="主办部门">
                   <el-input v-if="xiugai" v-model="form.bumen" placeholder="请输入主办部门"></el-input>
                   <div v-else class="xianshi">{{form.bumen}}</div>
@@ -233,6 +238,8 @@ export default {
         wendangid: '',
         zhuangtai: '未完成',
         biaoti: '',
+        nigaouserid: '',
+        nigaoren: '',
         jinji: '',
         bumen: '',
         qianyuelist: [],
@@ -327,14 +334,20 @@ export default {
         token: localStorage.getItem('token')
       };
       API.fasongmindoc(fasongdata).then(({ data }) => {
-        this.$message.success({
-          showClose: true,
-          message: '发送成功',
-          duration: 2000
-        });
-        this.$router.push({
-          path: '/main'
-        });
+        if (data.MSG == 'YES') {
+          this.$message.success({
+            showClose: true,
+            message: '发送成功',
+            duration: 2000
+          });
+          this.$router.push({
+            path: '/main'
+          });
+        } else {
+          this.$message({
+            message: '参数错误，请刷新后重试'
+          });
+        }
       });
     },
     guanbi(e) {

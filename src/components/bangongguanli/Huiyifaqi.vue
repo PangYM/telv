@@ -23,13 +23,25 @@
             <div v-else class="xianshi">{{form.didian}}</div>
           </el-form-item>
           <el-row>
-            <el-col :span="10">
+            <el-col :span="8">
+              <el-form-item label="会议日期">
+                <el-date-picker
+                  v-if="xiugai"
+                  v-model="form.riqi"
+                  value-format="yyyy-MM-dd"
+                  type="date"
+                  style="width:100%;"
+                  placeholder="选择日期"
+                ></el-date-picker>
+                <div v-else class="xianshi">{{form.riqi}}</div>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
               <el-form-item label="发起人">
                 <div class="xianshi">{{form.nigaoren}}</div>
               </el-form-item>
             </el-col>
-            <el-col :span="2">&nbsp;</el-col>
-            <el-col :span="10">
+            <el-col :span="8">
               <el-form-item label="发起单位">
                 <div class="xianshi">{{form.nigaodanwei}}</div>
               </el-form-item>
@@ -57,53 +69,6 @@
               <a v-else :span="4" style="color:#000000">{{item.name}};</a>
             </a>
           </el-form-item>
-          <el-row>
-            <el-col :span="6">
-              <el-form-item label="会议日期">
-                <el-date-picker
-                  v-if="xiugai"
-                  v-model="form.riqi"
-                  value-format="yyyy-MM-dd"
-                  type="date"
-                  style="width:100%;"
-                  placeholder="选择日期"
-                ></el-date-picker>
-                <div v-else class="xianshi">{{form.riqi}}</div>
-              </el-form-item>
-            </el-col>
-            <el-col :span="2">&nbsp;</el-col>
-            <el-col :span="6">
-              <el-form-item label="开始时间">
-                <el-time-select
-                  v-if="xiugai"
-                  placeholder="开始时间"
-                  v-model="form.kaishitime"
-                  :picker-options="{
-                    start: '08:00',
-                    step: '00:15',
-                    end: '20:00'
-                  }"
-                ></el-time-select>
-                <div v-else class="xianshi">{{form.kaishitime}}</div>
-              </el-form-item>
-            </el-col>
-            <el-col :span="2">&nbsp;</el-col>
-            <el-col :span="6">
-              <el-form-item label="结束时间">
-                <el-time-select
-                  v-if="xiugai"
-                  placeholder="结束时间"
-                  v-model="form.jieshutime"
-                  :picker-options="{
-                    start: '08:00',
-                    step: '00:15',
-                    end: '22:00'
-                  }"
-                ></el-time-select>
-                <div v-else class="xianshi">{{form.jieshutime}}</div>
-              </el-form-item>
-            </el-col>
-          </el-row>
           <el-form-item label="备注">
             <el-input v-if="xiugai" type="textarea" v-model="form.beizhu" :rows="5"></el-input>
             <div v-else class="xianshi">{{form.beizhu}}</div>
@@ -194,15 +159,13 @@ export default {
       upload: {},
       form: {
         doctype: 'huiyifaqi',
-        zhuangtai: '',
+        zhuangtai: '已完成',
         wendangid: '',
         biaoti: '',
         didian: '',
         nigaouserid: '',
         nigaoren: '',
         riqi: this.getToday(),
-        kaishitime: '08:00',
-        jieshutime: '08:00',
         beizhu: '',
         shenpihis: {},
         fileList: [],
@@ -255,12 +218,20 @@ export default {
         token: localStorage.getItem('token')
       };
       API.fasongmindoc(fasongdata).then(({ data }) => {
-        this.$message.success({
-          showClose: true,
-          message: '发起成功',
-          duration: 2000
-        });
-        this.$router.go(-1);
+        if (data.MSG == 'YES') {
+          this.$message.success({
+            showClose: true,
+            message: '发送成功',
+            duration: 2000
+          });
+          this.$router.push({
+            path: '/main'
+          });
+        } else {
+          this.$message({
+            message: '参数错误，请刷新后重试'
+          });
+        }
       });
     },
     handlechange(file, fileList) {
