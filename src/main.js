@@ -9,7 +9,6 @@ import VueParticles from 'vue-particles';
 import Print from 'vue-print-nb';
 
 import 'element-ui/lib/theme-chalk/index.css';
-import '@/assets/iconfont/iconfont.css';
 
 Vue.config.productionTip = true;
 Vue.use(ElementUI);
