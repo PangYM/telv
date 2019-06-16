@@ -61,7 +61,7 @@
 import * as API from '@/api';
 export default {
   components: {},
-  mounted() {
+  created() {
     API.getfasongguanli({
       token: localStorage.getItem('token'),
       doctype: 'youjian',

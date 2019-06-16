@@ -99,7 +99,7 @@
 import * as API from '@/api';
 export default {
   components: {},
-  mounted() {
+  created() {
     API.getfawenguanli({
       token: localStorage.getItem('token'),
       doctype: 'shouwen',

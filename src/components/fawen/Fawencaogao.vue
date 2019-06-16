@@ -48,7 +48,7 @@
 import * as API from '@/api';
 export default {
   components: {},
-  mounted() {
+  created() {
     let that = this;
     API.getfawencaogao({
       token: localStorage.getItem('token'),

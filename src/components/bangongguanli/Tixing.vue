@@ -99,7 +99,7 @@
           <el-input
             v-if="xiugai"
             type="textarea"
-            :rows="8"
+            :autosize="true"
             placeholder="请输入内容"
             v-model="form.beizhu"
           ></el-input>
@@ -226,6 +226,7 @@ export default {
       });
     },
     guanbi() {
+      localStorage.setItem('shuaxin', 0);
       this.$router.go(-1);
     },
     onSubmit() {

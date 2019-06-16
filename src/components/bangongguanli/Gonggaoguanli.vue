@@ -80,7 +80,7 @@
 import * as API from '@/api';
 export default {
   components: {},
-  mounted() {
+  created() {
     API.getgonggaoguanli({
       token: localStorage.getItem('token'),
       doctype: 'gonggao',

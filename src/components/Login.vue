@@ -22,13 +22,13 @@
     <img class="touban" :src="toubanimg">
     <div class="kuang">
       <div class="shouhang">
-        <div v-for="(item, index) in dengluyelist" :key="item">
+        <div v-for="(item, index) in dengluyelist" :key="item.title">
           <el-button class="anniutext" @click="xuanzeanniu(index)">{{item.title}}</el-button>
         </div>
       </div>
       <div class="body">
         <el-carousel class="toubanimg" :interval="4000" arrow="always">
-          <el-carousel-item class="toubanimg1" v-for="item in lunbotulist" :key="item">
+          <el-carousel-item class="toubanimg1" v-for="item in lunbotulist" :key="item.url">
             <img :src="base+item.url" width="100%" height="100%">
           </el-carousel-item>
         </el-carousel>
@@ -73,7 +73,7 @@
         </div>
         <div class="youbian">
           <div class="lianjietitle">友情链接</div>
-          <div v-for="item in youqinglist" :key="item">
+          <div v-for="item in youqinglist" :key="item.title">
             <div class="lianjiecontent">
               <a target="_blank" :href="item.url">{{item.title}}</a>
             </div>

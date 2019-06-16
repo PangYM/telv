@@ -130,7 +130,7 @@
 import * as API from '@/api';
 export default {
   components: {},
-  mounted() {
+  created() {
     API.getdaibanfawen({
       token: localStorage.getItem('token'),
       doctype: 'shouwen',
@@ -158,6 +158,9 @@ export default {
     };
   },
   methods: {
+    handleCurrentChange(val) {
+      this.qiefendataTable = this.dataTable.slice(20 * val - 20, val * 20);
+    },
     chaxun() {
       API.getdaibanfawen({
         token: localStorage.getItem('token'),

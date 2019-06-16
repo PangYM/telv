@@ -23,11 +23,11 @@
           <div class="todo_l">
             <el-row>
               <el-col :span="16" class="tl">
-                <span>我的会议</span>
+                <span>我的汇报</span>
               </el-col>
               <el-col :span="8" class="tr">
-                <el-button type="text" @click="handleGoUrl('/bangongguanli/huiyiguanli')">
-                  <i>{{huiyifaqi}}</i>
+                <el-button type="text" @click="handleGoUrl('/bangongguanli/huibaoguanli')">
+                  <i>{{huibao}}</i>
                 </el-button>
               </el-col>
             </el-row>
@@ -74,7 +74,7 @@
                 <span>发文督办</span>
               </el-col>
               <el-col :span="8" class="tr">
-                <el-button type="text" @click="handleGoUrl('/fawen/fawenguanli')">
+                <el-button type="text" @click="handleGoUrl('/fawen/fawenduban')">
                   <i>{{fawenduban}}</i>
                 </el-button>
               </el-col>
@@ -90,7 +90,7 @@
                 <span>收文督办</span>
               </el-col>
               <el-col :span="8" class="tr">
-                <el-button type="text" @click="handleGoUrl('/shouwen/shouwenguanli')">
+                <el-button type="text" @click="handleGoUrl('/shouwen/shouwenduban')">
                   <i>{{shouwenduban}}</i>
                 </el-button>
               </el-col>
@@ -267,7 +267,7 @@ export default {
       },
       base: API.base,
       duban: 0,
-      huiyifaqi: 0,
+      huibao: 0,
       youjian: 0,
       tixing: 0,
       fawenduban: 0,
@@ -294,7 +294,7 @@ export default {
         token: localStorage.getItem('token')
       }).then(({ data }) => {
         this.duban = data.duban;
-        this.huiyifaqi = data.huiyifaqi;
+        this.huibao = data.huibao;
         this.youjian = data.youjian;
         this.tixing = data.tixing;
         this.fawenduban = data.fawenduban;

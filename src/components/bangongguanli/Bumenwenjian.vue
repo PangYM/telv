@@ -1,5 +1,5 @@
 <template>
-  <div class="wenjianwenjian">
+  <div class="oa_main">
     <!--面包屑-->
     <el-row>
       <el-col :span="24" class="warp-breadcrum">
@@ -120,7 +120,7 @@
                   <i class="icon-wrapper">
                     <i class="icon icon-file-l"></i>
                   </i>
-                  <span title="a4" class="txt">{{file.label}}</span>
+                  <span title="a4" class="nametxt">{{file.label}}</span>
                   <i v-if="file.select" class="icon checkbox icon-checkbox-cur"></i>
                 </div>
               </li>
@@ -935,5 +935,8 @@ li {
   width: 0;
   height: 0;
   background-color: rgba(100, 100, 100, 0.2);
+}
+.nametxt{
+  overflow: hidden;
 }
 </style>

@@ -70,7 +70,7 @@
             </a>
           </el-form-item>
           <el-form-item label="备注">
-            <el-input v-if="xiugai" type="textarea" v-model="form.beizhu" :rows="5"></el-input>
+            <el-input v-if="xiugai" type="textarea" v-model="form.beizhu" :autosize="true"></el-input>
             <div v-else class="xianshi">{{form.beizhu}}</div>
           </el-form-item>
           <el-form-item v-if="xiugai==0" label="附件">
@@ -190,6 +190,7 @@ export default {
       return currentdate;
     },
     guanbi() {
+      localStorage.setItem('shuaxin', 0);
       this.$router.go(-1);
     },
     querensend() {

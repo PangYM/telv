@@ -130,7 +130,7 @@
 import * as API from '@/api';
 export default {
   components: {},
-  mounted() {
+  created() {
     API.getdaibanfawen({
       token: localStorage.getItem('token'),
       doctype: 'fawen',

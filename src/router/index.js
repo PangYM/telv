@@ -22,6 +22,7 @@ import Qianbao from '@/components/fawen/Qianbao';
 import Yian from '@/components/fawen/Yian';
 import Gouzhi from '@/components/fawen/Gouzhi';
 import Daibanfawen from '@/components/fawen/Daibanfawen';
+import Fawenduban from '@/components/fawen/Fawenduban';
 import Fawenguanli from '@/components/fawen/Fawenguanli';
 import Fawencaogao from '@/components/fawen/Fawencaogao';
 import Wodefawen from '@/components/fawen/Wodefawen';
@@ -29,6 +30,7 @@ import Wodefawen from '@/components/fawen/Wodefawen';
 //公文收文
 import Shouwendengji from '@/components/shouwen/Shouwendengji';
 import Daibanshouwen from '@/components/shouwen/Daibanshouwen';
+import Shouwenduban from '@/components/shouwen/Shouwenduban';
 import Shouwenguanli from '@/components/shouwen/Shouwenguanli';
 import Shouwencaogao from '@/components/shouwen/Shouwencaogao';
 import Yifashouwen from '@/components/shouwen/Yifashouwen';
@@ -36,6 +38,8 @@ import Yifashouwen from '@/components/shouwen/Yifashouwen';
 //办公管理
 import Gonggaoguanli from '@/components/bangongguanli/Gonggaoguanli';
 import Gonggao from '@/components/bangongguanli/Gonggao';
+import Huibaoguanli from '@/components/bangongguanli/Huibaoguanli';
+import Huibao from '@/components/bangongguanli/Huibao';
 import Huiyiguanli from '@/components/bangongguanli/Huiyiguanli';
 import Huiyifaqi from '@/components/bangongguanli/Huiyifaqi';
 import Duban from '@/components/bangongguanli/Duban';
@@ -61,124 +65,190 @@ const Login = resolve => require(['@/components/Login'], resolve);
 Vue.use(Router);
 
 let router = new Router({
+  scrollBehavior (to, from, savedPosition) {    
+          try {
+            if (from.meta.keepAlive) {    
+              from.meta.savedPosition = localStorage.getItem('scrollTop');      
+         }        
+          } catch (error) {
+            
+          }
+          try {
+            if(to.meta.keepAlive){
+              document.getElementsByClassName('content-container')[0].scrollTop = to.meta.savedPosition;
+            } 
+          } catch (error) {
+            
+          }
+},
   // mode: 'history',
   routes: [
     {
       path: '/login',
+      component: Login,
       name: '登录',
-      component: Login
+      meta: {
+        requiresAuth: false,
+        keepAlive:false,
+      },
     },
     {
       path: '/bangongguanli/gonggao',
       component: Gonggao,
       name: '公告发起',
-      menuShow: false,
       meta: {
-        requiresAuth: true
-      }
+        requiresAuth: true,
+        keepAlive:false,
+      },
     },
     {
       path: '/bangongguanli/duban',
       component: Duban,
       name: '督办',
-      menuShow: false,
       meta: {
-        requiresAuth: true
-      }
+        requiresAuth: true,
+        keepAlive:false,
+      },
+    },
+    {
+      path: '/bangongguanli/huibao',
+      component: Huibao,
+      name: '月度汇报',
+      meta: {
+        requiresAuth: true,
+        keepAlive:false,
+      },
     },
     {
       path: '/bangongguanli/huiyifaqi',
       component: Huiyifaqi,
       name: '会议发起',
-      menuShow: false,
       meta: {
-        requiresAuth: true
-      }
+        requiresAuth: true,
+        keepAlive:false,
+      },
     },
     {
       path: '/bangongguanli/tixing',
       component: Tixing,
       name: '新增提醒',
-      menuShow: false,
       meta: {
-        requiresAuth: true
-      }
+        requiresAuth: true,
+        keepAlive:false,
+      },
     },
     {
       path: '/fawen/gongwen',
+      component: Gongwen,
       name: '公文印发单',
-      component: Gongwen
+      meta: {
+        requiresAuth: true,
+        keepAlive:false,
+      },
     },
     {
       path: '/fawen/fawen',
+      component: Fawen,
       name: '发文',
-      component: Fawen
+      meta: {
+        requiresAuth: true,
+        keepAlive:false,
+      },
     },
     {
       path: '/fawen/huiyi',
+      component: Huiyi,
       name: '会议发文',
-      component: Huiyi
+      meta: {
+        requiresAuth: true,
+        keepAlive:false,
+      },
     },
     {
       path: '/fawen/dangwu',
+      component: Dangwu,
       name: '党务发文',
-      component: Dangwu
+      meta: {
+        requiresAuth: true,
+        keepAlive:false,
+      },
     },
     {
       path: '/fawen/dangwuhuiyi',
+      component: Dangwuhuiyi,
       name: '党务会议发文',
-      component: Dangwuhuiyi
+      meta: {
+        requiresAuth: true,
+        keepAlive:false,
+      },
     },
     {
       path: '/fawen/qianbao',
+      component: Qianbao,
       name: '签报',
-      component: Qianbao
+      meta: {
+        requiresAuth: true,
+        keepAlive:false,
+      },
     },
     {
       path: '/fawen/yian',
+      component: Yian,
       name: '议案报告',
-      component: Yian
+      meta: {
+        requiresAuth: true,
+        keepAlive:false,
+      },
     },
     {
       path: '/fawen/gouzhi',
+      component: Gouzhi,
       name: '购置申请',
-      component: Gouzhi
+      meta: {
+        requiresAuth: true,
+        keepAlive:false,
+      },
     },
     {
       path: '/',
-      name: '首页',
       component: Home,
+      name: '首页',
       redirect: '/main',
-      menuShow: true,
-      iconCls: 'iconfont icon-component',
-      leaf: true,
+      meta: {
+        requiresAuth: true,
+        keepAlive:false,
+      },
       children: [
         {
           path: '/main',
-          name: '首页',
           component: Main,
+          name: '首页',
           meta: {
-            requiresAuth: true
-          }
+            requiresAuth: true,
+            keepAlive:false,
+          },
         },
         {
           path: '/showhtml',
-          name: 'showhtml',
           component: Showhtml,
-          menuShow: false,
+          name: 'showhtml',
           meta: {
-            requiresAuth: true
-          }
+            requiresAuth: true,
+            keepAlive:false,
+          },
         },
       ]
     },
     {
-      path: '/',
+      path: '/geren',
       name: '个人事务',
       component: Home,
       redirect: '/main',
       menuShow: true,
-      iconCls: 'iconfont icon-component',
+      meta: {
+        requiresAuth: true,
+        keepAlive:false,
+      },
       children: [
         {
           path: '/person/fasongyoujian',
@@ -186,8 +256,9 @@ let router = new Router({
           name: '发送邮件',
           menuShow: true,
           meta: {
-            requiresAuth: true
-          }
+            requiresAuth: true,
+            keepAlive:false,
+          },
         },
         {
           path: '/person/yishouyoujian',
@@ -195,7 +266,8 @@ let router = new Router({
           name: '已收邮件',
           menuShow: true,
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            keepAlive:true,
           }
         },
         {
@@ -204,7 +276,8 @@ let router = new Router({
           name: '已发邮件',
           menuShow: true,
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            keepAlive:true,
           }
         },
         {
@@ -213,7 +286,8 @@ let router = new Router({
           name: '草稿箱',
           menuShow: true,
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            keepAlive:true,
           }
         },
         {
@@ -222,8 +296,9 @@ let router = new Router({
           name: '通讯录',
           menuShow: true,
           meta: {
-            requiresAuth: true
-          }
+            requiresAuth: true,
+            keepAlive:false,
+          },
         },
         {
           path: '/person/changyongzu',
@@ -231,25 +306,30 @@ let router = new Router({
           name: '常用组',
           menuShow: true,
           meta: {
-            requiresAuth: true
-          }
+            requiresAuth: true,
+            keepAlive:false,
+          },
         },
       ]
     },
     {
-      path: '/',
+      path: '/fawen',
       component: Home,
       name: '公文发文',
       menuShow: true,
-      iconCls: 'iconfont icon-survey1',
+      meta: {
+        requiresAuth: true,
+        keepAlive:false,
+      },
       children: [
         {
           path: '/fawen/gaozhi',
           name: '发文稿纸',
           component: Gaozhi,
           meta: {
-            requiresAuth: true
-          }
+            requiresAuth: true,
+            keepAlive:false,
+          },
         },
         {
           path: '/fawen/daibanfawen',
@@ -257,7 +337,18 @@ let router = new Router({
           name: '待办发文',
           menuShow: true,
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            keepAlive:true,
+          }
+        },
+        {
+          path: '/fawen/Fawenduban',
+          component: Fawenduban,
+          name: '发文督办',
+          menuShow: true,
+          meta: {
+            requiresAuth: true,
+            keepAlive:true,
           }
         },
         {
@@ -266,7 +357,8 @@ let router = new Router({
           name: '发文管理',
           menuShow: true,
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            keepAlive:true,
           }
         },
         {
@@ -275,7 +367,8 @@ let router = new Router({
           name: '发文草稿',
           menuShow: true,
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            keepAlive:true,
           }
         },
         {
@@ -284,17 +377,21 @@ let router = new Router({
           name: '我的发文',
           menuShow: true,
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            keepAlive:true,
           }
         },
       ]
     },
     {
-      path: '/',
+      path: '/shouwen',
       component: Home,
       name: '公文收文',
       menuShow: true,
-      iconCls: 'iconfont icon-survey1',
+      meta: {
+        requiresAuth: true,
+        keepAlive:false,
+      },
       children: [
         {
           path: '/shouwen/shouwendengji',
@@ -302,8 +399,9 @@ let router = new Router({
           name: '收文登记',
           menuShow: true,
           meta: {
-            requiresAuth: true
-          }
+            requiresAuth: true,
+            keepAlive:false,
+          },
         },
         {
           path: '/shouwen/daibanshouwen',
@@ -311,7 +409,18 @@ let router = new Router({
           name: '待办收文',
           menuShow: true,
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            keepAlive:true,
+          }
+        },
+        {
+          path: '/shouwen/shouwenduban',
+          component: Shouwenduban,
+          name: '收文督办',
+          menuShow: true,
+          meta: {
+            requiresAuth: true,
+            keepAlive:true,
           }
         },
         {
@@ -320,7 +429,8 @@ let router = new Router({
           name: '收文管理',
           menuShow: true,
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            keepAlive:true,
           }
         },
         {
@@ -329,7 +439,8 @@ let router = new Router({
           name: '收文草稿',
           menuShow: true,
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            keepAlive:true,
           }
         },
         {
@@ -338,17 +449,21 @@ let router = new Router({
           name: '已发收文',
           menuShow: true,
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            keepAlive:true,
           }
         },
       ]
     },
     {
-      path: '/',
+      path: '/bangong',
       component: Home,
       name: '办公管理',
       menuShow: true,
-      iconCls: 'iconfont icon-electronics',
+      meta: {
+        requiresAuth: true,
+        keepAlive:false,
+      },
       children: [
         {
           path: '/bangongguanli/gonggaoguanli',
@@ -356,7 +471,8 @@ let router = new Router({
           name: '公告管理',
           menuShow: true,
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            keepAlive:true,
           }
         },
         {
@@ -365,7 +481,18 @@ let router = new Router({
           name: '督办管理',
           menuShow: true,
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            keepAlive:true,
+          }
+        },
+        {
+          path: '/bangongguanli/huibaoguanli',
+          component: Huibaoguanli,
+          name: '汇报管理',
+          menuShow: true,
+          meta: {
+            requiresAuth: true,
+            keepAlive:true,
           }
         },
         {
@@ -374,7 +501,8 @@ let router = new Router({
           name: '会议管理',
           menuShow: true,
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            keepAlive:true,
           }
         },
         {
@@ -383,8 +511,9 @@ let router = new Router({
           name: '部门文件',
           menuShow: true,
           meta: {
-            requiresAuth: true
-          }
+            requiresAuth: true,
+            keepAlive:false,
+          },
         },
         {
           path: '/bangongguanli/tixingguanli',
@@ -392,17 +521,21 @@ let router = new Router({
           name: '提醒管理',
           menuShow: true,
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            keepAlive:true,
           }
         },
       ]
     },
     {
-      path: '/',
+      path: '/xitong',
       component: Home,
       name: '系统管理',
       menuShow: true,
-      iconCls: 'iconfont icon-set',
+      meta: {
+        requiresAuth: true,
+        keepAlive:false,
+      },
       children: [
         {
           path: '/xitongguanli/profile',
@@ -410,8 +543,9 @@ let router = new Router({
           name: '我的信息',
           menuShow: false,
           meta: {
-            requiresAuth: true
-          }
+            requiresAuth: true,
+            keepAlive:false,
+          },
         },
         {
           path: '/xitongguanli/touxiang',
@@ -419,8 +553,9 @@ let router = new Router({
           name: '我的头像',
           menuShow: false,
           meta: {
-            requiresAuth: true
-          }
+            requiresAuth: true,
+            keepAlive:false,
+          },
         },
         {
           path: '/xitongguanli/qianming',
@@ -428,8 +563,9 @@ let router = new Router({
           name: '我的签名',
           menuShow: false,
           meta: {
-            requiresAuth: true
-          }
+            requiresAuth: true,
+            keepAlive:false,
+          },
         },
         {
           path: '/xitongguanli/changepwd',
@@ -437,8 +573,9 @@ let router = new Router({
           name: '修改密码',
           menuShow: false,
           meta: {
-            requiresAuth: true
-          }
+            requiresAuth: true,
+            keepAlive:false,
+          },
         },
         {
           path: '/xitongguanli/renyuanguanli',
@@ -446,8 +583,9 @@ let router = new Router({
           name: '人员管理',
           menuShow: true,
           meta: {
-            requiresAuth: true
-          }
+            requiresAuth: true,
+            keepAlive:false,
+          },
         },
         {
           path: '/xitongguanli/wendangguanli',
@@ -455,7 +593,8 @@ let router = new Router({
           name: '文档管理',
           menuShow: true,
           meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            keepAlive:true,
           }
         },
         {
@@ -464,8 +603,9 @@ let router = new Router({
           name: '页面管理',
           menuShow: true,
           meta: {
-            requiresAuth: true
-          }
+            requiresAuth: true,
+            keepAlive:false,
+          },
         },
       ]
     }

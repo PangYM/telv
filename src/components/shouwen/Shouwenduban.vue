@@ -5,8 +5,8 @@
       <el-col :span="24" class="warp-breadcrum">
         <el-breadcrumb>
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>公文发文</el-breadcrumb-item>
-          <el-breadcrumb-item>我的发文</el-breadcrumb-item>
+          <el-breadcrumb-item>公文收文</el-breadcrumb-item>
+          <el-breadcrumb-item>收文督办</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
@@ -40,7 +40,7 @@
         sortable
         prop="biaoti"
         align="center"
-        label="发文标题"
+        label="来文标题"
         show-overflow-tooltip
         min-width="200"
       >
@@ -50,9 +50,33 @@
       </el-table-column>
       <el-table-column
         sortable
+        prop="fawenren"
+        align="center"
+        label="发文人"
+        show-overflow-tooltip
+        width="108"
+      ></el-table-column>
+      <el-table-column
+        sortable
         prop="starttime"
         align="center"
-        label="发送时间"
+        label="发文时间"
+        show-overflow-tooltip
+        width="108"
+      ></el-table-column>
+      <el-table-column
+        sortable
+        prop="laiwenren"
+        align="center"
+        label="来文人"
+        show-overflow-tooltip
+        width="108"
+      ></el-table-column>
+      <el-table-column
+        sortable
+        prop="laiwentime"
+        align="center"
+        label="来文时间"
         show-overflow-tooltip
         width="108"
       ></el-table-column>
@@ -107,10 +131,9 @@ import * as API from '@/api';
 export default {
   components: {},
   created() {
-    console.log("svdcsxZZzxcvdxcvcx")
-    API.getfawenguanli({
+    API.getshouwenduban({
       token: localStorage.getItem('token'),
-      doctype: 'fawen',
+      doctype: 'shouwen',
       query: this.query
     }).then(({ data }) => {
       this.dataTable = data.dataTable;
@@ -129,16 +152,16 @@ export default {
         已完成: '#008B00',
         未通过: '#FF0000',
         审批中: '#EEB422',
-        已撤销: '#DA70D6',
+        审批: '#DA70D6',
         退文: '#9400D3'
       }
     };
   },
   methods: {
     chaxun() {
-      API.getfawenguanli({
+      API.getshouwenduban({
         token: localStorage.getItem('token'),
-        doctype: 'fawen',
+        doctype: 'shouwen',
         query: this.query
       }).then(({ data }) => {
         this.dataTable = data.dataTable;
@@ -152,63 +175,10 @@ export default {
       this.qiefendataTable = this.dataTable.slice(20 * val - 20, val * 20);
     },
     handleEdit(index, row) {
-      if (row.doctype == 'gongwen') {
-        this.$router.push({
-          path: '/fawen/gongwen',
-          query: {
-            wendangid: row.wendangid
-          }
-        });
-      } else if (row.doctype == 'fawen') {
-        this.$router.push({
-          path: '/fawen/fawen',
-          query: {
-            wendangid: row.wendangid
-          }
-        });
-      } else if (row.doctype == 'huiyi') {
-        this.$router.push({
-          path: '/fawen/huiyi',
-          query: {
-            wendangid: row.wendangid
-          }
-        });
-      } else if (row.doctype == 'dangwu') {
-        this.$router.push({
-          path: '/fawen/dangwu',
-          query: {
-            wendangid: row.wendangid
-          }
-        });
-      } else if (row.doctype == 'dangwuhuiyi') {
-        this.$router.push({
-          path: '/fawen/dangwuhuiyi',
-          query: {
-            wendangid: row.wendangid
-          }
-        });
-      } else if (row.doctype == 'qianbao') {
-        this.$router.push({
-          path: '/fawen/qianbao',
-          query: {
-            wendangid: row.wendangid
-          }
-        });
-      } else if (row.doctype == 'yian') {
-        this.$router.push({
-          path: '/fawen/yian',
-          query: {
-            wendangid: row.wendangid
-          }
-        });
-      } else if (row.doctype == 'gouzhi') {
-        this.$router.push({
-          path: '/fawen/gouzhi',
-          query: {
-            wendangid: row.wendangid
-          }
-        });
-      }
+      this.$router.push({
+        path: '/shouwen/shouwendengji',
+        query: { wendangid: row.wendangid }
+      });
     }
   }
 };

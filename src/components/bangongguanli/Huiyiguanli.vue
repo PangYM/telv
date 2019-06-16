@@ -41,11 +41,9 @@
           <a v-if="scope.row.zhuangtai=='已结束'" :style="{'color': '#008B00'}">{{scope.row.zhuangtai}}</a>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" align="center" label="操作" width="80">
+      <el-table-column fixed="right" align="center" label="操作" width="120">
         <template slot-scope="scope">
-          <el-button type="text" @click="handleEdit(scope.$index, scope.row)" size="small">
-            <i class="iconfont icon-search"></i>
-          </el-button>
+          <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -64,7 +62,7 @@
 <script>
 import * as API from '@/api';
 export default {
-  mounted() {
+  created() {
     API.getjieshouguanli({
       token: localStorage.getItem('token'),
       doctype: 'huiyifaqi',

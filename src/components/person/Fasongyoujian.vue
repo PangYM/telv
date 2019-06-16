@@ -18,19 +18,7 @@
         <el-button type="primary" v-if="xiugai==0" @click="querensend">转发</el-button>
         <el-button type="primary" @click="guanbi(0)">关闭</el-button>
         <div class="renyuan" v-if="istongxinlu">
-          <tree-transfer
-            class="tongxinlu"
-            :title="title"
-            :from_data="fromData"
-            :to_data="toData"
-            :defaultProps="{label:'label'}"
-            @addBtn="add"
-            @removeBtn="remove"
-            :mode="mode"
-            width="50%"
-            height="500px"
-            filter
-          ></tree-transfer>
+          <tree-transfer class="tongxinlu" :title="title" :from_data="fromData" :to_data="toData" :defaultProps="{label:'label'}" @addBtn="add" @removeBtn="remove" :mode="mode" width="50%" height="500px" filter></tree-transfer>
           <el-button type="primary" @click="querenfasong(1)">确定发送</el-button>
           <el-button type="primary" @click="guanbi(1)">关闭</el-button>
         </div>
@@ -62,39 +50,16 @@
             </a>
           </el-form-item>
           <el-form-item label="正文" class="editer">
-            <vue-editor
-              v-if="xiugai"
-              useCustomImageHandler
-              @imageAdded="handleImageAdded"
-              v-model="form.content"
-            ></vue-editor>
-            <vue-editor
-              v-else
-              disabled
-              useCustomImageHandler
-              @imageAdded="handleImageAdded"
-              v-model="form.content"
-            ></vue-editor>
+            <vue-editor v-if="xiugai" useCustomImageHandler @imageAdded="handleImageAdded" v-model="form.content"></vue-editor>
+            <vue-editor v-else disabled useCustomImageHandler @imageAdded="handleImageAdded" v-model="form.content"></vue-editor>
           </el-form-item>
           <el-form-item>
             <li v-bind="form.fileList" v-for="item in form.fileList" :key="item.name">
-              <a
-                target="_blank"
-                :href="baseurl+'/data/fujian/'+form.wendangid+'/'+item.name"
-              >{{item.name}}</a>
+              <a target="_blank" :href="baseurl+'/data/fujian/'+form.wendangid+'/'+item.name">{{item.name}}</a>
             </li>
           </el-form-item>
           <el-form-item v-if="xiugai" label="附件">
-            <el-upload
-              drag
-              ref="upload"
-              :action="baocunfujian"
-              :data="upload"
-              :on-change="handlechange"
-              :on-remove="handleremove"
-              :file-list="form.fujianList"
-              multiple
-            >
+            <el-upload drag ref="upload" :action="baocunfujian" :data="upload" :on-change="handlechange" :on-remove="handleremove" :file-list="form.fujianList" multiple>
               <i class="el-icon-upload"></i>
               <div class="el-upload__text">
                 将附件拖到此处，或
@@ -107,181 +72,196 @@
     </el-row>
   </div>
 </template>
+
 <script>
-import * as API from '@/api';
-import treeTransfer from 'el-tree-transfer';
-import { VueEditor } from 'vue2-editor';
-import axios from 'axios';
-export default {
-  components: {
-    VueEditor,
-    treeTransfer
-  },
-  mounted() {
-    var userdata = JSON.parse(localStorage.getItem('userdata'));
-    if (this.$route.query.wendangid) {
-      API.getmindocid({
-        token: localStorage.getItem('token'),
-        wendangid: this.$route.query.wendangid
-      }).then(({ data }) => {
-        this.form = data.data;
-        this.upload.wendangid = this.form.wendangid;
-        if (this.form.zhuangtai != 'caogao') this.xiugai = 0;
-        this.form.fujianList = [];
-        for (var i = 0; i < this.form.fileList.length; ++i) {
-          this.form.fujianList.push({
-            name: this.form.fileList[i].name,
-            url: this.baseurl + '/data/fujian/' + this.form.wendangid + '/' + this.form.fileList[i].name
-          });
-        }
-        if (this.form.zhuangtai != 'caogao') {
-          API.mindocyiyue({
-            token: localStorage.getItem('token'),
-            wendangid: this.$route.query.wendangid
-          }).then(({ data }) => {});
-        }
-      });
-    } else {
-      API.getfawenhao().then(({ data }) => {
-        this.form.wendangid = data.wendangid + data.suiji;
-        this.upload.wendangid = this.form.wendangid;
-        this.form.nigaouserid = userdata.userid;
-        this.form.nigaoren = userdata.name;
-        this.form.nigaodanwei = userdata.group;
-      });
-    }
-  },
-  data() {
-    return {
-      xiugai: 1,
-      istongxinlu: 0,
-      title: ['未选列表', '已选列表'],
-      mode: 'transfer',
-      istongxinlu: 0,
-      fromData: [],
-      toData: [],
-      baseurl: API.base,
-      baocunfujian: API.baseurl + 'baocunfujian',
-      upload: {},
-      form: {
-        doctype: 'youjian',
-        zhuangtai: 'caogao',
-        wendangid: '',
-        biaoti: '',
-        nigaouserid: '',
-        nigaoren: '',
-        nigaodanwei: '',
-        starttime: '',
-        content: ' ',
-        shenpihis: {},
-        fileList: [],
-        fujianList: []
-      }
-    };
-  },
-  methods: {
-    handleImageAdded(file, Editor, cursorLocation, resetUploader) {
-      API.baocunimage(file).then(result => {
-        let url = result.data.url;
-        url = API.base + '/data/' + url;
-        Editor.insertEmbed(cursorLocation, 'image', url);
-        resetUploader();
-      });
+  import * as API from '@/api';
+  import treeTransfer from 'el-tree-transfer';
+  import {
+    VueEditor
+  } from 'vue2-editor';
+  import axios from 'axios';
+  export default {
+    components: {
+      VueEditor,
+      treeTransfer
     },
-    querenfasong(e) {
-      if (e && this.toData.length == 0) {
-        this.$message({
-          showClose: true,
-          message: '请选择发送人',
-          duration: 2000
-        });
-        return '';
-      }
-      var fasongdata = {
-        toData: this.toData,
-        wendang: this.form,
-        token: localStorage.getItem('token')
-      };
-      if (!e) fasongdata.toData = [];
-      API.fasongmindoc(fasongdata).then(({ data }) => {
-        if (data.MSG == 'YES') {
-          this.$message.success({
-            showClose: true,
-            message: e == 1 ? '发送成功' : '保存成功',
-            duration: 2000
-          });
-          if (e)
-            this.$router.push({
-              path: '/main'
+    mounted() {
+      var userdata = JSON.parse(localStorage.getItem('userdata'));
+      if (this.$route.query.wendangid) {
+        API.getmindocid({
+          token: localStorage.getItem('token'),
+          wendangid: this.$route.query.wendangid
+        }).then(({
+          data
+        }) => {
+          this.form = data.data;
+          this.upload.wendangid = this.form.wendangid;
+          if (this.form.zhuangtai != 'caogao') this.xiugai = 0;
+          this.form.fujianList = [];
+          for (var i = 0; i < this.form.fileList.length; ++i) {
+            this.form.fujianList.push({
+              name: this.form.fileList[i].name,
+              url: this.baseurl + '/data/fujian/' + this.form.wendangid + '/' + this.form.fileList[i].name
             });
-        } else {
-          this.$message({
-            message: '参数错误，请刷新后重试'
-          });
-        }
-      });
-    },
-    querensend() {
-      this.istongxinlu = 1;
-      API.gettongxinlu({ token: localStorage.getItem('token') }).then(({ data }) => {
-        this.fromData = data.tongxinlu;
-      });
-    },
-    guanbi(e) {
-      if (e == 0) {
-        this.$router.push({
-          path: '/main'
+          }
+          if (this.form.zhuangtai != 'caogao') {
+            API.mindocyiyue({
+              token: localStorage.getItem('token'),
+              wendangid: this.$route.query.wendangid
+            }).then(({
+              data
+            }) => {});
+          }
         });
       } else {
-        this.istongxinlu = 0;
-      }
-    },
-    add(fromData, toData, obj) {
-      this.fromData = fromData;
-      this.toData = toData;
-    },
-    remove(fromData, toData, obj) {
-      this.fromData = fromData;
-      this.toData = toData;
-    },
-    handlechange(file, fileList) {
-      this.form.fileList = [];
-      for (var i = 0; i < fileList.length; ++i) {
-        this.form.fileList.push({
-          name: fileList[i].name
+        API.getfawenhao().then(({
+          data
+        }) => {
+          this.form.wendangid = data.wendangid + data.suiji;
+          this.upload.wendangid = this.form.wendangid;
+          this.form.nigaouserid = userdata.userid;
+          this.form.nigaoren = userdata.name;
+          this.form.nigaodanwei = userdata.group;
         });
       }
     },
-    handleremove(file, fileList) {
-      this.form.fileList = [];
-      for (var i = 0; i < fileList.length; ++i) {
-        this.form.fileList.push({
-          name: fileList[i].name
+    data() {
+      return {
+        xiugai: 1,
+        istongxinlu: 0,
+        title: ['未选列表', '已选列表'],
+        mode: 'transfer',
+        istongxinlu: 0,
+        fromData: [],
+        toData: [],
+        baseurl: API.base,
+        baocunfujian: API.baseurl + 'baocunfujian',
+        upload: {},
+        form: {
+          doctype: 'youjian',
+          zhuangtai: 'caogao',
+          wendangid: '',
+          biaoti: '',
+          nigaouserid: '',
+          nigaoren: '',
+          nigaodanwei: '',
+          starttime: '',
+          content: ' ',
+          shenpihis: {},
+          fileList: [],
+          fujianList: []
+        }
+      };
+    },
+    methods: {
+      handleImageAdded(file, Editor, cursorLocation, resetUploader) {
+        API.baocunimage(file).then(result => {
+          let url = result.data.url;
+          url = API.base + '/data/' + url;
+          Editor.insertEmbed(cursorLocation, 'image', url);
+          resetUploader();
         });
+      },
+      querenfasong(e) {
+        if (e && this.toData.length == 0) {
+          this.$message({
+            showClose: true,
+            message: '请选择发送人',
+            duration: 2000
+          });
+          return '';
+        }
+        var fasongdata = {
+          toData: this.toData,
+          wendang: this.form,
+          token: localStorage.getItem('token')
+        };
+        if (!e) fasongdata.toData = [];
+        API.fasongmindoc(fasongdata).then(({
+          data
+        }) => {
+          if (data.MSG == 'YES') {
+            this.$message.success({
+              showClose: true,
+              message: e == 1 ? '发送成功' : '保存成功',
+              duration: 2000
+            });
+            if (e)
+              this.$router.push({
+                path: '/main'
+              });
+          } else {
+            this.$message({
+              message: '参数错误，请刷新后重试'
+            });
+          }
+        });
+      },
+      querensend() {
+        this.istongxinlu = 1;
+        API.gettongxinlu({
+          token: localStorage.getItem('token')
+        }).then(({
+          data
+        }) => {
+          this.fromData = data.tongxinlu;
+        });
+      },
+      guanbi(e) {
+        if (e == 0) {
+          localStorage.setItem('shuaxin', 0);
+          this.$router.go(-1);
+        } else {
+          this.istongxinlu = 0;
+        }
+      },
+      add(fromData, toData, obj) {
+        this.fromData = fromData;
+        this.toData = toData;
+      },
+      remove(fromData, toData, obj) {
+        this.fromData = fromData;
+        this.toData = toData;
+      },
+      handlechange(file, fileList) {
+        this.form.fileList = [];
+        for (var i = 0; i < fileList.length; ++i) {
+          this.form.fileList.push({
+            name: fileList[i].name
+          });
+        }
+      },
+      handleremove(file, fileList) {
+        this.form.fileList = [];
+        for (var i = 0; i < fileList.length; ++i) {
+          this.form.fileList.push({
+            name: fileList[i].name
+          });
+        }
       }
     }
-  }
-};
+  };
 </script>
+
 <style lang="scss" scoped>
-.send_file {
-  margin: 25px 0;
-  .set_tp {
-    margin-left: 80px;
-    height: 400px;
+  .send_file {
+    margin: 25px 0;
+    .set_tp {
+      margin-left: 80px;
+      height: 400px;
+    }
   }
-}
-.fasong {
-  text-align: center;
-  margin-bottom: 30px;
-}
-.renyuan {
-  text-align: center;
-  .tongxinlu {
-    margin-left: 25%;
+  .fasong {
+    text-align: center;
+    margin-bottom: 30px;
   }
-}
-.xianshi {
-  background: #ffffff;
-}
+  .renyuan {
+    text-align: center;
+    .tongxinlu {
+      margin-left: 25%;
+    }
+  }
+  .xianshi {
+    background: #ffffff;
+  }
 </style>

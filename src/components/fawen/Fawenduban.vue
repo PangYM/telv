@@ -6,7 +6,7 @@
         <el-breadcrumb>
           <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
           <el-breadcrumb-item>公文收文</el-breadcrumb-item>
-          <el-breadcrumb-item>发文管理</el-breadcrumb-item>
+          <el-breadcrumb-item>发文督办</el-breadcrumb-item>
         </el-breadcrumb>
       </el-col>
     </el-row>
@@ -113,7 +113,7 @@
   export default {
     components: {},
     created() {
-      API.getshouwenguanli({
+      API.getshouwenduban({
         token: localStorage.getItem('token'),
         doctype: 'fawen',
         query: this.query
@@ -143,7 +143,7 @@
     },
     methods: {
       chaxun() {
-        API.getshouwenguanli({
+        API.getshouwenduban({
           token: localStorage.getItem('token'),
           doctype: 'fawen',
           query: this.query

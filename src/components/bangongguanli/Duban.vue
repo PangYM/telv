@@ -106,14 +106,14 @@
               </el-table>
             </el-form-item>
             <el-form-item label="备注" class="editer">
-              <el-input v-if="xiugai" type="textarea" v-model="form.mark" :rows="5"></el-input>
+              <el-input v-if="xiugai" type="textarea" v-model="form.mark" :autosize="true"></el-input>
               <div v-else class="xianshi">{{form.mark}}</div>
             </el-form-item>
             <el-form-item label="办理情况" class="editer">
               <li v-bind="form.qianyuelist" v-for="item in form.qianyuelist" :key="item.name">
                 <a style="color:#000000">{{item.name}} {{item.time}} {{item.yijian}}</a>
               </li>
-              <el-input v-if="yuedu" type="textarea" v-model="banli" :rows="5"></el-input>
+              <el-input v-if="yuedu" type="textarea" v-model="banli" :autosize="true"></el-input>
             </el-form-item>
             <el-form-item label="办结期限">
               <el-date-picker
@@ -352,6 +352,7 @@ export default {
     },
     guanbi(e) {
       if (e == 0) {
+        localStorage.setItem('shuaxin', 0);
         this.$router.go(-1);
       } else {
         this.istongxinlu = 0;

@@ -96,7 +96,7 @@
 import * as API from '@/api';
 export default {
   components: {},
-  mounted() {
+  created() {
     API.getjieshouguanli({
       token: localStorage.getItem('token'),
       doctype: 'youjian',

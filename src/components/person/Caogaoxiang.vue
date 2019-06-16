@@ -77,11 +77,16 @@ export default {
       });
     },
     handleDelete(index, row) {
-      API.deletefawencaogao({
+      API.deletemindoccaogao({
         wendangid: row.wendangid
       }).then(({ data }) => {
-        if (data == 'YES') {
+        if (data.MSG == 'YES') {
           this.dataTable.splice(index, 1);
+          this.$message.success({
+                            showClose: true,
+                            message: '删除成功！',
+                            duration: 2000
+                        });
         } else {
           this.$confirm('当前邮件已经发送，您无权限删除', '提示', {
             confirmButtonText: '确定',
