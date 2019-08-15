@@ -3,13 +3,11 @@ import Router from 'vue-router';
 import Home from '@/components/Home';
 import Main from '@/components/Main';
 
-// 个人事务
-import Fasongyoujian from '@/components/person/Fasongyoujian';
-import Yifayoujian from '@/components/person/Yifayoujian';
-import Yishouyoujian from '@/components/person/Yishouyoujian';
-import Caogaoxiang from '@/components/person/Caogaoxiang';
-import Tongxinlu from '@/components/person/Tongxinlu';
-import Changyongzu from '@/components/person/Changyongzu';
+// 电子邮件
+import Fasongyoujian from '@/components/youjian/Fasongyoujian';
+import Yifayoujian from '@/components/youjian/Yifayoujian';
+import Yishouyoujian from '@/components/youjian/Yishouyoujian';
+import Caogaoxiang from '@/components/youjian/Caogaoxiang';
 
 //公文发文
 import Gaozhi from '@/components/fawen/Gaozhi';
@@ -47,6 +45,8 @@ import Dubanguanli from '@/components/bangongguanli/Dubanguanli';
 import Bumenwenjian from '@/components/bangongguanli/Bumenwenjian';
 import Tixingguanli from '@/components/bangongguanli/Tixingguanli';
 import Tixing from '@/components/bangongguanli/Tixing';
+import Tongxinlu from '@/components/bangongguanli/Tongxinlu';
+import Changyongzu from '@/components/bangongguanli/Changyongzu';
 
 //系统管理
 import UserChangePwd from '@/components/xitongguanli/Changepwd';
@@ -240,8 +240,8 @@ let router = new Router({
       ]
     },
     {
-      path: '/geren',
-      name: '个人事务',
+      path: '/youjian',
+      name: '电子邮件',
       component: Home,
       redirect: '/main',
       menuShow: true,
@@ -251,7 +251,7 @@ let router = new Router({
       },
       children: [
         {
-          path: '/person/fasongyoujian',
+          path: '/youjian/fasongyoujian',
           component: Fasongyoujian,
           name: '发送邮件',
           menuShow: true,
@@ -261,7 +261,7 @@ let router = new Router({
           },
         },
         {
-          path: '/person/yishouyoujian',
+          path: '/youjian/yishouyoujian',
           component: Yishouyoujian,
           name: '已收邮件',
           menuShow: true,
@@ -271,7 +271,7 @@ let router = new Router({
           }
         },
         {
-          path: '/person/yifayoujian',
+          path: '/youjian/yifayoujian',
           component: Yifayoujian,
           name: '已发邮件',
           menuShow: true,
@@ -281,7 +281,7 @@ let router = new Router({
           }
         },
         {
-          path: '/person/caogaoxiang',
+          path: '/youjian/caogaoxiang',
           component: Caogaoxiang,
           name: '草稿箱',
           menuShow: true,
@@ -289,26 +289,6 @@ let router = new Router({
             requiresAuth: true,
             keepAlive:true,
           }
-        },
-        {
-          path: '/person/tongxinlu',
-          component: Tongxinlu,
-          name: '通讯录',
-          menuShow: true,
-          meta: {
-            requiresAuth: true,
-            keepAlive:false,
-          },
-        },
-        {
-          path: '/person/changyongzu',
-          component: Changyongzu,
-          name: '常用组',
-          menuShow: true,
-          meta: {
-            requiresAuth: true,
-            keepAlive:false,
-          },
         },
       ]
     },
@@ -524,6 +504,26 @@ let router = new Router({
             requiresAuth: true,
             keepAlive:true,
           }
+        },
+        {
+          path: '/bangongguanli/tongxinlu',
+          component: Tongxinlu,
+          name: '通讯录',
+          menuShow: true,
+          meta: {
+            requiresAuth: true,
+            keepAlive:false,
+          },
+        },
+        {
+          path: '/bangongguanli/changyongzu',
+          component: Changyongzu,
+          name: '常用组',
+          menuShow: true,
+          meta: {
+            requiresAuth: true,
+            keepAlive:false,
+          },
         },
       ]
     },

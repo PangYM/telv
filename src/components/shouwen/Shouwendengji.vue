@@ -19,8 +19,7 @@
         <el-button type="primary" v-if="(quanxian<=20&&!pishi&&!yuedu)||ischehui" @click="querenchehui">撤回</el-button>
         <el-button type="primary" v-if="pishi" @click="querenshenpi">审批</el-button>
         <el-button type="primary" :loading="loading" @click="querensend">发送</el-button>
-        <el-button type="primary" v-if="yuedu&&form.zhuangtai!='退文'" @click="querenyuedu">办理</el-button>
-        <el-button type="primary" v-if="yuedu&&form.zhuangtai=='退文'" @click="querenyuedu">已阅</el-button>
+        <el-button type="primary" v-if="yuedu" @click="querenyuedu">办理</el-button>
         <el-button type="primary" v-if="!xiugai" @click="piyuejilu">查看批阅记录</el-button>
         <el-button type="primary" v-print="'#jieshou'">打印</el-button>
         <el-button type="primary" @click="guanbi(0)">关闭</el-button>
@@ -95,7 +94,7 @@
           <div class="kuang4">
             <div class="kuang41">拟办意见</div>
             <div class="kuang42">
-              <el-input v-if="hegao" type="textarea" :autosize="true" v-model="form.nibanyijian.yijian" placeholder></el-input>
+              <el-autocomplete v-if="hegao" v-model="form.nibanyijian.yijian" :fetch-suggestions="querySearch" placeholder="请输入意见" style="width:100%"></el-autocomplete>
               <a v-else style="color:#000000">{{form.nibanyijian.name}} {{form.nibanyijian.time}} {{form.nibanyijian.yijian}}</a>
             </div>
           </div>
@@ -108,7 +107,7 @@
                   <a v-else style="color:#000000">{{item.name}}</a> {{item.time}} {{item.yijian}}
                 </a>
               </li>
-              <el-input v-if="pishi" type="textarea" :autosize="true" v-model="lingdaopishi" placeholder></el-input>
+              <el-autocomplete v-if="pishi" v-model="lingdaopishi" :fetch-suggestions="querySearch" placeholder="请输入批示" style="width:100%"></el-autocomplete>
             </div>
           </div>
           <div class="kuang4">
@@ -146,11 +145,21 @@
     </div>
     <div v-else>
       <el-button type="primary" @click="piyuejilu">关闭</el-button>
-      <el-table border :data="form.liuchenglist" stripe style="width: 100%;margin-top:30px;" :default-sort="{prop: 'time', order: 'descending'}">
-        <el-table-column sortable prop="name" align="center" width="200" label="人员"></el-table-column>
-        <el-table-column sortable prop="miaoshu" align="center" min-width="250" show-overflow-tooltip label="操作"></el-table-column>
-        <el-table-column sortable prop="time" fixed="right" align="center" label="时间" width="200"></el-table-column>
-      </el-table>
+      <el-button type="primary" @click="gaibianweichuli">3天未处理</el-button>
+      <div v-if="weichuli==0">
+        <el-table border :data="form.liuchenglist" stripe style="width: 100%;margin-top:30px;" :default-sort="{prop: 'time', order: 'descending'}">
+          <el-table-column sortable prop="name" align="center" width="200" label="人员"></el-table-column>
+          <el-table-column sortable prop="miaoshu" align="center" min-width="250" show-overflow-tooltip label="操作"></el-table-column>
+          <el-table-column sortable prop="time" fixed="right" align="center" label="时间" width="200"></el-table-column>
+        </el-table>
+      </div>
+      <div v-else>
+        <el-table border :data="weichulilist" stripe style="width: 100%;margin-top:30px;" :default-sort="{prop: 'wancheng', order: 'descending'}">
+          <el-table-column sortable prop="name" align="center" width="200" label="人员"></el-table-column>
+          <el-table-column sortable prop="wancheng" align="center" min-width="250" show-overflow-tooltip label="天数"></el-table-column>
+          <el-table-column sortable prop="laiwentime" fixed="right" align="center" label="时间" width="200"></el-table-column>
+        </el-table>
+      </div>
     </div>
   </div>
 </template>
@@ -164,7 +173,7 @@
     },
     mounted() {
       var userdata = JSON.parse(localStorage.getItem('userdata'));
-      if(userdata.userid=='wangting') this.ischehui=1;
+      if (userdata.userid == 'wangting') this.ischehui = 1;
       this.quanxian = userdata.quanxian;
       if (this.$route.query.wendangid) {
         API.getwendangid({
@@ -179,6 +188,12 @@
           this.pishi = data.pishi;
           this.hegao = data.hegao;
           this.yuedu = data.yuedu;
+          this.lingdaopishilist = data.lingdaopishilist;
+          for (var i = 0; i < this.lingdaopishilist.length; ++i) {
+            this.lingdaopishilist[i] = {
+              'value': this.lingdaopishilist[i]
+            }
+          }
           this.upload.wendangid = this.form.wendangid;
           this.form.fujianList = [];
           for (var i = 0; i < this.form.fileList.length; ++i) {
@@ -209,7 +224,7 @@
     },
     data() {
       return {
-        ischehui:0,
+        ischehui: 0,
         quanxian: 50,
         xianshi: 1,
         xiugai: 1,
@@ -217,7 +232,10 @@
         tuiwen: 0,
         pishi: 0,
         yuedu: 0,
+        weichuli: 0,
+        weichulilist: [],
         lingdaopishi: '',
+        lingdaopishilist: [],
         banli: '',
         title: ['未选列表', '已选列表'],
         mode: 'transfer',
@@ -257,6 +275,29 @@
       };
     },
     methods: {
+      gaibianweichuli() {
+        this.weichuli = 1 - this.weichuli;
+        if (this.weichulilist.length == 0) {
+          for (var userid in this.form.shenpihis) {
+            var aaa = new Date();
+            var bbb = new Date(this.form.shenpihis[userid]['laiwentime']);
+            if (this.form.shenpihis[userid]['wancheng'] == 0 && (aaa.getTime() - bbb.getTime() >= 259200000)) {
+              this.weichulilist.push(this.form.shenpihis[userid]);
+              this.weichulilist[this.weichulilist.length-1]['wancheng'] = parseInt((aaa.getTime() - bbb.getTime()) / 86400000);
+            }
+          }
+        }
+      },
+      querySearch(queryString, cb) {
+        var results = queryString ? this.lingdaopishilist.filter(this.createFilter(queryString)) : this.lingdaopishilist;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (restaurant) => {
+          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
       querenfanhui() {
         this.$confirm('确认退回上一级?', '提示', {
             confirmButtonText: '确定',

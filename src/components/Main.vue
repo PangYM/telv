@@ -42,7 +42,7 @@
                 <span>未读邮件</span>
               </el-col>
               <el-col :span="8" class="tr">
-                <el-button type="text" @click="handleGoUrl('/person/yishouyoujian')">
+                <el-button type="text" @click="handleGoUrl('/youjian/yishouyoujian')">
                   <i>{{youjian}}</i>
                 </el-button>
               </el-col>
@@ -258,6 +258,7 @@ export default {
   },
   data() {
     return {
+      cishu:672,
       ifnew: 1,
       lunbotulist: [],
       dateList: {
@@ -321,6 +322,10 @@ export default {
       }).then(({ data }) => {
         this.daibanshouwen = data.dataTable.slice(0, 5);
       });
+      this.cishu-=0;
+      if(this.cishu>0){
+        setTimeout(this.gengxin, 1800000);
+      }
     },
     handleEdit(e, row) {
       if (e == 0) {

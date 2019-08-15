@@ -16,7 +16,7 @@
         <el-input class="chaxun1" size="medium" v-model="query" placeholder="全文搜索" @keyup.enter.native="chaxun"></el-input>
         <el-select v-model="doctype" placeholder="请选择文档类型" style="width:15%;">
           <el-option label="收文" value="shouwen"></el-option>
-          <el-option label="公文引发单" value="gongwen"></el-option>
+          <el-option label="公文印发单" value="gongwen"></el-option>
           <el-option label="发文" value="fawen"></el-option>
           <el-option label="会议发文" value="huiyi"></el-option>
           <el-option label="党务发文" value="dangwu"></el-option>

@@ -19,8 +19,7 @@
         <el-button type="primary" v-if="quanxian<=20&&!pishi&&!yuedu" @click="querenchehui">撤回</el-button>
         <el-button type="primary" v-if="pishi" @click="querenshenpi">审批</el-button>
         <el-button type="primary" v-if="fasong" :loading="loading" @click="querensend">发送</el-button>
-        <el-button type="primary" v-if="yuedu&&form.zhuangtai!='退文'" @click="querenyuedu">办理</el-button>
-        <el-button type="primary" v-if="yuedu&&form.zhuangtai=='退文'" @click="querenyuedu">已阅</el-button>
+        <el-button type="primary" v-if="yuedu" @click="querenyuedu">办理</el-button>
         <el-button type="primary" v-if="!xiugai" @click="piyuejilu">查看批阅记录</el-button>
         <el-button type="primary" v-print="'#qianbao'">打印</el-button>
         <el-button type="primary" @click="guanbi(0)">关闭</el-button>
@@ -39,8 +38,7 @@
           日期：
           <el-date-picker class="riqi1" value-format="yyyy-MM-dd" v-if="xiugai" v-model="form.riqi" type="date" placeholder="选择日期"></el-date-picker>
           <a class="riqi1" v-else style="color:#000000">{{form.riqi}}</a> 编号：（
-          <el-input v-if="xiugai" class="bianhao" size="small" v-model="form.bianhao" placeholder></el-input>
-          <a class="bianhao" v-else style="color:#000000">{{form.bianhao}}</a>）号
+          <el-input class="bianhao" size="small" v-model="form.bianhao" placeholder></el-input>）号
         </div>
         <div class="kuang">
           <div class="kuang1">
@@ -50,7 +48,7 @@
                 <img class="qianming" :src="getImgUrl(item.imageurl)">
                 <a style="color:#000000">{{item.time}} {{item.yijian}}</a>
               </li>
-              <el-input class="neirong" v-if="pishi==1" type="textarea" :autosize="true" v-model="lingdaopishi" placeholder></el-input>
+              <el-autocomplete class="neirong" v-if="pishi==1" v-model="lingdaopishi" :fetch-suggestions="querySearch" placeholder="请输入批示"></el-autocomplete>
             </div>
           </div>
           <div class="kuang1">
@@ -60,13 +58,13 @@
                 <img class="qianming" :src="getImgUrl(item.imageurl)">
                 <a style="color:#000000">{{item.time}} {{item.yijian}}</a>
               </li>
-              <el-input class="neirong" v-if="pishi==2" type="textarea" :autosize="true" v-model="lingdaopishi" placeholder></el-input>
+              <el-autocomplete class="neirong" v-if="pishi==2" v-model="lingdaopishi" :fetch-suggestions="querySearch" placeholder="请输入批示"></el-autocomplete>
             </div>
           </div>
           <div class="kuang3">
             <div class="kuang30">办公室意见</div>
             <div class="biaoti">
-              <el-input v-if="pishi>2" type="textarea" :autosize="true" v-model="lingdaopishi" placeholder></el-input>
+              <el-autocomplete v-if="pishi>2" v-model="lingdaopishi" :fetch-suggestions="querySearch" placeholder="请输入意见" style="width:100%"></el-autocomplete>
               <li v-bind="form.minlingdaolist" v-for="item in form.minlingdaolist" :key="item.name">
                 <a style="color:#000000">{{item.name}} {{item.time}} {{item.yijian}}</a>
               </li>
@@ -75,7 +73,7 @@
           <div class="kuang3">
             <div class="kuang30">拟办意见</div>
             <div class="biaoti">
-              <el-input v-if="hegao" type="textarea" :autosize="true" v-model="form.nibanyijian.yijian" placeholder></el-input>
+              <el-autocomplete v-if="hegao" v-model="form.nibanyijian.yijian" :fetch-suggestions="querySearch" placeholder="请输入意见" style="width:100%"></el-autocomplete>
               <a v-else style="color:#000000">{{form.nibanyijian.name}} {{form.nibanyijian.time}} {{form.nibanyijian.yijian}}</a>
             </div>
           </div>
@@ -140,11 +138,21 @@
     </div>
     <div v-else>
       <el-button type="primary" @click="piyuejilu">关闭</el-button>
-      <el-table border :data="form.liuchenglist" stripe style="width: 100%;margin-top:30px;" :default-sort="{prop: 'time', order: 'descending'}">
-        <el-table-column sortable prop="name" align="center" width="200" label="人员"></el-table-column>
-        <el-table-column sortable prop="miaoshu" align="center" min-width="250" show-overflow-tooltip label="操作"></el-table-column>
-        <el-table-column sortable prop="time" fixed="right" align="center" label="时间" width="200"></el-table-column>
-      </el-table>
+      <el-button type="primary" @click="gaibianweichuli">3天未处理</el-button>
+      <div v-if="weichuli==0">
+        <el-table border :data="form.liuchenglist" stripe style="width: 100%;margin-top:30px;" :default-sort="{prop: 'time', order: 'descending'}">
+          <el-table-column sortable prop="name" align="center" width="200" label="人员"></el-table-column>
+          <el-table-column sortable prop="miaoshu" align="center" min-width="250" show-overflow-tooltip label="操作"></el-table-column>
+          <el-table-column sortable prop="time" fixed="right" align="center" label="时间" width="200"></el-table-column>
+        </el-table>
+      </div>
+      <div v-else>
+        <el-table border :data="weichulilist" stripe style="width: 100%;margin-top:30px;" :default-sort="{prop: 'wancheng', order: 'descending'}">
+          <el-table-column sortable prop="name" align="center" width="200" label="人员"></el-table-column>
+          <el-table-column sortable prop="wancheng" align="center" min-width="250" show-overflow-tooltip label="天数"></el-table-column>
+          <el-table-column sortable prop="laiwentime" fixed="right" align="center" label="时间" width="200"></el-table-column>
+        </el-table>
+      </div>
     </div>
   </div>
 </template>
@@ -173,6 +181,12 @@
           this.pishi = data.pishi;
           this.yuedu = data.yuedu;
           this.fasong = data.fasong;
+          this.lingdaopishilist = data.lingdaopishilist;
+          for (var i = 0; i < this.lingdaopishilist.length; ++i) {
+            this.lingdaopishilist[i] = {
+              'value': this.lingdaopishilist[i]
+            }
+          }
           this.upload.wendangid = this.form.wendangid;
           if (this.hegao) {
             this.form.lingdao.name = userdata.name;
@@ -228,7 +242,10 @@
         pishi: 0,
         yuedu: 0,
         fasong: 1,
+        weichuli: 0,
+        weichulilist: [],
         lingdaopishi: '',
+        lingdaopishilist: [],
         banli: '',
         title: ['未选列表', '已选列表'],
         mode: 'transfer',
@@ -273,6 +290,29 @@
       };
     },
     methods: {
+      gaibianweichuli() {
+        this.weichuli = 1 - this.weichuli;
+        if (this.weichulilist.length == 0) {
+          for (var userid in this.form.shenpihis) {
+            var aaa = new Date();
+            var bbb = new Date(this.form.shenpihis[userid]['laiwentime']);
+            if (this.form.shenpihis[userid]['wancheng'] == 0 && (aaa.getTime() - bbb.getTime() >= 259200000)) {
+              this.weichulilist.push(this.form.shenpihis[userid]);
+              this.weichulilist[this.weichulilist.length-1]['wancheng'] = parseInt((aaa.getTime() - bbb.getTime()) / 86400000);
+            }
+          }
+        }
+      },
+      querySearch(queryString, cb) {
+        var results = queryString ? this.lingdaopishilist.filter(this.createFilter(queryString)) : this.lingdaopishilist;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (restaurant) => {
+          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
       querenfanhui() {
         this.$confirm('确认退回上一级?', '提示', {
             confirmButtonText: '确定',
@@ -349,6 +389,7 @@
         API.yiyue({
           token: localStorage.getItem('token'),
           wendangid: this.form.wendangid,
+          bianhao: this.form.bianhao,
           banli: this.banli
         }).then(({
           data

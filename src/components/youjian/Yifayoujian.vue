@@ -94,7 +94,7 @@ export default {
     },
     handleEdit(index, row) {
       this.$router.push({
-        path: '/person/fasongyoujian',
+        path: '/youjian/fasongyoujian',
         query: {
           wendangid: row.wendangid
         }

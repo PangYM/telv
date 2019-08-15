@@ -43,10 +43,6 @@
     </el-table>
   </div>
 </template>
-      </el-table-column>
-    </el-table>
-  </div>
-</template>
 
 <script>
 import * as API from '@/api';
@@ -70,7 +66,7 @@ export default {
     handleEdit(index, row) {
       // localStorage.setItem("fileList", JSON.stringify(row.fileList));
       this.$router.push({
-        path: '/person/fasongyoujian',
+        path: '/youjian/fasongyoujian',
         query: {
           wendangid: row.wendangid
         }

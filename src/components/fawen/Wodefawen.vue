@@ -107,7 +107,6 @@ import * as API from '@/api';
 export default {
   components: {},
   created() {
-    console.log("svdcsxZZzxcvdxcvcx")
     API.getfawenguanli({
       token: localStorage.getItem('token'),
       doctype: 'fawen',

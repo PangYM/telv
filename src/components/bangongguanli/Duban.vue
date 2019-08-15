@@ -161,13 +161,13 @@
           :data="shenyuejilu"
           stripe
           style="width: 60%;margin-top:30px;margin-left:20%;"
-          :default-sort="{prop: 'caozuo', order: 'descending'}"
+          :default-sort="{prop: 'wancheng', order: 'descending'}"
         >
           <el-table-column sortable prop="name" align="center" width="200" label="人员"></el-table-column>
           <el-table-column sortable prop="endtime" align="center" width="200" label="结束时间"></el-table-column>
           <el-table-column
             sortable
-            prop="caozuo"
+            prop="wancheng"
             fixed="right"
             align="center"
             min-width="250"
@@ -330,7 +330,7 @@ export default {
       }
       var fasongdata = {
         toData: this.toData,
-        wendang: this.form,
+        mindoc: this.form,
         token: localStorage.getItem('token')
       };
       API.fasongmindoc(fasongdata).then(({ data }) => {

@@ -142,13 +142,23 @@
     </div>
     <div v-else>
       <el-button type="primary" @click="piyuejilu">关闭</el-button>
-      <el-table border :data="shenyuejilu" stripe style="width: 100%;margin-top:30px;" :default-sort="{prop: 'caozuo', order: 'descending'}">
-        <el-table-column sortable prop="name" align="center" width="200" label="人员"></el-table-column>
-        <el-table-column sortable prop="laiwenren" align="center" min-width="250" show-overflow-tooltip label="来文人"></el-table-column>
-        <el-table-column sortable prop="laiwentime" align="center" label="来文时间" width="200"></el-table-column>
-        <el-table-column sortable prop="endtime" align="center" width="200" label="结束时间"></el-table-column>
-        <el-table-column sortable prop="caozuo" fixed="right" align="center" min-width="250" show-overflow-tooltip label="操作"></el-table-column>
-      </el-table>
+      <el-button type="primary" @click="gaibianweichuli">3天未处理</el-button>
+      <div v-if="weichuli==0">
+        <el-table border :data="shenyuejilu" stripe style="width: 100%;margin-top:30px;" :default-sort="{prop: 'wancheng', order: 'descending'}">
+          <el-table-column sortable prop="name" align="center" width="200" label="人员"></el-table-column>
+          <el-table-column sortable prop="laiwenren" align="center" min-width="250" show-overflow-tooltip label="来文人"></el-table-column>
+          <el-table-column sortable prop="laiwentime" align="center" label="来文时间" width="200"></el-table-column>
+          <el-table-column sortable prop="endtime" align="center" width="200" label="结束时间"></el-table-column>
+          <el-table-column sortable prop="wancheng" fixed="right" align="center" min-width="250" show-overflow-tooltip label="操作"></el-table-column>
+        </el-table>
+      </div>
+      <div v-else>
+        <el-table border :data="weichulilist" stripe style="width: 100%;margin-top:30px;" :default-sort="{prop: 'wancheng', order: 'descending'}">
+          <el-table-column sortable prop="name" align="center" width="200" label="人员"></el-table-column>
+          <el-table-column sortable prop="wancheng" align="center" min-width="250" show-overflow-tooltip label="天数"></el-table-column>
+          <el-table-column sortable prop="laiwentime" fixed="right" align="center" label="时间" width="200"></el-table-column>
+        </el-table>
+      </div>
     </div>
   </div>
 </template>
@@ -208,6 +218,8 @@
         xiugai: 1,
         yuedu: 0,
         fasong: 1,
+        weichuli: 0,
+        weichulilist: [],
         title: ['未选列表', '已选列表'],
         mode: 'transfer',
         fromData: [],
@@ -244,6 +256,19 @@
       };
     },
     methods: {
+      gaibianweichuli() {
+        this.weichuli = 1 - this.weichuli;
+        if (this.weichulilist.length == 0) {
+          for (var userid in this.form.shenpihis) {
+            var aaa = new Date();
+            var bbb = new Date(this.form.shenpihis[userid]['laiwentime']);
+            if (this.form.shenpihis[userid]['wancheng'] == 0 && (aaa.getTime() - bbb.getTime() >= 259200000)) {
+              this.weichulilist.push(this.form.shenpihis[userid]);
+              this.weichulilist[this.weichulilist.length - 1]['wancheng'] = parseInt((aaa.getTime() - bbb.getTime()) / 86400000);
+            }
+          }
+        }
+      },
       getToday() {
         var date = new Date();
         var seperator1 = '-';

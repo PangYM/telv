@@ -73,9 +73,10 @@
         show-overflow-tooltip
         width="108"
       ></el-table-column>
-      <el-table-column fixed="right" align="center" width="120" label="操作">
+      <el-table-column fixed="right" align="center" width="180" label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
+          <el-button size="mini" type="primary" @click="handleDele(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -115,7 +116,7 @@ export default {
   },
   methods: {
     handleGoUrl() {
-      this.$router.push({ path: '/person/fasongyoujian' });
+      this.$router.push({ path: '/youjian/fasongyoujian' });
     },
     chaxun() {
       API.getjieshouguanli({
@@ -131,12 +132,43 @@ export default {
       this.qiefendataTable = this.dataTable.slice(20 * val - 20, val * 20);
     },
     handleEdit(index, row) {
+      this.qiefendataTable[index].weidu=0;
       this.$router.push({
-        path: '/person/fasongyoujian',
+        path: '/youjian/fasongyoujian',
         query: {
           wendangid: row.wendangid
         }
       });
+    },
+    handleDele(index, row){
+      if(row.weidu){
+       this.$message({
+                message: '当前邮件未读，无法删除，若已读请刷新后重试',
+                duration: 2000
+              }); 
+      }
+      else{
+        this.$confirm('确认删除邮件?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          API.shanchuyoujian({
+            token: localStorage.getItem('token'),
+            wendangid: row.wendangid
+          }).then(({
+            data
+          }) => {
+            if (data.MSG == 'YES') {
+              this.$message.success({
+                showClose: true,
+                message: '邮件删除成功！请刷新',
+                duration: 2000
+              });
+            }
+          });
+        });
+      }
     }
   }
 };

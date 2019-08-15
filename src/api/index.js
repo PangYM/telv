@@ -45,6 +45,8 @@ instance.interceptors.response.use(
 
 //基地址
 export const base = 'http://10.190.177.115';
+// export const base = 'http://localhost';
+// export const base = 'http://192.168.199.207';
 export const port = ':16888/api/';
 export const baseurl = base + port;
 //用户登录
@@ -159,7 +161,7 @@ function getjieshouguanli(data) {
 function getusers(data) {
     return instance.post(baseurl + 'getusers', data);
 }
-//获取min文档
+//完成min文档
 function wanchengmindoc(data) {
     return instance.post(baseurl + 'wanchengmindoc', data);
 }
@@ -271,7 +273,12 @@ function tongzhidongyun(data) {
 function getshouwenduban(data) {
     return instance.post(baseurl + 'getshouwenduban', data);
 }
+//通知收文督办
+function shanchuyoujian(data) {
+    return instance.post(baseurl + 'shanchuyoujian', data);
+}
 export {
+    shanchuyoujian,
     getshouwenduban,
     tongzhidongyun,
     chehui,

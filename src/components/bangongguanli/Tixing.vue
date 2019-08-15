@@ -232,7 +232,7 @@ export default {
     onSubmit() {
       API.fasongmindoc({
         token: localStorage.getItem('token'),
-        wendang: this.form
+        mindoc: this.form
       }).then(({ data }) => {
         if (data.MSG == 'YES') {
           this.$message.success({

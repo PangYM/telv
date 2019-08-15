@@ -159,7 +159,7 @@
             <el-button type="primary" @click="piyuejilu">关闭</el-button>
             <el-table border :data="form.shenpihis" stripe style="width: 100%;margin-top:30px;" :default-sort="{prop: 'name', order: 'descending'}">
                 <el-table-column sortable prop="name" align="center" width="200" label="人员"></el-table-column>
-                <el-table-column sortable prop="caozuo" align="center" min-width="250" show-overflow-tooltip label="操作"></el-table-column>
+                <el-table-column sortable prop="wancheng" align="center" min-width="250" show-overflow-tooltip label="操作"></el-table-column>
             </el-table>
         </div>
     </div>
@@ -315,7 +315,7 @@
                 this.loading = true;
                 var fasongdata = {
                     toData: this.toData,
-                    wendang: this.form,
+                    mindoc: this.form,
                     token: localStorage.getItem('token')
                 };
                 if (!e) fasongdata.toData = [];

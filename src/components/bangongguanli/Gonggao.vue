@@ -173,7 +173,7 @@ export default {
         return '';
       }
       var fasongdata = {
-        wendang: this.form,
+        mindoc: this.form,
         token: localStorage.getItem('token')
       };
       API.fasongmindoc(fasongdata).then(({ data }) => {

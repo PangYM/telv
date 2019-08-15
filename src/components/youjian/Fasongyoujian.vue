@@ -45,7 +45,7 @@
           </el-row>
           <el-form-item label="收件人">
             <a v-bind="form.shenpihis" v-for="item in form.shenpihis" :key="item.name">
-              <a v-if="item.caozuo=='未完成'" :span="4" style="color:#0000FF">{{item.name}};</a>
+              <a v-if="item.wancheng==0" :span="4" style="color:#0000FF">{{item.name}};</a>
               <a v-else :span="4" style="color:#000000">{{item.name}};</a>
             </a>
           </el-form-item>
@@ -173,7 +173,7 @@
         }
         var fasongdata = {
           toData: this.toData,
-          wendang: this.form,
+          mindoc: this.form,
           token: localStorage.getItem('token')
         };
         if (!e) fasongdata.toData = [];
