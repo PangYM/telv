@@ -146,7 +146,7 @@
                 </div>
             </el-row>
             <div v-if="xiugai" class="upload">
-                <el-upload drag ref="upload" :action="baocunfujian" :data="upload" :on-change="handlechange" :on-remove="handleremove" :file-list="form.fujianList" multiple>
+                <el-upload drag ref="upload" :action="baocunfujian" :on-success="onsuccess" :data="upload" :on-change="handlechange" :on-remove="handleremove" :file-list="form.fujianList" multiple>
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">
                         将附件拖到此处，或
@@ -218,7 +218,7 @@
                 xianshi: 1,
                 xiugai: 1,
                 yuedu: 0,
-                banli:'',
+                banli: '',
                 title: ['未选列表', '已选列表'],
                 mode: 'transfer',
                 istongxinlu: 0,
@@ -252,6 +252,11 @@
             };
         },
         methods: {
+            onsuccess(response, file, fileList) {
+                if (this.form.biaoti == '') {
+                    this.form.biaoti = file.name.split('.')[0];
+                }
+            },
             getToday() {
                 var date = new Date();
                 var seperator1 = '-';

@@ -14,19 +14,20 @@
     <div class="chaxun">
       <el-input class="chaxun1" size="medium" v-model="query" placeholder="全文搜索" @keyup.enter.native="chaxun"></el-input>
       <el-button size="medium" type="primary" @click="chaxun">查询</el-button>
+      <a v-if="userdata.userid=='wubo'" class="cuiban" target="_blank" :href="baseurl+'/data/催办名单.xlsx'">催办名单.xlsx</a>
     </div>
     <div class="chaxun">
       标题颜色说明：
-      <a style="color: #008B00">审批已完成</a>，
-      <a style="color: #FF0000">审批未通过</a>，
-      <a style="color: #EEB422">审批中</a>，
-      <a style="color: #DA70D6">审批已撤销</a>，
-      <a style="color: #9400D3">退文至发起人</a>
+      <a style="color: #008B00" @click="changetable(0)">审批已完成</a>，
+      <a style="color: #FF0000" @click="changetable(3)">审批未通过</a>，
+      <a style="color: #EEB422" @click="changetable(1)">审批中</a>，
+      <a style="color: #DA70D6" @click="changetable(3)">审批已撤销</a>，
+      <a style="color: #9400D3" @click="changetable(2)">退文至发起人</a>
     </div>
     <el-table border :data="qiefendataTable" stripe style="width: 100%" :default-sort="{prop: 'starttime', order: 'descending'}">
       <el-table-column sortable prop="biaoti" align="center" label="发文标题" show-overflow-tooltip min-width="200">
         <template slot-scope="scope">
-                          <a :style="{'color': scope.row.clour}">{{scope.row.biaoti}}</a>
+                                  <a :style="{'color': scope.row.clour}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
 </template>
       </el-table-column>
       <el-table-column
@@ -98,11 +99,12 @@
     <div class="pailei">
       <el-pagination
         @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
         background
         :page-size="20"
         :pager-count="11"
         layout="prev, pager, next"
-        :total="dataTable.length"
+        :total="dataTable1.length"
       ></el-pagination>
     </div>
   </div>
@@ -121,17 +123,29 @@
         data
       }) => {
         this.dataTable = data.dataTable;
+        this.dataTable1 = data.dataTable;
         for (var i = 0; i < this.dataTable.length; ++i) {
           this.dataTable[i].clour = this.zhuangtai_clour[this.dataTable[i].zhuangtai];
+          this.dataTable1[i].clour = this.zhuangtai_clour[this.dataTable1[i].zhuangtai];
         }
         this.qiefendataTable = this.dataTable.slice(0, 20);
       });
+      if (this.userdata.userid == 'wubo') {
+        API.getcuibanmingdan({
+          token: localStorage.getItem('token')
+        });
+      }
+      this.$forceUpdate();
     },
     data() {
       return {
+        userdata: JSON.parse(localStorage.getItem('userdata')),
+        baseurl: API.base,
         query: '',
         qiefendataTable: [],
         dataTable: [],
+        dataTable1: [],
+        currentPage: 1,
         zhuangtai_clour: {
           已完成: '#008B00',
           未通过: '#FF0000',
@@ -142,6 +156,40 @@
       };
     },
     methods: {
+      changetable(e) {
+        if (e == 0) {
+          this.dataTable1 = [];
+          for (var i = 0; i < this.dataTable.length; ++i) {
+            if (this.dataTable[i].zhuangtai == '已完成') {
+              this.dataTable1.push(this.dataTable[i]);
+            }
+          }
+          this.qiefendataTable = this.dataTable1.slice(0, 20);
+          this.currentPage = 1;
+        } else if (e == 1) {
+          this.dataTable1 = [];
+          for (var i = 0; i < this.dataTable.length; ++i) {
+            if (this.dataTable[i].zhuangtai == '审批中') {
+              this.dataTable1.push(this.dataTable[i]);
+            }
+          }
+          this.qiefendataTable = this.dataTable1.slice(0, 20);
+          this.currentPage = 1;
+        } else if (e == 2) {
+          this.dataTable1 = [];
+          for (var i = 0; i < this.dataTable.length; ++i) {
+            if (this.dataTable[i].zhuangtai == '退文') {
+              this.dataTable1.push(this.dataTable[i]);
+            }
+          }
+          this.qiefendataTable = this.dataTable1.slice(0, 20);
+          this.currentPage = 1;
+        } else {
+          this.dataTable1 = this.dataTable;
+          this.qiefendataTable = this.dataTable.slice(0, 20);
+          this.currentPage = 1;
+        }
+      },
       chaxun() {
         API.getshouwenduban({
           token: localStorage.getItem('token'),
@@ -151,14 +199,16 @@
           data
         }) => {
           this.dataTable = data.dataTable;
+          this.dataTable1 = data.dataTable;
           for (var i = 0; i < this.dataTable.length; ++i) {
             this.dataTable[i].clour = this.zhuangtai_clour[this.dataTable[i].zhuangtai];
+            this.dataTable1[i].clour = this.zhuangtai_clour[this.dataTable1[i].zhuangtai];
           }
           this.qiefendataTable = this.dataTable.slice(0, 20);
         });
       },
       handleCurrentChange(val) {
-        this.qiefendataTable = this.dataTable.slice(20 * val - 20, val * 20);
+        this.qiefendataTable = this.dataTable1.slice(20 * val - 20, val * 20);
       },
       handleEdit(index, row) {
         if (row.doctype == 'gongwen') {
@@ -240,6 +290,9 @@
     display: block;
     .chaxun1 {
       width: 300px;
+    }
+    .cuiban {
+      margin-left: 200px;
     }
   }
   .pailei {

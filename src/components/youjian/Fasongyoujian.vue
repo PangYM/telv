@@ -16,6 +16,7 @@
         <el-button type="primary" v-if="xiugai" @click="querenfasong(0)">保存</el-button>
         <el-button type="primary" v-if="xiugai" @click="querensend">发送</el-button>
         <el-button type="primary" v-if="xiugai==0" @click="querensend">转发</el-button>
+        <el-button type="primary" v-if="xiugai==0" @click="huifuyoujian">回复</el-button>
         <el-button type="primary" @click="guanbi(0)">关闭</el-button>
         <div class="renyuan" v-if="istongxinlu">
           <tree-transfer class="tongxinlu" :title="title" :from_data="fromData" :to_data="toData" :defaultProps="{label:'label'}" @addBtn="add" @removeBtn="remove" :mode="mode" width="50%" height="500px" filter></tree-transfer>
@@ -53,13 +54,21 @@
             <vue-editor v-if="xiugai" useCustomImageHandler @imageAdded="handleImageAdded" v-model="form.content"></vue-editor>
             <vue-editor v-else disabled useCustomImageHandler @imageAdded="handleImageAdded" v-model="form.content"></vue-editor>
           </el-form-item>
+          
+          <el-form-item v-if="xiugai==0" label="回复">
+            <li v-bind="form.huifuList" v-for="item in form.huifuList" :key="item">
+              {{item.name}}
+            </li>
+            <el-input v-model="form.huifu" placeholder="请输入回复内容"></el-input>
+          </el-form-item>
+
           <el-form-item>
             <li v-bind="form.fileList" v-for="item in form.fileList" :key="item.name">
               <a target="_blank" :href="baseurl+'/data/fujian/'+form.wendangid+'/'+item.name">{{item.name}}</a>
             </li>
           </el-form-item>
           <el-form-item v-if="xiugai" label="附件">
-            <el-upload drag ref="upload" :action="baocunfujian" :data="upload" :on-change="handlechange" :on-remove="handleremove" :file-list="form.fujianList" multiple>
+            <el-upload drag ref="upload" :action="baocunfujian" :on-success="onsuccess" :data="upload" :on-change="handlechange" :on-remove="handleremove" :file-list="form.fujianList" multiple>
               <i class="el-icon-upload"></i>
               <div class="el-upload__text">
                 将附件拖到此处，或
@@ -146,6 +155,8 @@
           nigaoren: '',
           nigaodanwei: '',
           starttime: '',
+          huifu:'',
+          huifuList:[],
           content: ' ',
           shenpihis: {},
           fileList: [],
@@ -154,6 +165,11 @@
       };
     },
     methods: {
+      onsuccess(response, file, fileList){
+        if(this.form.biaoti==''){
+          this.form.biaoti=file.name.split('.')[0];
+        }
+      },
       handleImageAdded(file, Editor, cursorLocation, resetUploader) {
         API.baocunimage(file).then(result => {
           let url = result.data.url;
@@ -205,6 +221,36 @@
           data
         }) => {
           this.fromData = data.tongxinlu;
+        });
+      },
+      huifuyoujian() {
+        if(this.form.huifu==''){
+          this.$message({
+              message: '请输入回复内容'
+            });
+            return;
+        }
+        var fasongdata = {
+          mindoc: this.form,
+          token: localStorage.getItem('token')
+        };
+        API.huifuyoujian(fasongdata).then(({
+          data
+        }) => {
+          if (data.MSG == 'YES') {
+            this.$message.success({
+              showClose: true,
+              message: '回复成功',
+              duration: 2000
+            });
+              this.$router.push({
+                path: '/main'
+              });
+          } else {
+            this.$message({
+              message: '参数错误，请刷新后重试'
+            });
+          }
         });
       },
       guanbi(e) {

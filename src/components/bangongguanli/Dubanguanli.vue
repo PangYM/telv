@@ -29,7 +29,15 @@
       style="width: 100%"
       :default-sort="{prop: 'starttime', order: 'descending'}"
     >
-      <el-table-column sortable prop="biaoti" label="交办事项" align="center" min-width="200"></el-table-column>
+      <el-table-column sortable prop="biaoti" label="交办事项" align="center" min-width="200">
+        <template slot-scope="scope">
+          <a
+            size="mini"
+            type="primary"
+            @click="handleEdit(scope.$index, scope.row)"
+          >{{scope.row.biaoti}}</a>
+        </template>
+      </el-table-column>
       <el-table-column sortable prop="nigaoren" label="发起人" align="center" width="120"></el-table-column>
       <el-table-column sortable prop="starttime" align="center" width="120" label="发起时间"></el-table-column>
       <el-table-column sortable prop="jinji" align="center" width="120" label="督办类型"></el-table-column>

@@ -17,7 +17,7 @@
         <el-button type="primary" v-if="tuiwen" @click="querentuiwen">退文至发起人</el-button>
         <el-button type="primary" v-if="tuiwen" @click="querenfanhui">退回上一级</el-button>
         <el-button type="primary" v-if="quanxian<=20&&!pishi&&!yuedu" @click="querenchehui">撤回</el-button>
-        <el-button type="primary" v-if="pishi" @click="querenshenpi">审批</el-button>
+        <el-button type="primary" v-if="(pishi==1||pishi==3||pishi==4)&&hegao!=1" @click="querenshenpi">审批</el-button>
         <el-button type="primary" v-if="fasong" :loading="loading" @click="querensend">发送</el-button>
         <el-button type="primary" v-if="yuedu" @click="querenyuedu">办理</el-button>
         <el-button type="primary" v-if="!xiugai" @click="piyuejilu">查看批阅记录</el-button>
@@ -39,7 +39,7 @@
         <div class="kuang">
           <div class="kuang1">
             <div class="kuang11">
-              <el-input class="bianhao" size="small" v-model="form.bianhao" placeholder></el-input>号
+              <el-input class="bianhao" size="small" v-model="form.bianhao" placeholder></el-input>
             </div>
             <div class="kuang12">备注</div>
             <div class="kuang13">
@@ -140,7 +140,7 @@
         </div>
       </el-row>
       <div v-if="xiugai" class="upload">
-        <el-upload drag ref="upload" :action="baocunfujian" :data="upload" :on-change="handlechange" :on-remove="handleremove" :file-list="form.fujianList" multiple>
+        <el-upload drag ref="upload" :action="baocunfujian" :on-success="onsuccess" :data="upload" :on-change="handlechange" :on-remove="handleremove" :file-list="form.fujianList" multiple>
           <i class="el-icon-upload"></i>
           <div class="el-upload__text">
             将附件拖到此处，或
@@ -151,19 +151,14 @@
     </div>
     <div v-else>
       <el-button type="primary" @click="piyuejilu">关闭</el-button>
-      <el-button type="primary" @click="gaibianweichuli">3天未处理</el-button>
-      <div v-if="weichuli==0">
-        <el-table border :data="form.liuchenglist" stripe style="width: 100%;margin-top:30px;" :default-sort="{prop: 'time', order: 'descending'}">
+      <div>
+        <el-table border :data="weichulilist" stripe style="width: 100%;margin-top:30px;" :default-sort="{prop: 'tianshu', order: 'descending'}">
           <el-table-column sortable prop="name" align="center" width="200" label="人员"></el-table-column>
-          <el-table-column sortable prop="miaoshu" align="center" min-width="250" show-overflow-tooltip label="操作"></el-table-column>
-          <el-table-column sortable prop="time" fixed="right" align="center" label="时间" width="200"></el-table-column>
-        </el-table>
-      </div>
-      <div v-else>
-        <el-table border :data="weichulilist" stripe style="width: 100%;margin-top:30px;" :default-sort="{prop: 'wancheng', order: 'descending'}">
-          <el-table-column sortable prop="name" align="center" width="200" label="人员"></el-table-column>
-          <el-table-column sortable prop="wancheng" align="center" min-width="250" show-overflow-tooltip label="天数"></el-table-column>
-          <el-table-column sortable prop="laiwentime" fixed="right" align="center" label="时间" width="200"></el-table-column>
+          <el-table-column sortable prop="laiwentime" align="center" width="200" label="接收时间"></el-table-column>
+          <el-table-column sortable prop="laiwenren" align="center" width="200" label="接收对象"></el-table-column>
+          <el-table-column sortable prop="endtime" align="center" label="完成时间" width="200"></el-table-column>
+          <el-table-column sortable prop="wancheng" align="center" label="完成状态" width="200"></el-table-column>
+          <el-table-column sortable prop="tianshu" align="center" label="超时天数" width="200"></el-table-column>
         </el-table>
       </div>
     </div>
@@ -221,6 +216,18 @@
               url: this.baseurl + '/data/fujian/' + this.form.wendangid + '/' + this.form.fileList[i].name
             });
           }
+          for (var userid in this.form.shenpihis) {
+            var newshenpi=this.form.shenpihis[userid];
+            var aaa = new Date();
+            var bbb = new Date(this.form.shenpihis[userid]['laiwentime']);
+            if (this.form.shenpihis[userid]['wancheng'] == 0) {
+              newshenpi['tianshu']=parseInt((aaa.getTime() - bbb.getTime()) / 86400000);
+            }
+            else{
+              newshenpi['tianshu']=0;
+            }
+            this.weichulilist.push(newshenpi);
+          }
         });
       } else {
         API.getfawenhao().then(({
@@ -259,11 +266,10 @@
         pishi: 0,
         yuedu: 0,
         fasong: 1,
-        weichuli: 0,
-        weichulilist: [],
         lingdaopishi: '',
         lingdaopishilist: [],
         banli: '',
+        weichulilist:[],
         title: ['未选列表', '已选列表'],
         mode: 'transfer',
         istongxinlu: 0,
@@ -309,17 +315,9 @@
       };
     },
     methods: {
-      gaibianweichuli() {
-        this.weichuli = 1 - this.weichuli;
-        if (this.weichulilist.length == 0) {
-          for (var userid in this.form.shenpihis) {
-            var aaa = new Date();
-            var bbb = new Date(this.form.shenpihis[userid]['laiwentime']);
-            if (this.form.shenpihis[userid]['wancheng'] == 0 && (aaa.getTime() - bbb.getTime() >= 259200000)) {
-              this.weichulilist.push(this.form.shenpihis[userid]);
-              this.weichulilist[this.weichulilist.length-1]['wancheng'] = parseInt((aaa.getTime() - bbb.getTime()) / 86400000);
-            }
-          }
+      onsuccess(response, file, fileList){
+        if(this.form.biaoti==''){
+          this.form.biaoti=file.name.split('.')[0];
         }
       },
       querySearch(queryString, cb) {
@@ -501,6 +499,14 @@
           this.$message({
             showClose: true,
             message: '请选择发送人',
+            duration: 2000
+          });
+          return '';
+        }
+        if (e && this.form.zhuangtai=='caogao' && this.toData.length >1) {
+          this.$message({
+            showClose: true,
+            message: '请只选择你的上级',
             duration: 2000
           });
           return '';

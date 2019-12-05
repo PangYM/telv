@@ -131,7 +131,7 @@
         </div>
       </el-row>
       <div v-if="xiugai" class="upload">
-        <el-upload drag ref="upload" :action="baocunfujian" :data="upload" :on-change="handlechange" :on-remove="handleremove" :file-list="form.fujianList" multiple>
+        <el-upload drag ref="upload" :action="baocunfujian" :on-success="onsuccess" :data="upload" :on-change="handlechange" :on-remove="handleremove" :file-list="form.fujianList" multiple>
           <i class="el-icon-upload"></i>
           <div class="el-upload__text">
             将附件拖到此处，或
@@ -142,21 +142,14 @@
     </div>
     <div v-else>
       <el-button type="primary" @click="piyuejilu">关闭</el-button>
-      <el-button type="primary" @click="gaibianweichuli">3天未处理</el-button>
-      <div v-if="weichuli==0">
-        <el-table border :data="shenyuejilu" stripe style="width: 100%;margin-top:30px;" :default-sort="{prop: 'wancheng', order: 'descending'}">
+      <div>
+        <el-table border :data="weichulilist" stripe style="width: 100%;margin-top:30px;" :default-sort="{prop: 'tianshu', order: 'descending'}">
           <el-table-column sortable prop="name" align="center" width="200" label="人员"></el-table-column>
-          <el-table-column sortable prop="laiwenren" align="center" min-width="250" show-overflow-tooltip label="来文人"></el-table-column>
-          <el-table-column sortable prop="laiwentime" align="center" label="来文时间" width="200"></el-table-column>
-          <el-table-column sortable prop="endtime" align="center" width="200" label="结束时间"></el-table-column>
-          <el-table-column sortable prop="wancheng" fixed="right" align="center" min-width="250" show-overflow-tooltip label="操作"></el-table-column>
-        </el-table>
-      </div>
-      <div v-else>
-        <el-table border :data="weichulilist" stripe style="width: 100%;margin-top:30px;" :default-sort="{prop: 'wancheng', order: 'descending'}">
-          <el-table-column sortable prop="name" align="center" width="200" label="人员"></el-table-column>
-          <el-table-column sortable prop="wancheng" align="center" min-width="250" show-overflow-tooltip label="天数"></el-table-column>
-          <el-table-column sortable prop="laiwentime" fixed="right" align="center" label="时间" width="200"></el-table-column>
+          <el-table-column sortable prop="laiwentime" align="center" width="200" label="接收时间"></el-table-column>
+          <el-table-column sortable prop="laiwenren" align="center" width="200" label="接收对象"></el-table-column>
+          <el-table-column sortable prop="endtime" align="center" label="完成时间" width="200"></el-table-column>
+          <el-table-column sortable prop="wancheng" align="center" label="完成状态" width="200"></el-table-column>
+          <el-table-column sortable prop="tianshu" align="center" label="超时天数" width="200"></el-table-column>
         </el-table>
       </div>
     </div>
@@ -191,6 +184,18 @@
               url: this.baseurl + '/data/fujian/' + this.form.wendangid + '/' + this.form.fileList[i].name
             });
           }
+          for (var userid in this.form.shenpihis) {
+            var newshenpi=this.form.shenpihis[userid];
+            var aaa = new Date();
+            var bbb = new Date(this.form.shenpihis[userid]['laiwentime']);
+            if (this.form.shenpihis[userid]['wancheng'] == 0) {
+              newshenpi['tianshu']=parseInt((aaa.getTime() - bbb.getTime()) / 86400000);
+            }
+            else{
+              newshenpi['tianshu']=0;
+            }
+            this.weichulilist.push(newshenpi);
+          }
         });
       } else {
         API.getfawenhao().then(({
@@ -218,8 +223,7 @@
         xiugai: 1,
         yuedu: 0,
         fasong: 1,
-        weichuli: 0,
-        weichulilist: [],
+        weichulilist:[],
         title: ['未选列表', '已选列表'],
         mode: 'transfer',
         fromData: [],
@@ -256,17 +260,9 @@
       };
     },
     methods: {
-      gaibianweichuli() {
-        this.weichuli = 1 - this.weichuli;
-        if (this.weichulilist.length == 0) {
-          for (var userid in this.form.shenpihis) {
-            var aaa = new Date();
-            var bbb = new Date(this.form.shenpihis[userid]['laiwentime']);
-            if (this.form.shenpihis[userid]['wancheng'] == 0 && (aaa.getTime() - bbb.getTime() >= 259200000)) {
-              this.weichulilist.push(this.form.shenpihis[userid]);
-              this.weichulilist[this.weichulilist.length - 1]['wancheng'] = parseInt((aaa.getTime() - bbb.getTime()) / 86400000);
-            }
-          }
+      onsuccess(response, file, fileList){
+        if(this.form.biaoti==''){
+          this.form.biaoti=file.name.split('.')[0];
         }
       },
       getToday() {

@@ -37,8 +37,8 @@
         min-width="200"
       >
         <template slot-scope="scope">
-          <a v-if="scope.row.weidu" :style="{'color': '#008B00'}">{{scope.row.biaoti}}</a>
-          <a v-else :style="{'color': '#000000'}">{{scope.row.biaoti}}</a>
+          <a v-if="scope.row.weidu" :style="{'color': '#008B00'}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
+          <a v-else :style="{'color': '#000000'}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
         </template>
       </el-table-column>
       <el-table-column

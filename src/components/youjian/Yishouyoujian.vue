@@ -37,8 +37,8 @@
         min-width="200"
       >
         <template slot-scope="scope">
-          <a v-if="scope.row.weidu" :style="{'color': '#008B00'}">{{scope.row.biaoti}}</a>
-          <a v-else :style="{'color': '#000000'}">{{scope.row.biaoti}}</a>
+          <a v-if="scope.row.weidu" :style="{'color': '#008B00'}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
+          <a v-else :style="{'color': '#000000'}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
         </template>
       </el-table-column>
       <el-table-column
@@ -76,7 +76,7 @@
       <el-table-column fixed="right" align="center" width="180" label="操作">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
-          <el-button size="mini" type="primary" @click="handleDele(scope.$index, scope.row)">删除</el-button>
+          <el-button size="mini" type="danger" @click="handleDele(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

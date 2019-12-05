@@ -44,12 +44,15 @@ instance.interceptors.response.use(
 );
 
 //基地址
-export const base = 'http://10.190.177.115';
-// export const base = 'http://localhost';
-// export const base = 'http://192.168.199.207';
+// export const base = 'http://10.190.177.115';
+export const base = 'http://localhost';
+// export const base = 'http://192.168.199.150';
 export const port = ':16888/api/';
 export const baseurl = base + port;
 //用户登录
+function getcuibanmingdan(data) {
+    return instance.post(baseurl + 'getcuibanmingdan', data);
+}
 function userLogin(data) {
     return instance.post(baseurl + 'userLogin', data);
 }
@@ -277,7 +280,13 @@ function getshouwenduban(data) {
 function shanchuyoujian(data) {
     return instance.post(baseurl + 'shanchuyoujian', data);
 }
+//回复邮件
+function huifuyoujian(data) {
+    return instance.post(baseurl + 'huifuyoujian', data);
+}
 export {
+    huifuyoujian,
+    getcuibanmingdan,
     shanchuyoujian,
     getshouwenduban,
     tongzhidongyun,

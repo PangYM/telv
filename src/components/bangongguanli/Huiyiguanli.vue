@@ -30,7 +30,15 @@
       style="width: 100%"
       :default-sort="{prop: 'riqi', order: 'descending'}"
     >
-      <el-table-column sortable prop="biaoti" label="会议主题" align="center" min-width="200"></el-table-column>
+      <el-table-column sortable prop="biaoti" label="会议主题" align="center" min-width="200">
+        <template slot-scope="scope">
+          <a
+            size="mini"
+            type="primary"
+            @click="handleEdit(scope.$index, scope.row)"
+          >{{scope.row.biaoti}}</a>
+        </template>
+      </el-table-column>
       <el-table-column sortable prop="nigaoren" label="发起人" align="center" width="120"></el-table-column>
       <el-table-column sortable prop="didian" align="center" width="120" label="会议地点"></el-table-column>
       <el-table-column sortable prop="riqi" align="center" width="120" label="会议日期"></el-table-column>

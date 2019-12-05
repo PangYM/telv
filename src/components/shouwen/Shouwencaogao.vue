@@ -25,7 +25,15 @@
         min-width="250"
         show-overflow-tooltip
         label="标题"
-      ></el-table-column>
+      >
+      <template slot-scope="scope">
+          <a
+            size="mini"
+            type="primary"
+            @click="handleEdit(scope.$index, scope.row)"
+          >{{scope.row.biaoti}}</a>
+        </template>
+      </el-table-column>
       <el-table-column
         sortable
         prop="starttime"

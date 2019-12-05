@@ -32,7 +32,15 @@
       style="width: 100%"
       :default-sort="{prop: 'starttime', order: 'descending'}"
     >
-      <el-table-column sortable prop="biaoti" label="提醒标题" align="center" min-width="200"></el-table-column>
+      <el-table-column sortable prop="biaoti" label="提醒标题" align="center" min-width="200">
+        <template slot-scope="scope">
+          <a
+            size="mini"
+            type="primary"
+            @click="handleEdit(scope.$index, scope.row)"
+          >{{scope.row.biaoti}}</a>
+        </template>
+      </el-table-column>
       <el-table-column sortable prop="nigaoren" label="发起人" align="center" width="120"></el-table-column>
       <el-table-column sortable prop="jiange" align="center" width="120" label="提醒间隔">
         <template slot-scope="scope">

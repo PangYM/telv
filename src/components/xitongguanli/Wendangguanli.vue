@@ -34,13 +34,18 @@
         <el-button size="medium" type="primary" @click="chaxun">查询</el-button>
       </div>
       <el-table border :data="qiefendataTable" stripe style="width: 100%" :default-sort="{prop: 'starttime', order: 'descending'}">
-        <el-table-column sortable prop="biaoti" align="center" label="标题" show-overflow-tooltip min-width="200"></el-table-column>
+        <el-table-column sortable prop="biaoti" align="center" label="标题" show-overflow-tooltip min-width="200">
+          <template slot-scope="scope">
+            <a size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
+</template>
+        </el-table-column>
         <el-table-column sortable prop="nigaoren" align="center" label="发文人" show-overflow-tooltip width="108"></el-table-column>
         <el-table-column sortable prop="starttime" align="center" label="发文时间" show-overflow-tooltip width="108"></el-table-column>
         <el-table-column fixed="right" align="center" width="160" label="操作">
-          <template slot-scope="scope">
-              <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+<template slot-scope="scope">
+  <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">
+    查看</el-button>
+  <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
 </template>
         </el-table-column>
       </el-table>
@@ -98,7 +103,12 @@
                 message: '删除文档成功！',
                 duration: 2000
               });
-              this.dataTable = [];
+              this.qiefendataTable.splice(index, 1);
+              for (var i = 0; i < this.dataTable.length; ++i) {
+                if (this.dataTable[i].wendangid == row.wendangid) {
+                  this.dataTable.splice(i, 1);
+                }
+              }
             }
           });
         });
@@ -189,7 +199,7 @@
           });
         } else if (row.doctype == 'youjian') {
           this.$router.push({
-            path: '/person/fasongyoujian',
+            path: '/youjian/fasongyoujian',
             query: {
               wendangid: row.wendangid
             }

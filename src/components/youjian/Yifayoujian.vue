@@ -16,7 +16,7 @@
       <el-button type="primary" @click="chaxun">查询</el-button>
     </div>
     <el-table
-      border
+      border=""
       :data="qiefendataTable"
       stripe
       style="width: 100%"
@@ -29,7 +29,15 @@
         label="标题"
         show-overflow-tooltip
         min-width="200"
-      ></el-table-column>
+      >
+        <template slot-scope="scope">
+          <a
+            size="mini"
+            type="primary"
+            @click="handleEdit(scope.$index, scope.row)"
+          >{{scope.row.biaoti}}</a>
+        </template>
+      </el-table-column>
       <el-table-column
         sortable
         prop="starttime"
@@ -47,7 +55,7 @@
     <div class="pailei">
       <el-pagination
         @current-change="handleCurrentChange"
-        background
+        background=""
         :page-size="20"
         :pager-count="11"
         layout="prev, pager, next"
