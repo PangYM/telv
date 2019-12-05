@@ -14,7 +14,9 @@
     <div class="chaxun">
       <el-input class="chaxun1" size="medium" v-model="query" placeholder="全文搜索" @keyup.enter.native="chaxun"></el-input>
       <el-button size="medium" type="primary" @click="chaxun">查询</el-button>
-      <a v-if="userdata.userid=='wubo'" class="cuiban" target="_blank" :href="baseurl+'/data/催办名单.xlsx'">催办名单.xlsx</a>
+      <a class="cuiban"></a>
+      <el-button size="medium" type="primary" @click="getcuibanmingdan">重新生成催办名单</el-button>
+      <a v-if="userdata.userid=='wubo'||userdata.userid=='weiyi'" target="_blank" :href="baseurl+'/data/催办名单.xlsx'">催办名单.xlsx</a>
     </div>
     <div class="chaxun">
       标题颜色说明：
@@ -27,7 +29,7 @@
     <el-table border :data="qiefendataTable" stripe style="width: 100%" :default-sort="{prop: 'starttime', order: 'descending'}">
       <el-table-column sortable prop="biaoti" align="center" label="发文标题" show-overflow-tooltip min-width="200">
         <template slot-scope="scope">
-                                  <a :style="{'color': scope.row.clour}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
+                                    <a :style="{'color': scope.row.clour}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
 </template>
       </el-table-column>
       <el-table-column
@@ -130,11 +132,6 @@
         }
         this.qiefendataTable = this.dataTable.slice(0, 20);
       });
-      if (this.userdata.userid == 'wubo') {
-        API.getcuibanmingdan({
-          token: localStorage.getItem('token')
-        });
-      }
       this.$forceUpdate();
     },
     data() {
@@ -156,6 +153,23 @@
       };
     },
     methods: {
+      getcuibanmingdan() {
+        if (this.userdata.userid == 'wubo' || this.userdata.userid == 'weiyi') {
+          API.getcuibanmingdan({
+            token: localStorage.getItem('token')
+          }).then(({
+            data
+          }) => {
+            if (data.MSG == 'YES') {
+              this.$message({
+                type: 'success',
+                message: '生成成功!',
+                duration: 2000
+              });
+            }
+          });
+        }
+      },
       changetable(e) {
         if (e == 0) {
           this.dataTable1 = [];
