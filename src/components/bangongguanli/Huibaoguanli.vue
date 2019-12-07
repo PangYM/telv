@@ -21,25 +21,12 @@
       <a style="color: #008B00">未完成</a>，
       <a style="color: #000000">已完成</a>
     </div>
-    <el-table
-      border
-      :data="qiefendataTable"
-      stripe
-      style="width: 100%"
-      :default-sort="{prop: 'starttime', order: 'descending'}"
-    >
-      <el-table-column
-        sortable
-        prop="biaoti"
-        align="center"
-        label="标题"
-        show-overflow-tooltip
-        min-width="200"
-      >
+    <el-table border :data="qiefendataTable" stripe style="width: 100%">
+      <el-table-column sortable prop="biaoti" align="center" label="标题" show-overflow-tooltip min-width="200">
         <template slot-scope="scope">
-          <a v-if="scope.row.weidu" :style="{'color': '#008B00'}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
-          <a v-else :style="{'color': '#000000'}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
-        </template>
+            <a v-if="scope.row.weidu" :style="{'color': '#008B00'}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
+            <a v-else :style="{'color': '#000000'}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
+</template>
       </el-table-column>
       <el-table-column
         sortable
@@ -74,9 +61,10 @@
         width="108"
       ></el-table-column>
       <el-table-column fixed="right" align="center" width="120" label="操作">
-        <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
-        </template>
+<template slot-scope="scope">
+  <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">
+    查看</el-button>
+</template>
       </el-table-column>
     </el-table>
     <div class="pailei">
@@ -93,77 +81,82 @@
 </template>
 
 <script>
-import * as API from '@/api';
-export default {
-  components: {},
-  created() {
-    API.getjieshouguanli({
-      token: localStorage.getItem('token'),
-      doctype: 'huibao',
-      query: this.query
-    }).then(({ data }) => {
-      this.dataTable = data.dataTable;
-      this.qiefendataTable = this.dataTable.slice(0, 20);
-    });
-  },
-  data() {
-    return {
-      query: '',
-      qiefendataTable: [],
-      dataTable: []
-    };
-  },
-  methods: {
-    handleGoUrl() {
-      this.$router.push({ path: '/bangongguanli/huibao' });
-    },
-    chaxun() {
+  import * as API from '@/api';
+  export default {
+    components: {},
+    created() {
       API.getjieshouguanli({
         token: localStorage.getItem('token'),
         doctype: 'huibao',
         query: this.query
-      }).then(({ data }) => {
+      }).then(({
+        data
+      }) => {
         this.dataTable = data.dataTable;
         this.qiefendataTable = this.dataTable.slice(0, 20);
       });
     },
-    handleCurrentChange(val) {
-      this.qiefendataTable = this.dataTable.slice(20 * val - 20, val * 20);
+    data() {
+      return {
+        query: '',
+        qiefendataTable: [],
+        dataTable: []
+      };
     },
-    handleEdit(index, row) {
-      this.$router.push({
-        path: '/bangongguanli/huibao',
-        query: {
-          wendangid: row.wendangid
-        }
-      });
+    methods: {
+      handleGoUrl() {
+        this.$router.push({
+          path: '/bangongguanli/huibao'
+        });
+      },
+      chaxun() {
+        API.getjieshouguanli({
+          token: localStorage.getItem('token'),
+          doctype: 'huibao',
+          query: this.query
+        }).then(({
+          data
+        }) => {
+          this.dataTable = data.dataTable;
+          this.qiefendataTable = this.dataTable.slice(0, 20);
+        });
+      },
+      handleCurrentChange(val) {
+        this.qiefendataTable = this.dataTable.slice(20 * val - 20, val * 20);
+      },
+      handleEdit(index, row) {
+        this.$router.push({
+          path: '/bangongguanli/huibao',
+          query: {
+            wendangid: row.wendangid
+          }
+        });
+      }
     }
-  }
-};
+  };
 </script>
 
 <style lang="scss">
-.caogao {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.chaxun {
-  height: 40px;
-  line-height: 40px;
-  background: #efefef;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 20px;
-  display: block;
-  .chaxun1 {
-    width: 300px;
+  .caogao {
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
-}
-.pailei {
-  margin-top: 30px;
-  text-align: center;
-}
+  .chaxun {
+    height: 40px;
+    line-height: 40px;
+    background: #efefef;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    display: block;
+    .chaxun1 {
+      width: 300px;
+    }
+  }
+  .pailei {
+    margin-top: 30px;
+    text-align: center;
+  }
 </style>

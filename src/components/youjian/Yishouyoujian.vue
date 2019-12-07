@@ -26,7 +26,6 @@
       :data="qiefendataTable"
       stripe
       style="width: 100%"
-      :default-sort="{prop: 'starttime', order: 'descending'}"
     >
       <el-table-column
         sortable

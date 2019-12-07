@@ -28,7 +28,6 @@
       stripe
       border
       style="width: 100%"
-      :default-sort="{prop: 'riqi', order: 'descending'}"
     >
       <el-table-column sortable prop="biaoti" label="会议主题" align="center" min-width="200">
         <template slot-scope="scope">

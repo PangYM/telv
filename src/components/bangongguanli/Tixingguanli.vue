@@ -30,7 +30,6 @@
       stripe
       border
       style="width: 100%"
-      :default-sort="{prop: 'starttime', order: 'descending'}"
     >
       <el-table-column sortable prop="biaoti" label="提醒标题" align="center" min-width="200">
         <template slot-scope="scope">

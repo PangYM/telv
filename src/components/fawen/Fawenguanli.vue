@@ -23,7 +23,7 @@
       <a style="color: #DA70D6" @click="changetable(3)">审批已撤销</a>，
       <a style="color: #9400D3" @click="changetable(2)">退文至发起人</a>
     </div>
-    <el-table border :data="qiefendataTable" stripe style="width: 100%" :default-sort="{prop: 'starttime', order: 'descending'}">
+    <el-table border :data="qiefendataTable" stripe style="width: 100%">
       <el-table-column sortable prop="biaoti" align="center" label="发文标题" show-overflow-tooltip min-width="200">
         <template slot-scope="scope">
                           <a :style="{'color': scope.row.clour}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>

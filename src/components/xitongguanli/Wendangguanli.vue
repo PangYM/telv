@@ -33,7 +33,7 @@
         </el-select>
         <el-button size="medium" type="primary" @click="chaxun">查询</el-button>
       </div>
-      <el-table border :data="qiefendataTable" stripe style="width: 100%" :default-sort="{prop: 'starttime', order: 'descending'}">
+      <el-table border :data="qiefendataTable" stripe style="width: 100%">
         <el-table-column sortable prop="biaoti" align="center" label="标题" show-overflow-tooltip min-width="200">
           <template slot-scope="scope">
             <a size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>

@@ -74,7 +74,10 @@
                 <span>发文督办</span>
               </el-col>
               <el-col :span="8" class="tr">
-                <el-button type="text" @click="handleGoUrl('/fawen/fawenduban')">
+                <el-button v-if="userdata.userid=='wubo'" type="text" @click="handleGoUrl('/fawen/fawenduban')">
+                  <i>{{fawenduban}}</i>
+                </el-button>
+                <el-button v-else type="text" @click="handleGoUrl('/fawen/daibanfawen')">
                   <i>{{fawenduban}}</i>
                 </el-button>
               </el-col>
@@ -90,7 +93,10 @@
                 <span>收文督办</span>
               </el-col>
               <el-col :span="8" class="tr">
-                <el-button type="text" @click="handleGoUrl('/shouwen/shouwenduban')">
+                <el-button v-if="userdata.userid=='wubo'" type="text" @click="handleGoUrl('/shouwen/shouwenduban')">
+                  <i>{{shouwenduban}}</i>
+                </el-button>
+                <el-button v-else type="text" @click="handleGoUrl('/shouwen/daibanshouwen')">
                   <i>{{shouwenduban}}</i>
                 </el-button>
               </el-col>
@@ -113,8 +119,8 @@
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span class="title">
-                        <i class="iconfont icon-remind1"></i> 通知公告
-                      </span>
+                              <i class="iconfont icon-remind1"></i> 通知公告
+                            </span>
             <el-tooltip class="item" effect="dark" content="查看更多" placement="top-start">
               <i class="el-icon-more-outline" style="float: right; padding: 3px 0" @click="handleGoUrl('/bangongguanli/gonggaoguanli')"></i>
             </el-tooltip>
@@ -123,10 +129,10 @@
             <el-table :data="gonggao" stripe style="width: 100%">
               <el-table-column prop="biaoti" align="center" label="标题" min-width="150" show-overflow-tooltip>
                 <template slot-scope="scope">
-                            <div @click="handleEdit(0, scope.row)">
-                              <a v-if="scope.row.weidu" :style="{'color': '#008B00'}">{{scope.row.biaoti}}</a>
-                              <a v-else :style="{'color': '#000000'}">{{scope.row.biaoti}}</a>
-                            </div>
+                                  <div @click="handleEdit(0, scope.row)">
+                                    <a v-if="scope.row.weidu" :style="{'color': '#008B00'}">{{scope.row.biaoti}}</a>
+                                    <a v-else :style="{'color': '#000000'}">{{scope.row.biaoti}}</a>
+                                  </div>
 </template>
               </el-table-column>
               <el-table-column prop="nigaoren" align="center" label="发起人" width="100"></el-table-column>
@@ -239,6 +245,7 @@
     },
     data() {
       return {
+        userdata: JSON.parse(localStorage.getItem('userdata')),
         cishu: 144,
         ifnew: 1,
         lunbotulist: [],
@@ -283,7 +290,7 @@
             this.$message.success({
               showClose: true,
               message: '我的督办已更新请查看',
-              duration: 5000
+              duration: 3600000
             });
           }
           this.duban = data.duban;
@@ -291,7 +298,7 @@
             this.$message.success({
               showClose: true,
               message: '我的汇报已更新请查看',
-              duration: 5000
+              duration: 3600000
             });
           }
           this.huibao = data.huibao;
@@ -299,7 +306,7 @@
             this.$message.success({
               showClose: true,
               message: '未读邮件已更新请查看',
-              duration: 5000
+              duration: 3600000
             });
           }
           this.youjian = data.youjian;
@@ -307,26 +314,28 @@
             this.$message.success({
               showClose: true,
               message: '提醒待办已更新请查看',
-              duration: 5000
+              duration: 3600000
             });
           }
           this.tixing = data.tixing;
-          if (this.fawenduban != data.fawenduban && this.fawenduban != 0) {
-            this.$message.success({
-              showClose: true,
-              message: '发文督办已更新请查看',
-              duration: 5000
-            });
+          if (this.userdata.userid == 'wubo') {
+            if (this.fawenduban != data.fawenduban && this.fawenduban != 0) {
+              this.$message.success({
+                showClose: true,
+                message: '发文督办已更新请查看',
+                duration: 3600000
+              });
+            }
+            this.fawenduban = data.fawenduban;
+            if (this.shouwenduban != data.shouwenduban && this.shouwenduban != 0) {
+              this.$message.success({
+                showClose: true,
+                message: '收文督办已更新请查看',
+                duration: 3600000
+              });
+            }
+            this.shouwenduban = data.shouwenduban;
           }
-          this.fawenduban = data.fawenduban;
-          if (this.shouwenduban != data.shouwenduban && this.shouwenduban != 0) {
-            this.$message.success({
-              showClose: true,
-              message: '收文督办已更新请查看',
-              duration: 5000
-            });
-          }
-          this.shouwenduban = data.shouwenduban;
         });
         API.getgonggaoguanli({
           token: localStorage.getItem('token'),
@@ -344,6 +353,14 @@
         }).then(({
           data
         }) => {
+          if (this.fawenduban != data.dataTable.length && this.fawenduban != 0) {
+            this.$message.success({
+              showClose: true,
+              message: '发文督办已更新请查看',
+              duration: 3600000
+            });
+          }
+          this.fawenduban = data.dataTable.length;
           this.daibanfawen = data.dataTable.slice(0, 5);
         });
         API.getdaibanfawen({
@@ -353,9 +370,17 @@
         }).then(({
           data
         }) => {
+          if (this.shouwenduban != data.dataTable.length && this.shouwenduban != 0) {
+            this.$message.success({
+              showClose: true,
+              message: '收文督办已更新请查看',
+              duration: 3600000
+            });
+          }
+          this.shouwenduban = data.dataTable.length;
           this.daibanshouwen = data.dataTable.slice(0, 5);
         });
-        this.cishu -= 0;
+        this.cishu -= 1;
         if (this.cishu > 0) {
           setTimeout(this.gengxin, 600000);
         }

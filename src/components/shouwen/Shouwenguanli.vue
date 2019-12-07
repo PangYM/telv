@@ -12,13 +12,7 @@
     </el-row>
     <!--list-->
     <div class="chaxun">
-      <el-input
-        class="chaxun1"
-        size="medium"
-        v-model="query"
-        placeholder="全文搜索"
-        @keyup.enter.native="chaxun"
-      ></el-input>
+      <el-input class="chaxun1" size="medium" v-model="query" placeholder="全文搜索" @keyup.enter.native="chaxun"></el-input>
       <el-button size="medium" type="primary" @click="chaxun">查询</el-button>
     </div>
     <div class="chaxun">
@@ -29,24 +23,11 @@
       <a style="color: #DA70D6" @click="changetable(3)">审批已撤销</a>，
       <a style="color: #9400D3" @click="changetable(2)">退文至发起人</a>
     </div>
-    <el-table
-      border
-      :data="qiefendataTable"
-      stripe
-      style="width: 100%"
-      :default-sort="{prop: 'starttime', order: 'descending'}"
-    >
-      <el-table-column
-        sortable
-        prop="biaoti"
-        align="center"
-        label="来文标题"
-        show-overflow-tooltip
-        min-width="200"
-      >
+    <el-table border :data="qiefendataTable" stripe style="width: 100%">
+      <el-table-column sortable prop="biaoti" align="center" label="来文标题" show-overflow-tooltip min-width="200">
         <template slot-scope="scope">
-          <a :style="{'color': scope.row.clour}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
-        </template>
+            <a :style="{'color': scope.row.clour}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
+</template>
       </el-table-column>
       <el-table-column
         sortable
@@ -96,9 +77,9 @@
         show-overflow-tooltip
         width="100"
       >
-        <template slot-scope="scope">
-          <a :style="{'color': scope.row.clour}">{{scope.row.zhuangtai}}</a>
-        </template>
+<template slot-scope="scope">
+  <a :style="{'color': scope.row.clour}">{{scope.row.zhuangtai}}</a>
+</template>
       </el-table-column>
       <el-table-column
         prop="liuchenging"
@@ -108,9 +89,10 @@
         width="130"
       ></el-table-column>
       <el-table-column fixed="right" align="center" width="120" label="操作">
-        <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">查看操作记录</el-button>
-        </template>
+<template slot-scope="scope">
+  <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">
+    查看操作记录</el-button>
+</template>
       </el-table-column>
     </el-table>
     <div class="pailei">
@@ -128,42 +110,44 @@
 </template>
 
 <script>
-import * as API from '@/api';
-export default {
-  components: {},
-  created() {
-    API.getshouwenguanli({
-      token: localStorage.getItem('token'),
-      doctype: 'shouwen',
-      query: this.query
-    }).then(({ data }) => {
-      this.dataTable = data.dataTable;
-      this.dataTable1 = data.dataTable;
-      for (var i = 0; i < this.dataTable.length; ++i) {
-        this.dataTable[i].clour = this.zhuangtai_clour[this.dataTable[i].zhuangtai];
-        this.dataTable1[i].clour = this.zhuangtai_clour[this.dataTable1[i].zhuangtai];
-      }
-      this.qiefendataTable = this.dataTable.slice(0, 20);
-    });
-  },
-  data() {
-    return {
-      query: '',
-      qiefendataTable: [],
-      dataTable: [],
-      dataTable1: [],
-      currentPage: 1,
-      zhuangtai_clour: {
-        已完成: '#008B00',
-        未通过: '#FF0000',
-        审批中: '#EEB422',
-        审批: '#DA70D6',
-        退文: '#9400D3'
-      }
-    };
-  },
-  methods: {
-    changetable(e) {
+  import * as API from '@/api';
+  export default {
+    components: {},
+    created() {
+      API.getshouwenguanli({
+        token: localStorage.getItem('token'),
+        doctype: 'shouwen',
+        query: this.query
+      }).then(({
+        data
+      }) => {
+        this.dataTable = data.dataTable;
+        this.dataTable1 = data.dataTable;
+        for (var i = 0; i < this.dataTable.length; ++i) {
+          this.dataTable[i].clour = this.zhuangtai_clour[this.dataTable[i].zhuangtai];
+          this.dataTable1[i].clour = this.zhuangtai_clour[this.dataTable1[i].zhuangtai];
+        }
+        this.qiefendataTable = this.dataTable.slice(0, 20);
+      });
+    },
+    data() {
+      return {
+        query: '',
+        qiefendataTable: [],
+        dataTable: [],
+        dataTable1: [],
+        currentPage: 1,
+        zhuangtai_clour: {
+          已完成: '#008B00',
+          未通过: '#FF0000',
+          审批中: '#EEB422',
+          审批: '#DA70D6',
+          退文: '#9400D3'
+        }
+      };
+    },
+    methods: {
+      changetable(e) {
         if (e == 0) {
           this.dataTable1 = [];
           for (var i = 0; i < this.dataTable.length; ++i) {
@@ -197,56 +181,59 @@ export default {
           this.currentPage = 1;
         }
       },
-    chaxun() {
-      API.getshouwenguanli({
-        token: localStorage.getItem('token'),
-        doctype: 'shouwen',
-        query: this.query
-      }).then(({ data }) => {
-        this.dataTable = data.dataTable;
-        this.dataTable1 = data.dataTable;
-        for (var i = 0; i < this.dataTable.length; ++i) {
-          this.dataTable[i].clour = this.zhuangtai_clour[this.dataTable[i].zhuangtai];
-          this.dataTable1[i].clour = this.zhuangtai_clour[this.dataTable1[i].zhuangtai];
-        }
-        this.qiefendataTable = this.dataTable.slice(0, 20);
-      });
-    },
-    handleCurrentChange(val) {
-      this.qiefendataTable = this.dataTable1.slice(20 * val - 20, val * 20);
-    },
-    handleEdit(index, row) {
-      this.$router.push({
-        path: '/shouwen/shouwendengji',
-        query: { wendangid: row.wendangid }
-      });
+      chaxun() {
+        API.getshouwenguanli({
+          token: localStorage.getItem('token'),
+          doctype: 'shouwen',
+          query: this.query
+        }).then(({
+          data
+        }) => {
+          this.dataTable = data.dataTable;
+          this.dataTable1 = data.dataTable;
+          for (var i = 0; i < this.dataTable.length; ++i) {
+            this.dataTable[i].clour = this.zhuangtai_clour[this.dataTable[i].zhuangtai];
+            this.dataTable1[i].clour = this.zhuangtai_clour[this.dataTable1[i].zhuangtai];
+          }
+          this.qiefendataTable = this.dataTable.slice(0, 20);
+        });
+      },
+      handleCurrentChange(val) {
+        this.qiefendataTable = this.dataTable1.slice(20 * val - 20, val * 20);
+      },
+      handleEdit(index, row) {
+        this.$router.push({
+          path: '/shouwen/shouwendengji',
+          query: {
+            wendangid: row.wendangid
+          }
+        });
+      }
     }
-  }
-};
+  };
 </script>
 
 <style lang="scss">
-.caogao {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.chaxun {
-  height: 40px;
-  line-height: 40px;
-  background: #efefef;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 20px;
-  display: block;
-  .chaxun1 {
-    width: 300px;
+  .caogao {
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
-}
-.pailei {
-  margin-top: 30px;
-  text-align: center;
-}
+  .chaxun {
+    height: 40px;
+    line-height: 40px;
+    background: #efefef;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    display: block;
+    .chaxun1 {
+      width: 300px;
+    }
+  }
+  .pailei {
+    margin-top: 30px;
+    text-align: center;
+  }
 </style>

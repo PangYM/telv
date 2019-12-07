@@ -44,8 +44,8 @@ instance.interceptors.response.use(
 );
 
 //基地址
-// export const base = 'http://10.190.177.115';
-export const base = 'http://localhost';
+export const base = 'http://10.190.177.115';
+// export const base = 'http://localhost';
 // export const base = 'http://192.168.199.150';
 export const port = ':16888/api/';
 export const baseurl = base + port;
