@@ -15,27 +15,15 @@
       <el-input class="chaxun1" size="medium" v-model="query" placeholder="全文搜索"></el-input>
       <el-button type="primary" @click="chaxun">查询</el-button>
     </div>
-    <el-table
-      border=""
-      :data="qiefendataTable"
-      stripe
-      style="width: 100%"
-    >
-      <el-table-column
-        sortable
-        prop="biaoti"
-        align="center"
-        label="标题"
-        show-overflow-tooltip
-        min-width="200"
-      >
+    <el-table border="" :data="qiefendataTable" stripe style="width: 100%">
+      <el-table-column sortable prop="biaoti" align="center" label="标题" show-overflow-tooltip min-width="200">
         <template slot-scope="scope">
-          <a
-            size="mini"
-            type="primary"
-            @click="handleEdit(scope.$index, scope.row)"
-          >{{scope.row.biaoti}}</a>
-        </template>
+            <a
+              size="mini"
+              type="primary"
+              @click="handleEdit(scope.$index, scope.row)"
+            >{{scope.row.biaoti}}</a>
+</template>
       </el-table-column>
       <el-table-column
         sortable
@@ -46,14 +34,17 @@
         width="108"
       ></el-table-column>
       <el-table-column fixed="right" align="center" width="120" label="操作">
-        <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
-        </template>
+<template slot-scope="scope">
+  <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">
+    查看</el-button>
+</template>
       </el-table-column>
     </el-table>
     <div class="pailei">
       <el-pagination
+        v-if="pageshow"
         @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
         background=""
         :page-size="20"
         :pager-count="11"
@@ -65,74 +56,98 @@
 </template>
 
 <script>
-import * as API from '@/api';
-export default {
-  components: {},
-  created() {
-    API.getfasongguanli({
-      token: localStorage.getItem('token'),
-      doctype: 'youjian',
-      query: this.query
-    }).then(({ data }) => {
-      this.dataTable = data.dataTable;
-      this.qiefendataTable = this.dataTable.slice(0, 20);
-    });
-  },
-  data() {
-    return {
-      query: '',
-      qiefendataTable: [],
-      dataTable: []
-    };
-  },
-  methods: {
-    chaxun() {
+  import * as API from '@/api';
+  export default {
+    components: {},
+    created() {
       API.getfasongguanli({
         token: localStorage.getItem('token'),
         doctype: 'youjian',
         query: this.query
-      }).then(({ data }) => {
+      }).then(({
+        data
+      }) => {
         this.dataTable = data.dataTable;
         this.qiefendataTable = this.dataTable.slice(0, 20);
       });
     },
-    handleCurrentChange(val) {
-      this.qiefendataTable = this.dataTable.slice(20 * val - 20, val * 20);
+    activated() {
+      var qiangzhishuaxin = localStorage.getItem('qiangzhishuaxin');
+      localStorage.setItem('qiangzhishuaxin', 0);
+      if (qiangzhishuaxin == 1) {
+        this.pageshow = false;
+        API.getfasongguanli({
+          token: localStorage.getItem('token'),
+          doctype: 'youjian',
+          query: this.query
+        }).then(({
+          data
+        }) => {
+          this.dataTable = data.dataTable;
+          this.qiefendataTable = this.dataTable.slice(0, 20);
+        });
+        this.currentPage = 1;
+        this.pageshow = true;
+      }
     },
-    handleEdit(index, row) {
-      this.$router.push({
-        path: '/youjian/fasongyoujian',
-        query: {
-          wendangid: row.wendangid
-        }
-      });
+    data() {
+      return {
+        query: '',
+        qiefendataTable: [],
+        dataTable: [],
+        pageshow: true,
+        currentPage: 1,
+      };
+    },
+    methods: {
+      chaxun() {
+        API.getfasongguanli({
+          token: localStorage.getItem('token'),
+          doctype: 'youjian',
+          query: this.query
+        }).then(({
+          data
+        }) => {
+          this.dataTable = data.dataTable;
+          this.qiefendataTable = this.dataTable.slice(0, 20);
+        });
+      },
+      handleCurrentChange(val) {
+        this.qiefendataTable = this.dataTable.slice(20 * val - 20, val * 20);
+      },
+      handleEdit(index, row) {
+        this.$router.push({
+          path: '/youjian/fasongyoujian',
+          query: {
+            wendangid: row.wendangid
+          }
+        });
+      }
     }
-  }
-};
+  };
 </script>
 
 <style lang="scss">
-.caogao {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.chaxun {
-  height: 40px;
-  line-height: 40px;
-  background: #efefef;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 20px;
-  display: block;
-  .chaxun1 {
-    width: 300px;
+  .caogao {
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
-}
-.pailei {
-  margin-top: 30px;
-  text-align: center;
-}
+  .chaxun {
+    height: 40px;
+    line-height: 40px;
+    background: #efefef;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    display: block;
+    .chaxun1 {
+      width: 300px;
+    }
+  }
+  .pailei {
+    margin-top: 30px;
+    text-align: center;
+  }
 </style>

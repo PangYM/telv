@@ -65,22 +65,22 @@ const Login = resolve => require(['@/components/Login'], resolve);
 Vue.use(Router);
 
 let router = new Router({
-  scrollBehavior (to, from, savedPosition) {    
-          try {
-            if (from.meta.keepAlive) {    
-              from.meta.savedPosition = localStorage.getItem('scrollTop');      
-         }        
-          } catch (error) {
-            
-          }
-          try {
-            if(to.meta.keepAlive){
-              document.getElementsByClassName('content-container')[0].scrollTop = to.meta.savedPosition;
-            } 
-          } catch (error) {
-            
-          }
-},
+  scrollBehavior(to, from, savedPosition) {
+    try {
+      if (from.meta.keepAlive) {
+        from.meta.savedPosition = localStorage.getItem('scrollTop');
+      }
+    } catch (error) {
+
+    }
+    try {
+      if (to.meta.keepAlive) {
+        document.getElementsByClassName('content-container')[0].scrollTop = to.meta.savedPosition;
+      }
+    } catch (error) {
+
+    }
+  },
   // mode: 'history',
   routes: [
     {
@@ -88,8 +88,8 @@ let router = new Router({
       component: Login,
       name: '登录',
       meta: {
-        requiresAuth: false,
-        keepAlive:false,
+        requireAuth: false,
+        keepAlive: false,
       },
     },
     {
@@ -97,8 +97,8 @@ let router = new Router({
       component: Gonggao,
       name: '公告发起',
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
     },
     {
@@ -106,8 +106,8 @@ let router = new Router({
       component: Duban,
       name: '督办',
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
     },
     {
@@ -115,8 +115,8 @@ let router = new Router({
       component: Huibao,
       name: '月度汇报',
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
     },
     {
@@ -124,8 +124,8 @@ let router = new Router({
       component: Huiyifaqi,
       name: '会议发起',
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
     },
     {
@@ -133,8 +133,8 @@ let router = new Router({
       component: Tixing,
       name: '新增提醒',
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
     },
     {
@@ -142,8 +142,8 @@ let router = new Router({
       component: Gongwen,
       name: '公文印发单',
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
     },
     {
@@ -151,8 +151,8 @@ let router = new Router({
       component: Fawen,
       name: '发文',
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
     },
     {
@@ -160,8 +160,8 @@ let router = new Router({
       component: Huiyi,
       name: '会议发文',
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
     },
     {
@@ -169,8 +169,8 @@ let router = new Router({
       component: Dangwu,
       name: '党务发文',
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
     },
     {
@@ -178,8 +178,8 @@ let router = new Router({
       component: Dangwuhuiyi,
       name: '党务会议发文',
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
     },
     {
@@ -187,8 +187,8 @@ let router = new Router({
       component: Qianbao,
       name: '签报',
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
     },
     {
@@ -196,8 +196,8 @@ let router = new Router({
       component: Yian,
       name: '议案报告',
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
     },
     {
@@ -205,8 +205,8 @@ let router = new Router({
       component: Gouzhi,
       name: '购置申请',
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
     },
     {
@@ -215,8 +215,8 @@ let router = new Router({
       name: '首页',
       redirect: '/main',
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
       children: [
         {
@@ -224,8 +224,8 @@ let router = new Router({
           component: Main,
           name: '首页',
           meta: {
-            requiresAuth: true,
-            keepAlive:false,
+            requireAuth: true,
+            keepAlive: false,
           },
         },
         {
@@ -233,8 +233,8 @@ let router = new Router({
           component: Showhtml,
           name: 'showhtml',
           meta: {
-            requiresAuth: true,
-            keepAlive:false,
+            requireAuth: true,
+            keepAlive: false,
           },
         },
       ]
@@ -246,8 +246,8 @@ let router = new Router({
       redirect: '/main',
       menuShow: true,
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
       children: [
         {
@@ -256,8 +256,8 @@ let router = new Router({
           name: '发送邮件',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:false,
+            requireAuth: true,
+            keepAlive: false,
           },
         },
         {
@@ -266,8 +266,8 @@ let router = new Router({
           name: '已收邮件',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
         {
@@ -276,8 +276,8 @@ let router = new Router({
           name: '已发邮件',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
         {
@@ -286,8 +286,8 @@ let router = new Router({
           name: '草稿箱',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
       ]
@@ -298,8 +298,8 @@ let router = new Router({
       name: '公文发文',
       menuShow: true,
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
       children: [
         {
@@ -307,8 +307,8 @@ let router = new Router({
           name: '发文稿纸',
           component: Gaozhi,
           meta: {
-            requiresAuth: true,
-            keepAlive:false,
+            requireAuth: true,
+            keepAlive: false,
           },
         },
         {
@@ -317,8 +317,8 @@ let router = new Router({
           name: '待办发文',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
         {
@@ -327,8 +327,8 @@ let router = new Router({
           name: '发文督办',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
         {
@@ -337,8 +337,8 @@ let router = new Router({
           name: '发文管理',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
         {
@@ -347,8 +347,8 @@ let router = new Router({
           name: '发文草稿',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
         {
@@ -357,8 +357,8 @@ let router = new Router({
           name: '我的发文',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
       ]
@@ -369,8 +369,8 @@ let router = new Router({
       name: '公文收文',
       menuShow: true,
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
       children: [
         {
@@ -379,8 +379,8 @@ let router = new Router({
           name: '收文登记',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:false,
+            requireAuth: true,
+            keepAlive: false,
           },
         },
         {
@@ -389,8 +389,8 @@ let router = new Router({
           name: '待办收文',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
         {
@@ -399,8 +399,8 @@ let router = new Router({
           name: '收文督办',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
         {
@@ -409,8 +409,8 @@ let router = new Router({
           name: '收文管理',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
         {
@@ -419,8 +419,8 @@ let router = new Router({
           name: '收文草稿',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
         {
@@ -429,8 +429,8 @@ let router = new Router({
           name: '已发收文',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
       ]
@@ -441,8 +441,8 @@ let router = new Router({
       name: '办公管理',
       menuShow: true,
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
       children: [
         {
@@ -451,8 +451,8 @@ let router = new Router({
           name: '公告管理',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
         {
@@ -461,8 +461,8 @@ let router = new Router({
           name: '督办管理',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
         {
@@ -471,8 +471,8 @@ let router = new Router({
           name: '汇报管理',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
         {
@@ -481,8 +481,8 @@ let router = new Router({
           name: '会议管理',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
         {
@@ -491,8 +491,8 @@ let router = new Router({
           name: '部门文件',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:false,
+            requireAuth: true,
+            keepAlive: false,
           },
         },
         {
@@ -501,8 +501,8 @@ let router = new Router({
           name: '提醒管理',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
         {
@@ -511,8 +511,8 @@ let router = new Router({
           name: '通讯录',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:false,
+            requireAuth: true,
+            keepAlive: false,
           },
         },
         {
@@ -521,8 +521,8 @@ let router = new Router({
           name: '常用组',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:false,
+            requireAuth: true,
+            keepAlive: false,
           },
         },
       ]
@@ -533,8 +533,8 @@ let router = new Router({
       name: '系统管理',
       menuShow: true,
       meta: {
-        requiresAuth: true,
-        keepAlive:false,
+        requireAuth: true,
+        keepAlive: false,
       },
       children: [
         {
@@ -543,8 +543,8 @@ let router = new Router({
           name: '我的信息',
           menuShow: false,
           meta: {
-            requiresAuth: true,
-            keepAlive:false,
+            requireAuth: true,
+            keepAlive: false,
           },
         },
         {
@@ -553,8 +553,8 @@ let router = new Router({
           name: '我的头像',
           menuShow: false,
           meta: {
-            requiresAuth: true,
-            keepAlive:false,
+            requireAuth: true,
+            keepAlive: false,
           },
         },
         {
@@ -563,8 +563,8 @@ let router = new Router({
           name: '我的签名',
           menuShow: false,
           meta: {
-            requiresAuth: true,
-            keepAlive:false,
+            requireAuth: true,
+            keepAlive: false,
           },
         },
         {
@@ -573,8 +573,8 @@ let router = new Router({
           name: '修改密码',
           menuShow: false,
           meta: {
-            requiresAuth: true,
-            keepAlive:false,
+            requireAuth: true,
+            keepAlive: false,
           },
         },
         {
@@ -583,8 +583,8 @@ let router = new Router({
           name: '人员管理',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:false,
+            requireAuth: true,
+            keepAlive: false,
           },
         },
         {
@@ -593,8 +593,8 @@ let router = new Router({
           name: '文档管理',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:true,
+            requireAuth: true,
+            keepAlive: true,
           }
         },
         {
@@ -603,8 +603,8 @@ let router = new Router({
           name: '页面管理',
           menuShow: true,
           meta: {
-            requiresAuth: true,
-            keepAlive:false,
+            requireAuth: true,
+            keepAlive: false,
           },
         },
       ]
@@ -613,22 +613,17 @@ let router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  //获取store里面的token
-  let token = localStorage.getItem('token');
-  //判断要去的路由有没有requiresAuth
-  if (to.meta.requiresAuth) {
-    if (token) {
-      next();
-    } else {
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath }  // 将刚刚要去的路由path（却无权限）作为参数，方便登录成功后直接跳转到该路由
-      });
-    }
-
-  } else {
-    next();//如果无需token,那么随它去吧
-  }
+  next();
+  // 获取store里面的token
+  // let token = localStorage.getItem('token');
+  // if (token) {
+  //   next();
+  // } else {
+  //   next({
+  //     path: '/login',
+  //     query: { redirect: to.fullPath }  // 将刚刚要去的路由path（却无权限）作为参数，方便登录成功后直接跳转到该路由
+  //   });
+  // }
 });
 
 

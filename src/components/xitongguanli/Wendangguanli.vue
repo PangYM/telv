@@ -36,7 +36,7 @@
       <el-table border :data="qiefendataTable" stripe style="width: 100%">
         <el-table-column sortable prop="biaoti" align="center" label="标题" show-overflow-tooltip min-width="200">
           <template slot-scope="scope">
-            <a size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
+              <a size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
 </template>
         </el-table-column>
         <el-table-column sortable prop="nigaoren" align="center" label="发文人" show-overflow-tooltip width="108"></el-table-column>
@@ -52,7 +52,9 @@
     </div>
     <div class="pailei">
       <el-pagination
+        v-if="pageshow"
         @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
         background
         :page-size="20"
         :pager-count="11"
@@ -72,13 +74,27 @@
       this.quanxian = userdata.quanxian;
       this.chaxun();
     },
+    activated() {
+      var qiangzhishuaxin = localStorage.getItem('qiangzhishuaxin');
+      localStorage.setItem('qiangzhishuaxin', 0);
+      if (qiangzhishuaxin == 1) {
+        this.pageshow = false;
+        var userdata = JSON.parse(localStorage.getItem('userdata'));
+        this.quanxian = userdata.quanxian;
+        this.chaxun();
+        this.currentPage = 1;
+        this.pageshow = true;
+      }
+    },
     data() {
       return {
         query: '',
         doctype: 'shouwen',
         quanxian: 0,
         dataTable: [],
-        qiefendataTable: []
+        qiefendataTable: [],
+        pageshow: true,
+        currentPage: 1,
       };
     },
     methods: {

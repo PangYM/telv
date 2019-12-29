@@ -26,7 +26,7 @@
     <el-table border :data="qiefendataTable" stripe style="width: 100%">
       <el-table-column sortable prop="biaoti" align="center" label="标题" show-overflow-tooltip min-width="200">
         <template slot-scope="scope">
-                          <a :style="{'color': scope.row.clour}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
+                            <a :style="{'color': scope.row.clour}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
 </template>
       </el-table-column>
       <el-table-column
@@ -67,6 +67,7 @@
     </el-table>
     <div class="pailei">
       <el-pagination
+        v-if="pageshow"
         @current-change="handleCurrentChange"
         :current-page.sync="currentPage"
         background
@@ -107,6 +108,37 @@
         this.qiefendataTable = this.dataTable.slice(0, 20);
       });
     },
+    activated() {
+      var qiangzhishuaxin = localStorage.getItem('qiangzhishuaxin');
+      localStorage.setItem('qiangzhishuaxin', 0);
+      if (qiangzhishuaxin == 1) {
+        this.pageshow = false;
+        API.getUser({
+          token: localStorage.getItem('token')
+        }).then(({
+          data
+        }) => {
+          this.zhanghao = data.userinfo.zhanghao;
+        });
+        API.getfawenguanli({
+          token: localStorage.getItem('token'),
+          doctype: 'shouwen',
+          query: this.query
+        }).then(({
+          data
+        }) => {
+          this.dataTable = data.dataTable;
+          this.dataTable1 = data.dataTable;
+          for (var i = 0; i < this.dataTable.length; ++i) {
+            this.dataTable[i].clour = this.zhuangtai_clour[this.dataTable[i].zhuangtai];
+            this.dataTable1[i].clour = this.zhuangtai_clour[this.dataTable1[i].zhuangtai];
+          }
+          this.qiefendataTable = this.dataTable.slice(0, 20);
+        });
+        this.currentPage = 1;
+        this.pageshow = true;
+      }
+    },
     data() {
       return {
         zhanghao: '',
@@ -114,6 +146,7 @@
         qiefendataTable: [],
         dataTable: [],
         dataTable1: [],
+        pageshow: true,
         currentPage: 1,
         zhuangtai_clour: {
           已完成: '#008B00',

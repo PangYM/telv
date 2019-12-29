@@ -94,6 +94,7 @@
   export default {
     name: 'home',
     mounted() {
+      localStorage.setItem('qiangzhishuaxin', 1);
       localStorage.setItem('ifnew', 1);
       var userdata = JSON.parse(localStorage.getItem('userdata'));
       this.quanxian = userdata.quanxian;

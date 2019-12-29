@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 //设置全局axios默认值
-axios.defaults.timeout = 5000; //5000的超时验证
+axios.defaults.timeout = 60000; //5000的超时验证
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 
 //创建一个axios实例
@@ -46,7 +46,7 @@ instance.interceptors.response.use(
 //基地址
 export const base = 'http://10.190.177.115';
 // export const base = 'http://localhost';
-// export const base = 'http://192.168.199.150';
+// export const base = 'http://192.168.43.92';
 export const port = ':16888/api/';
 export const baseurl = base + port;
 //用户登录

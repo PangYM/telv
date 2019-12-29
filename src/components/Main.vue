@@ -241,6 +241,7 @@
   export default {
     name: 'Main',
     mounted() {
+      localStorage.setItem('qiangzhishuaxin', 1);
       this.gengxin();
     },
     data() {
@@ -286,54 +287,40 @@
         }).then(({
           data
         }) => {
-          if (this.duban != data.duban && this.duban != 0) {
+          if (this.duban < data.duban && this.duban != 0) {
             this.$message.success({
               showClose: true,
               message: '我的督办已更新请查看',
-              duration: 3600000
+              duration: 60000
             });
           }
           this.duban = data.duban;
-          if (this.huibao != data.huibao && this.huibao != 0) {
+          if (this.huibao < data.huibao && this.huibao != 0) {
             this.$message.success({
               showClose: true,
               message: '我的汇报已更新请查看',
-              duration: 3600000
+              duration: 60000
             });
           }
           this.huibao = data.huibao;
-          if (this.youjian != data.youjian && this.youjian != 0) {
+          if (this.youjian < data.youjian && this.youjian != 0) {
             this.$message.success({
               showClose: true,
               message: '未读邮件已更新请查看',
-              duration: 3600000
+              duration: 60000
             });
           }
           this.youjian = data.youjian;
-          if (this.tixing != data.tixing && this.tixing != 0) {
+          if (this.tixing < data.tixing && this.tixing != 0) {
             this.$message.success({
               showClose: true,
               message: '提醒待办已更新请查看',
-              duration: 3600000
+              duration: 60000
             });
           }
           this.tixing = data.tixing;
           if (this.userdata.userid == 'wubo') {
-            if (this.fawenduban != data.fawenduban && this.fawenduban != 0) {
-              this.$message.success({
-                showClose: true,
-                message: '发文督办已更新请查看',
-                duration: 3600000
-              });
-            }
             this.fawenduban = data.fawenduban;
-            if (this.shouwenduban != data.shouwenduban && this.shouwenduban != 0) {
-              this.$message.success({
-                showClose: true,
-                message: '收文督办已更新请查看',
-                duration: 3600000
-              });
-            }
             this.shouwenduban = data.shouwenduban;
           }
         });
@@ -353,11 +340,11 @@
         }).then(({
           data
         }) => {
-          if (this.fawenduban != data.dataTable.length && this.fawenduban != 0) {
+          if (this.fawenduban < data.dataTable.length && this.fawenduban != 0) {
             this.$message.success({
               showClose: true,
               message: '发文督办已更新请查看',
-              duration: 3600000
+              duration: 60000
             });
           }
           this.fawenduban = data.dataTable.length;
@@ -370,11 +357,11 @@
         }).then(({
           data
         }) => {
-          if (this.shouwenduban != data.dataTable.length && this.shouwenduban != 0) {
+          if (this.shouwenduban < data.dataTable.length && this.shouwenduban != 0) {
             this.$message.success({
               showClose: true,
               message: '收文督办已更新请查看',
-              duration: 3600000
+              duration: 60000
             });
           }
           this.shouwenduban = data.dataTable.length;

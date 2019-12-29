@@ -21,24 +21,12 @@
       <a style="color: #008B00">未读</a>，
       <a style="color: #000000">已读</a>
     </div>
-    <el-table
-      border
-      :data="qiefendataTable"
-      stripe
-      style="width: 100%"
-    >
-      <el-table-column
-        sortable
-        prop="biaoti"
-        align="center"
-        label="标题"
-        show-overflow-tooltip
-        min-width="200"
-      >
+    <el-table border :data="qiefendataTable" stripe style="width: 100%">
+      <el-table-column sortable prop="biaoti" align="center" label="标题" show-overflow-tooltip min-width="200">
         <template slot-scope="scope">
-          <a v-if="scope.row.weidu" :style="{'color': '#008B00'}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
-          <a v-else :style="{'color': '#000000'}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
-        </template>
+              <a v-if="scope.row.weidu" :style="{'color': '#008B00'}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
+              <a v-else :style="{'color': '#000000'}" @click="handleEdit(scope.$index, scope.row)">{{scope.row.biaoti}}</a>
+</template>
       </el-table-column>
       <el-table-column
         sortable
@@ -73,15 +61,18 @@
         width="108"
       ></el-table-column>
       <el-table-column fixed="right" align="center" width="180" label="操作">
-        <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">查看</el-button>
-          <el-button size="mini" type="danger" @click="handleDele(scope.$index, scope.row)">删除</el-button>
-        </template>
+<template slot-scope="scope">
+  <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">
+    查看</el-button>
+  <el-button size="mini" type="danger" @click="handleDele(scope.$index, scope.row)">删除</el-button>
+</template>
       </el-table-column>
     </el-table>
     <div class="pailei">
       <el-pagination
+        v-if="pageshow"
         @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
         background
         :page-size="20"
         :pager-count="11"
@@ -93,108 +84,133 @@
 </template>
 
 <script>
-import * as API from '@/api';
-export default {
-  components: {},
-  created() {
-    API.getjieshouguanli({
-      token: localStorage.getItem('token'),
-      doctype: 'youjian',
-      query: this.query
-    }).then(({ data }) => {
-      this.dataTable = data.dataTable;
-      this.qiefendataTable = this.dataTable.slice(0, 20);
-    });
-  },
-  data() {
-    return {
-      query: '',
-      qiefendataTable: [],
-      dataTable: []
-    };
-  },
-  methods: {
-    handleGoUrl() {
-      this.$router.push({ path: '/youjian/fasongyoujian' });
-    },
-    chaxun() {
+  import * as API from '@/api';
+  export default {
+    components: {},
+    created() {
       API.getjieshouguanli({
         token: localStorage.getItem('token'),
         doctype: 'youjian',
         query: this.query
-      }).then(({ data }) => {
+      }).then(({
+        data
+      }) => {
         this.dataTable = data.dataTable;
         this.qiefendataTable = this.dataTable.slice(0, 20);
       });
     },
-    handleCurrentChange(val) {
-      this.qiefendataTable = this.dataTable.slice(20 * val - 20, val * 20);
-    },
-    handleEdit(index, row) {
-      this.qiefendataTable[index].weidu=0;
-      this.$router.push({
-        path: '/youjian/fasongyoujian',
-        query: {
-          wendangid: row.wendangid
-        }
-      });
-    },
-    handleDele(index, row){
-      if(row.weidu){
-       this.$message({
-                message: '当前邮件未读，无法删除，若已读请刷新后重试',
-                duration: 2000
-              }); 
-      }
-      else{
-        this.$confirm('确认删除邮件?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          API.shanchuyoujian({
-            token: localStorage.getItem('token'),
-            wendangid: row.wendangid
-          }).then(({
-            data
-          }) => {
-            if (data.MSG == 'YES') {
-              this.$message.success({
-                showClose: true,
-                message: '邮件删除成功！请刷新',
-                duration: 2000
-              });
-            }
-          });
+    activated() {
+      var qiangzhishuaxin = localStorage.getItem('qiangzhishuaxin');
+      localStorage.setItem('qiangzhishuaxin', 0);
+      if (qiangzhishuaxin == 1) {
+        this.pageshow=false;
+        API.getjieshouguanli({
+          token: localStorage.getItem('token'),
+          doctype: 'youjian',
+          query: this.query
+        }).then(({
+          data
+        }) => {
+          this.dataTable = data.dataTable;
+          this.qiefendataTable = this.dataTable.slice(0, 20);
         });
+        this.currentPage=1;
+        this.pageshow=true;
+      }
+    },
+    data() {
+      return {
+        query: '',
+        qiefendataTable: [],
+        dataTable: [],
+        pageshow: true,
+        currentPage: 1,
+      };
+    },
+    methods: {
+      handleGoUrl() {
+        this.$router.push({
+          path: '/youjian/fasongyoujian'
+        });
+      },
+      chaxun() {
+        API.getjieshouguanli({
+          token: localStorage.getItem('token'),
+          doctype: 'youjian',
+          query: this.query
+        }).then(({
+          data
+        }) => {
+          this.dataTable = data.dataTable;
+          this.qiefendataTable = this.dataTable.slice(0, 20);
+        });
+      },
+      handleCurrentChange(val) {
+        this.qiefendataTable = this.dataTable.slice(20 * val - 20, val * 20);
+      },
+      handleEdit(index, row) {
+        this.qiefendataTable[index].weidu = 0;
+        this.$router.push({
+          path: '/youjian/fasongyoujian',
+          query: {
+            wendangid: row.wendangid
+          }
+        });
+      },
+      handleDele(index, row) {
+        if (row.weidu) {
+          this.$message({
+            message: '当前邮件未读，无法删除，若已读请刷新后重试',
+            duration: 2000
+          });
+        } else {
+          this.$confirm('确认删除邮件?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            API.shanchuyoujian({
+              token: localStorage.getItem('token'),
+              wendangid: row.wendangid
+            }).then(({
+              data
+            }) => {
+              if (data.MSG == 'YES') {
+                this.$message.success({
+                  showClose: true,
+                  message: '邮件删除成功！请刷新',
+                  duration: 2000
+                });
+              }
+            });
+          });
+        }
       }
     }
-  }
-};
+  };
 </script>
 
 <style lang="scss">
-.caogao {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.chaxun {
-  height: 40px;
-  line-height: 40px;
-  background: #efefef;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 20px;
-  display: block;
-  .chaxun1 {
-    width: 300px;
+  .caogao {
+    margin-top: 10px;
+    margin-bottom: 10px;
   }
-}
-.pailei {
-  margin-top: 30px;
-  text-align: center;
-}
+  .chaxun {
+    height: 40px;
+    line-height: 40px;
+    background: #efefef;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    display: block;
+    .chaxun1 {
+      width: 300px;
+    }
+  }
+  .pailei {
+    margin-top: 30px;
+    text-align: center;
+  }
 </style>

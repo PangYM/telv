@@ -25,11 +25,11 @@
     <el-table :data="qiefendataTable" stripe border style="width: 100%">
       <el-table-column sortable prop="biaoti" label="交办事项" align="center" min-width="200">
         <template slot-scope="scope">
-            <a
-              size="mini"
-              type="primary"
-              @click="handleEdit(scope.$index, scope.row)"
-            >{{scope.row.biaoti}}</a>
+              <a
+                size="mini"
+                type="primary"
+                @click="handleEdit(scope.$index, scope.row)"
+              >{{scope.row.biaoti}}</a>
 </template>
       </el-table-column>
       <el-table-column sortable prop="nigaoren" label="发起人" align="center" width="120"></el-table-column>
@@ -51,7 +51,9 @@
     </el-table>
     <div class="pailei">
       <el-pagination
+        v-if="pageshow"
         @current-change="handleCurrentChange"
+        :current-page.sync="currentPage"
         background
         :page-size="20"
         :pager-count="11"
@@ -77,11 +79,32 @@
         this.qiefendataTable = this.dataTable.slice(0, 20);
       });
     },
+    activated() {
+      var qiangzhishuaxin = localStorage.getItem('qiangzhishuaxin');
+      localStorage.setItem('qiangzhishuaxin', 0);
+      if (qiangzhishuaxin == 1) {
+        this.pageshow = false;
+        API.getjieshouguanli({
+          token: localStorage.getItem('token'),
+          doctype: 'duban',
+          query: this.query
+        }).then(({
+          data
+        }) => {
+          this.dataTable = data.dataTable;
+          this.qiefendataTable = this.dataTable.slice(0, 20);
+        });
+        this.currentPage = 1;
+        this.pageshow = true;
+      }
+    },
     data() {
       return {
         dataTable: [],
         qiefendataTable: [],
-        query: ''
+        query: '',
+        pageshow: true,
+        currentPage: 1,
       };
     },
     methods: {
