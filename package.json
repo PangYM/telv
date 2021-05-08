@@ -18,7 +18,7 @@
     "el-tree-transfer": "^2.2.0",
     "element-ui": "^2.4.1",
     "es6-promise": "^4.2.6",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.21",
     "vue": "^2.5.9",
     "vue-fullcalendar": "^1.0.9",
     "vue-print-nb": "^1.0.3",
